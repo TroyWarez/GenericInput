@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+    <metadata>
+        <id>CompanyName.GenericInput</id>
+        <version>0.0.7</version>
+        <description>Input Library</description>
+        <authors>CompanyAuthor</authors>
+        <tags>Native, native</tags>
+    </metadata>
+     
+    <files>
+        <file src="lib\**\*.*"       target="native\lib"     />
+        <file src="include\**\*.*"   target="native\include" />
+        <file src="bin\**\*.*"            target="native\bin"     />
+        <file src="README.md"        target="native"      />
+        <file src="GenericInput.props"   target="native" />
+    </files>
+</package>
