@@ -154,17 +154,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\SDL2H\File.cpp" />
-    <ClCompile Include="..\SDL2H\http.cpp" />
-    <ClCompile Include="..\SDL2H\SDL2H.cpp" />
-    <ClCompile Include="..\SDL2H\string.cpp" />
+    <ClCompile Include="..\..\SDL2H\File.cpp" />
+    <ClCompile Include="..\..\SDL2H\http.cpp" />
+    <ClCompile Include="..\..\SDL2H\SDL2H.cpp" />
+    <ClCompile Include="..\..\SDL2H\string.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\SDL2H\File.h" />
-    <ClInclude Include="..\SDL2H\framework.h" />
-    <ClInclude Include="..\SDL2H\http.h" />
-    <ClInclude Include="..\SDL2H\string.h" />
-    <ClInclude Include="..\SDL2H\user_agent.h" />
+    <ClInclude Include="..\..\SDL2H\File.h" />
+    <ClInclude Include="..\..\SDL2H\framework.h" />
+    <ClInclude Include="..\..\SDL2H\http.h" />
+    <ClInclude Include="..\..\SDL2H\string.h" />
+    <ClInclude Include="..\..\SDL2H\user_agent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

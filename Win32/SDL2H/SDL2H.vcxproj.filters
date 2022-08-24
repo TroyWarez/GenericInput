@@ -15,33 +15,33 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SDL2H.cpp">
+    <ClCompile Include="..\..\SDL2H\File.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="http.cpp">
+    <ClCompile Include="..\..\SDL2H\http.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="File.cpp">
+    <ClCompile Include="..\..\SDL2H\SDL2H.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="string.cpp">
+    <ClCompile Include="..\..\SDL2H\string.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="http.h">
+    <ClInclude Include="..\..\SDL2H\File.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="framework.h">
+    <ClInclude Include="..\..\SDL2H\framework.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="File.h">
+    <ClInclude Include="..\..\SDL2H\http.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="string.h">
+    <ClInclude Include="..\..\SDL2H\string.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="user_agent.h">
+    <ClInclude Include="..\..\SDL2H\user_agent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
