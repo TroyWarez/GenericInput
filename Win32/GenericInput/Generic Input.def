@@ -1,0 +1,20 @@
+LIBRARY   GENERICINPUT
+EXPORTS
+   DirectInput8Create   @1
+   XInputGetCapabilities   @2
+   XInputGetDSoundAudioDeviceGuids   @3
+   XInputGetState   @4
+   XInputSetState   @5
+   GetdfDIJoystick   @6
+   joyConfigChanged  @21
+   joyGetDevCapsA  @22
+   joyGetDevCapsW  @23
+   joyGetNumDevs  @24
+   joyGetPos  @25
+   joyGetPosEx  @26
+   joyGetThreshold  @27
+   joyReleaseCapture  @28
+   joySetCapture  @29
+   joySetThreshold  @30
+   Init   @31
+   WndProc   @32

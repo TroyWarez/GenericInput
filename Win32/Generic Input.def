@@ -1,4 +1,0 @@
-LIBRARY   OPENINPUT
-EXPORTS
-   XInputGetState   @1
-   XInputSetState   @2

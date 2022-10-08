@@ -101,6 +101,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>Cfgmgr32.lib;SetupAPI.lib;Bthprops.lib;Hid.lib;Xinput.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>Generic Input.def</ModuleDefinitionFile>
     </Link>
     <PreBuildEvent>
       <Command> "$(SolutionDir)$(IntermediateOutputPath)SDL2H.exe" -$(SolutionDir)GenericInput\controllerDB.h-raw.githubusercontent.com-/gabomdq/SDL_GameControllerDB/master/gamecontrollerdb.txt</Command>
@@ -112,6 +113,9 @@
       <Command>
       </Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Message>Packing in nuget package..</Message>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -131,6 +135,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>Cfgmgr32.lib;SetupAPI.lib;Bthprops.lib;Hid.lib;Xinput.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>Generic Input.def</ModuleDefinitionFile>
     </Link>
     <PreBuildEvent>
       <Command> "$(SolutionDir)$(IntermediateOutputPath)SDL2H.exe" -$(SolutionDir)GenericInput\controllerDB.h-raw.githubusercontent.com-/gabomdq/SDL_GameControllerDB/master/gamecontrollerdb.txt</Command>
@@ -140,6 +145,9 @@
       <Command>
       </Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Message>Packing in nuget package..</Message>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -155,6 +163,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>Cfgmgr32.lib;SetupAPI.lib;Bthprops.lib;Hid.lib;Xinput.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>Generic Input.def</ModuleDefinitionFile>
     </Link>
     <PreBuildEvent>
       <Message>Checking if the controller database header file needs to be rebuilt...</Message>
@@ -168,6 +177,9 @@
       <Message>
       </Message>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Message>Packing in nuget package..</Message>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -187,6 +199,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>Cfgmgr32.lib;SetupAPI.lib;Bthprops.lib;Hid.lib;Xinput.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>Generic Input.def</ModuleDefinitionFile>
     </Link>
     <PreBuildEvent>
       <Command> "$(SolutionDir)$(IntermediateOutputPath)SDL2H.exe" -$(SolutionDir)GenericInput\controllerDB.h-raw.githubusercontent.com-/gabomdq/SDL_GameControllerDB/master/gamecontrollerdb.txt</Command>
@@ -196,6 +209,9 @@
       <Command>
       </Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Message>Packing in nuget package..</Message>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Bluetooth.h" />
@@ -203,6 +219,7 @@
     <ClInclude Include="ControllerScanner.h" />
     <ClInclude Include="CRC32.h" />
     <ClInclude Include="Devices.h" />
+    <ClInclude Include="DirectInput.h" />
     <ClInclude Include="DualSense.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Registry.h" />
@@ -211,12 +228,14 @@
     <ClInclude Include="GenericInput.h" />
     <ClInclude Include="GenericInputController.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="WinMM.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bluetooth.cpp" />
     <ClCompile Include="ControllerScanner.cpp" />
     <ClCompile Include="CRC32.cpp" />
     <ClCompile Include="Devices.cpp" />
+    <ClCompile Include="DirectInput.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="DualSense.cpp" />
     <ClCompile Include="Registry.cpp" />
@@ -228,12 +247,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="WinMM.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Generic Input DLL.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Generic Input.def" />
+    <None Include="Generic Input.def" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

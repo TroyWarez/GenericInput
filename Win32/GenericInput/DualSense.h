@@ -25,5 +25,9 @@ BOOL GetWiredMAC(std::wstring& DevicePath, BTH_ADDR& ullbtDeviceInfo);
 
 DWORD GetState(GenericInputController& controller, GENERIC_INPUT_STATE* pState);
 
+DWORD SetState(GenericInputController& controller, LPVOID* pData, DWORD dSize);
+
+BYTE OutputBuffer[547];
+
 };
 

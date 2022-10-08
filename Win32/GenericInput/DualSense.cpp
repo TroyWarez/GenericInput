@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "DualSense.h"
 #include "CRC32.h"
+
 #define PS_OUTPUT_CRC32_SEED 0xA2
 const USHORT DualSenseVID = 0x054c;
 const USHORT DualSensePID = 0x0ce6;
@@ -214,77 +215,77 @@ DWORD DualSense::GetState(GenericInputController& controller, GENERIC_INPUT_STAT
 			{
 			case 0x10:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_X;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_X;
 				break;
 			}
 			case 0x20:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_A;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_A;
 				break;
 			}
 			case 0x30:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_A | XINPUT_GAMEPAD_X;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_A | CONTROLLER_BUTTON_X;
 				break;
 			}
 			case 0x40:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_B;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_B;
 				break;
 			}
 			case 0x50:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_B | XINPUT_GAMEPAD_X;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_B | CONTROLLER_BUTTON_X;
 				break;
 			}
 			case 0x60:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_B | XINPUT_GAMEPAD_A;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_B | CONTROLLER_BUTTON_A;
 				break;
 			}
 			case 0x70:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_B | XINPUT_GAMEPAD_A | XINPUT_GAMEPAD_X;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_B | CONTROLLER_BUTTON_A | CONTROLLER_BUTTON_X;
 				break;
 			}
 			case 0x80:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_Y;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_Y;
 				break;
 			}
 			case 0x90:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_Y | XINPUT_GAMEPAD_X;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_Y | CONTROLLER_BUTTON_X;
 				break;
 			}
 			case 0xA0:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_Y | XINPUT_GAMEPAD_A;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_Y | CONTROLLER_BUTTON_A;
 				break;
 			}
 			case 0xB0:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_Y | XINPUT_GAMEPAD_A | XINPUT_GAMEPAD_X;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_Y | CONTROLLER_BUTTON_A | CONTROLLER_BUTTON_X;
 				break;
 			}
 			case 0xC0:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_Y | XINPUT_GAMEPAD_B;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_Y | CONTROLLER_BUTTON_B;
 				break;
 			}
 			case 0xD0:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_Y | XINPUT_GAMEPAD_B | XINPUT_GAMEPAD_X;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_Y | CONTROLLER_BUTTON_B | CONTROLLER_BUTTON_X;
 				break;
 			}
 			case 0xE0:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_Y | XINPUT_GAMEPAD_B | XINPUT_GAMEPAD_A;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_Y | CONTROLLER_BUTTON_B | CONTROLLER_BUTTON_A;
 				break;
 			}
 			case 0xF0:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_Y | XINPUT_GAMEPAD_X | XINPUT_GAMEPAD_B | XINPUT_GAMEPAD_A;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_Y | CONTROLLER_BUTTON_X | CONTROLLER_BUTTON_B | CONTROLLER_BUTTON_A;
 				break;
 			}
 			break;
@@ -294,42 +295,42 @@ DWORD DualSense::GetState(GenericInputController& controller, GENERIC_INPUT_STAT
 			{
 			case 0x0:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_DPAD_UP;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_DPAD_UP;
 				break;
 			}
 			case 0x1:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_DPAD_RIGHT | XINPUT_GAMEPAD_DPAD_UP;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_DPAD_RIGHT | CONTROLLER_BUTTON_DPAD_UP;
 				break;
 			}
 			case 0x2:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_DPAD_RIGHT;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_DPAD_RIGHT;
 				break;
 			}
 			case 0x3:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_DPAD_RIGHT | XINPUT_GAMEPAD_DPAD_DOWN;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_DPAD_RIGHT | CONTROLLER_BUTTON_DPAD_DOWN;
 				break;
 			}
 			case 0x4:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_DPAD_DOWN;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_DPAD_DOWN;
 				break;
 			}
 			case 0x5:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_DPAD_LEFT | XINPUT_GAMEPAD_DPAD_DOWN;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_DPAD_LEFT | CONTROLLER_BUTTON_DPAD_DOWN;
 				break;
 			}
 			case 0x6:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_DPAD_LEFT;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_DPAD_LEFT;
 				break;
 			}
 			case 0x7:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_DPAD_LEFT | XINPUT_GAMEPAD_DPAD_UP;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_DPAD_LEFT | CONTROLLER_BUTTON_DPAD_UP;
 				break;
 			}
 			}
@@ -338,77 +339,77 @@ DWORD DualSense::GetState(GenericInputController& controller, GENERIC_INPUT_STAT
 			{
 			case 0x10:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_BACK;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_BACK;
 				break;
 			}
 			case 0x20:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_START;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_START;
 				break;
 			}
 			case 0x30:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_START | XINPUT_GAMEPAD_BACK;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_START | CONTROLLER_BUTTON_BACK;
 				break;
 			}
 			case 0x40:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_LEFT_THUMB;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_LEFTSTICK;
 				break;
 			}
 			case 0x50:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_LEFT_THUMB | XINPUT_GAMEPAD_BACK;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_LEFTSTICK | CONTROLLER_BUTTON_BACK;
 				break;
 			}
 			case 0x60:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_LEFT_THUMB | XINPUT_GAMEPAD_START;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_LEFTSTICK | CONTROLLER_BUTTON_START;
 				break;
 			}
 			case 0x70:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_LEFT_THUMB | XINPUT_GAMEPAD_START | XINPUT_GAMEPAD_BACK;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_LEFTSTICK | CONTROLLER_BUTTON_START | CONTROLLER_BUTTON_BACK;
 				break;
 			}
 			case 0x80:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_THUMB;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSTICK;
 				break;
 			}
 			case 0x90:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_THUMB | XINPUT_GAMEPAD_BACK;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSTICK | CONTROLLER_BUTTON_BACK;
 				break;
 			}
 			case 0xA0:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_THUMB | XINPUT_GAMEPAD_START;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSTICK | CONTROLLER_BUTTON_START;
 				break;
 			}
 			case 0xB0:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_THUMB | XINPUT_GAMEPAD_START | XINPUT_GAMEPAD_BACK;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSTICK | CONTROLLER_BUTTON_START | CONTROLLER_BUTTON_BACK;
 				break;
 			}
 			case 0xC0:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_THUMB | XINPUT_GAMEPAD_LEFT_THUMB;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSTICK | CONTROLLER_BUTTON_LEFTSTICK;
 				break;
 			}
 			case 0xD0:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_THUMB | XINPUT_GAMEPAD_LEFT_THUMB | XINPUT_GAMEPAD_BACK;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSTICK | CONTROLLER_BUTTON_LEFTSTICK | CONTROLLER_BUTTON_BACK;
 				break;
 			}
 			case 0xE0:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_THUMB | XINPUT_GAMEPAD_LEFT_THUMB | XINPUT_GAMEPAD_START;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSTICK | CONTROLLER_BUTTON_LEFTSTICK | CONTROLLER_BUTTON_START;
 				break;
 			}
 			case 0xF0:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_THUMB | XINPUT_GAMEPAD_LEFT_THUMB | XINPUT_GAMEPAD_BACK | XINPUT_GAMEPAD_START;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSTICK | CONTROLLER_BUTTON_LEFTSTICK | CONTROLLER_BUTTON_BACK | CONTROLLER_BUTTON_START;
 				break;
 			}
 			break;
@@ -418,72 +419,72 @@ DWORD DualSense::GetState(GenericInputController& controller, GENERIC_INPUT_STAT
 			{
 			case 0x1:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_LEFT_SHOULDER;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_LEFTSHOULDER;
 				break;
 			}
 			case 0x2:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_SHOULDER;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSHOULDER;
 				break;
 			}
 			case 0x3:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_SHOULDER | XINPUT_GAMEPAD_LEFT_SHOULDER;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSHOULDER | CONTROLLER_BUTTON_LEFTSHOULDER;
 				break;
 			}
 			case 0x5:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_LEFT_SHOULDER;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_LEFTSHOULDER;
 				break;
 			}
 			case 0x6:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_SHOULDER;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSHOULDER;
 				break;
 			}
 			case 0x7:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_SHOULDER | XINPUT_GAMEPAD_LEFT_SHOULDER;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSHOULDER | CONTROLLER_BUTTON_LEFTSHOULDER;
 				break;
 			}
 			case 0x9:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_LEFT_SHOULDER;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_LEFTSHOULDER;
 				break;
 			}
 			case 0xA:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_SHOULDER;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSHOULDER;
 				break;
 			}
 			case 0xB:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_SHOULDER | XINPUT_GAMEPAD_LEFT_SHOULDER;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSHOULDER | CONTROLLER_BUTTON_LEFTSHOULDER;
 				break;
 			}
 			case 0xD:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_LEFT_SHOULDER;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_LEFTSHOULDER;
 				break;
 			}
 			case 0xE:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_SHOULDER;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSHOULDER;
 				break;
 			}
 			case 0xF:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_SHOULDER | XINPUT_GAMEPAD_LEFT_SHOULDER;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSHOULDER | CONTROLLER_BUTTON_LEFTSHOULDER;
 				break;
 			}
 			break;
 			}
 
-			switch (controller.InputBuffer[11] & 0x0f)//Mic button and touch pad button needed to be dealt with differently
+			switch (controller.InputBuffer[11] & 0x0f)//Mic button and touch pad button need to be dealt with differently
 			{
 			case 0x1:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_GUIDE;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_GUIDE;
 				break;
 			}
 			case 0x2:
@@ -492,7 +493,7 @@ DWORD DualSense::GetState(GenericInputController& controller, GENERIC_INPUT_STAT
 			}
 			case 0x3:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_GUIDE;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_GUIDE;
 				break;
 			}
 			case 0x4:
@@ -501,7 +502,7 @@ DWORD DualSense::GetState(GenericInputController& controller, GENERIC_INPUT_STAT
 			}
 			case 0x5:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_GUIDE;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_GUIDE;
 				break;
 			}
 			case 0x6:
@@ -510,7 +511,7 @@ DWORD DualSense::GetState(GenericInputController& controller, GENERIC_INPUT_STAT
 			}
 			case 0x7:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_GUIDE;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_GUIDE;
 				break;
 			}
 			}
@@ -550,77 +551,77 @@ DWORD DualSense::GetState(GenericInputController& controller, GENERIC_INPUT_STAT
 			{
 			case 0x10:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_X;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_X;
 				break;
 			}
 			case 0x20:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_A;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_A;
 				break;
 			}
 			case 0x30:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_A | XINPUT_GAMEPAD_X;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_A | CONTROLLER_BUTTON_X;
 				break;
 			}
 			case 0x40:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_B;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_B;
 				break;
 			}
 			case 0x50:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_B | XINPUT_GAMEPAD_X;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_B | CONTROLLER_BUTTON_X;
 				break;
 			}
 			case 0x60:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_B | XINPUT_GAMEPAD_A;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_B | CONTROLLER_BUTTON_A;
 				break;
 			}
 			case 0x70:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_B | XINPUT_GAMEPAD_A | XINPUT_GAMEPAD_X;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_B | CONTROLLER_BUTTON_A | CONTROLLER_BUTTON_X;
 				break;
 			}
 			case 0x80:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_Y;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_Y;
 				break;
 			}
 			case 0x90:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_Y | XINPUT_GAMEPAD_X;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_Y | CONTROLLER_BUTTON_X;
 				break;
 			}
 			case 0xA0:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_Y | XINPUT_GAMEPAD_A;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_Y | CONTROLLER_BUTTON_A;
 				break;
 			}
 			case 0xB0:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_Y | XINPUT_GAMEPAD_A | XINPUT_GAMEPAD_X;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_Y | CONTROLLER_BUTTON_A | CONTROLLER_BUTTON_X;
 				break;
 			}
 			case 0xC0:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_Y | XINPUT_GAMEPAD_B;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_Y | CONTROLLER_BUTTON_B;
 				break;
 			}
 			case 0xD0:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_Y | XINPUT_GAMEPAD_B | XINPUT_GAMEPAD_X;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_Y | CONTROLLER_BUTTON_B | CONTROLLER_BUTTON_X;
 				break;
 			}
 			case 0xE0:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_Y | XINPUT_GAMEPAD_B | XINPUT_GAMEPAD_A;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_Y | CONTROLLER_BUTTON_B | CONTROLLER_BUTTON_A;
 				break;
 			}
 			case 0xF0:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_Y | XINPUT_GAMEPAD_X | XINPUT_GAMEPAD_B | XINPUT_GAMEPAD_A;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_Y | CONTROLLER_BUTTON_X | CONTROLLER_BUTTON_B | CONTROLLER_BUTTON_A;
 				break;
 			}
 				break;
@@ -630,42 +631,42 @@ DWORD DualSense::GetState(GenericInputController& controller, GENERIC_INPUT_STAT
 			{
 			case 0x0:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_DPAD_UP;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_DPAD_UP;
 				break;
 			}
 			case 0x1:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_DPAD_RIGHT | XINPUT_GAMEPAD_DPAD_UP;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_DPAD_RIGHT | CONTROLLER_BUTTON_DPAD_UP;
 				break;
 			}
 			case 0x2:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_DPAD_RIGHT;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_DPAD_RIGHT;
 				break;
 			}
 			case 0x3:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_DPAD_RIGHT | XINPUT_GAMEPAD_DPAD_DOWN;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_DPAD_RIGHT | CONTROLLER_BUTTON_DPAD_DOWN;
 				break;
 			}
 			case 0x4:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_DPAD_DOWN;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_DPAD_DOWN;
 				break;
 			}
 			case 0x5:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_DPAD_LEFT | XINPUT_GAMEPAD_DPAD_DOWN;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_DPAD_LEFT | CONTROLLER_BUTTON_DPAD_DOWN;
 				break;
 			}
 			case 0x6:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_DPAD_LEFT;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_DPAD_LEFT;
 				break;
 			}
 			case 0x7:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_DPAD_LEFT | XINPUT_GAMEPAD_DPAD_UP;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_DPAD_LEFT | CONTROLLER_BUTTON_DPAD_UP;
 				break;
 			}
 			}
@@ -674,77 +675,77 @@ DWORD DualSense::GetState(GenericInputController& controller, GENERIC_INPUT_STAT
 			{
 			case 0x10:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_BACK;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_BACK;
 				break;
 			}
 			case 0x20:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_START;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_START;
 				break;
 			}
 			case 0x30:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_START | XINPUT_GAMEPAD_BACK;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_START | CONTROLLER_BUTTON_BACK;
 				break;
 			}
 			case 0x40:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_LEFT_THUMB;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_LEFTSTICK;
 				break;
 			}
 			case 0x50:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_LEFT_THUMB | XINPUT_GAMEPAD_BACK;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_LEFTSTICK | CONTROLLER_BUTTON_BACK;
 				break;
 			}
 			case 0x60:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_LEFT_THUMB | XINPUT_GAMEPAD_START;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_LEFTSTICK | CONTROLLER_BUTTON_START;
 				break;
 			}
 			case 0x70:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_LEFT_THUMB | XINPUT_GAMEPAD_START | XINPUT_GAMEPAD_BACK;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_LEFTSTICK | CONTROLLER_BUTTON_START | CONTROLLER_BUTTON_BACK;
 				break;
 			}
 			case 0x80:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_THUMB;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSTICK;
 				break;
 			}
 			case 0x90:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_THUMB | XINPUT_GAMEPAD_BACK;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSTICK | CONTROLLER_BUTTON_BACK;
 				break;
 			}
 			case 0xA0:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_THUMB | XINPUT_GAMEPAD_START;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSTICK | CONTROLLER_BUTTON_START;
 				break;
 			}
 			case 0xB0:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_THUMB | XINPUT_GAMEPAD_START | XINPUT_GAMEPAD_BACK;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSTICK | CONTROLLER_BUTTON_START | CONTROLLER_BUTTON_BACK;
 				break;
 			}
 			case 0xC0:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_THUMB | XINPUT_GAMEPAD_LEFT_THUMB;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSTICK | CONTROLLER_BUTTON_LEFTSTICK;
 				break;
 			}
 			case 0xD0:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_THUMB | XINPUT_GAMEPAD_LEFT_THUMB | XINPUT_GAMEPAD_BACK;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSTICK | CONTROLLER_BUTTON_LEFTSTICK | CONTROLLER_BUTTON_BACK;
 				break;
 			}
 			case 0xE0:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_THUMB | XINPUT_GAMEPAD_LEFT_THUMB | XINPUT_GAMEPAD_START;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSTICK | CONTROLLER_BUTTON_LEFTSTICK | CONTROLLER_BUTTON_START;
 				break;
 			}
 			case 0xF0:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_THUMB | XINPUT_GAMEPAD_LEFT_THUMB | XINPUT_GAMEPAD_BACK | XINPUT_GAMEPAD_START;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSTICK | CONTROLLER_BUTTON_LEFTSTICK | CONTROLLER_BUTTON_BACK | CONTROLLER_BUTTON_START;
 				break;
 			}
 			break;
@@ -754,62 +755,62 @@ DWORD DualSense::GetState(GenericInputController& controller, GENERIC_INPUT_STAT
 			{
 			case 0x1:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_LEFT_SHOULDER;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_LEFTSHOULDER;
 				break;
 			}
 			case 0x2:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_SHOULDER;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSHOULDER;
 				break;
 			}
 			case 0x3:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_SHOULDER | XINPUT_GAMEPAD_LEFT_SHOULDER;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSHOULDER | CONTROLLER_BUTTON_LEFTSHOULDER;
 				break;
 			}
 			case 0x5:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_LEFT_SHOULDER;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_LEFTSHOULDER;
 				break;
 			}
 			case 0x6:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_SHOULDER;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSHOULDER;
 				break;
 			}
 			case 0x7:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_SHOULDER | XINPUT_GAMEPAD_LEFT_SHOULDER;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSHOULDER | CONTROLLER_BUTTON_LEFTSHOULDER;
 				break;
 			}
 			case 0x9:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_LEFT_SHOULDER;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_LEFTSHOULDER;
 				break;
 			}
 			case 0xA:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_SHOULDER;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSHOULDER;
 				break;
 			}
 			case 0xB:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_SHOULDER | XINPUT_GAMEPAD_LEFT_SHOULDER;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSHOULDER | CONTROLLER_BUTTON_LEFTSHOULDER;
 				break;
 			}
 			case 0xD:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_LEFT_SHOULDER;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_LEFTSHOULDER;
 				break;
 			}
 			case 0xE:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_SHOULDER;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSHOULDER;
 				break;
 			}
 			case 0xF:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_RIGHT_SHOULDER | XINPUT_GAMEPAD_LEFT_SHOULDER;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSHOULDER | CONTROLLER_BUTTON_LEFTSHOULDER;
 				break;
 			}
 			break;
@@ -819,7 +820,7 @@ DWORD DualSense::GetState(GenericInputController& controller, GENERIC_INPUT_STAT
 			{
 			case 0x1:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_GUIDE;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_GUIDE;
 				break;
 			}
 			case 0x2:
@@ -828,7 +829,7 @@ DWORD DualSense::GetState(GenericInputController& controller, GENERIC_INPUT_STAT
 			}
 			case 0x3:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_GUIDE;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_GUIDE;
 				break;
 			}
 			case 0x4:
@@ -837,7 +838,7 @@ DWORD DualSense::GetState(GenericInputController& controller, GENERIC_INPUT_STAT
 			}
 			case 0x5:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_GUIDE;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_GUIDE;
 				break;
 			}
 			case 0x6:
@@ -846,7 +847,7 @@ DWORD DualSense::GetState(GenericInputController& controller, GENERIC_INPUT_STAT
 			}
 			case 0x7:
 			{
-				pState->Gamepad.wButtons |= XINPUT_GAMEPAD_GUIDE;
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_GUIDE;
 				break;
 			}
 			}
@@ -861,5 +862,25 @@ DWORD DualSense::GetState(GenericInputController& controller, GENERIC_INPUT_STAT
 		return ERROR_GEN_FAILURE;
 	}
 	}
+	return ERROR_SUCCESS;
+}
+
+DWORD DualSense::SetState(GenericInputController& controller, LPVOID* pData, DWORD dSize)
+{
+	if (dSize > 512)
+	{
+		return ERROR_INVALID_PARAMETER;
+	}
+	try {
+		vOutput.resize(dSize);
+	}
+	catch (std::bad_alloc)
+	{
+		return ERROR_OUTOFMEMORY;
+	}
+
+	CopyMemory(vOutput.data(), pData, dSize);
+	uint32_t CRC32 = GetCRC32(vOutput, CRC32_SEED);
+
 	return ERROR_SUCCESS;
 }

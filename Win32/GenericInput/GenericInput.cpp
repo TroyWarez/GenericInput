@@ -166,7 +166,7 @@ LRESULT GenericInput::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 	}
 	return 0;
 }
-DWORD GenericInput::GetState(DWORD dwUserIndex, GENERIC_INPUT_STATE* pState)
+DWORD GenericInput::XInputGetState(DWORD dwUserIndex, GENERIC_INPUT_STATE* pState)
 {
 	if (pState == nullptr || dwUserIndex > 7)
 	{
@@ -194,6 +194,7 @@ DWORD GenericInput::GetState(DWORD dwUserIndex, GENERIC_INPUT_STATE* pState)
 	{
 	case XInput:
 	{
+		
 		break;
 	}
 	case DS://DualSense
@@ -208,7 +209,35 @@ DWORD GenericInput::GetState(DWORD dwUserIndex, GENERIC_INPUT_STATE* pState)
 	}
 	return ERROR_SUCCESS;
 }
-DWORD GenericInput::GetType(DWORD dwUserIndex)
+DWORD GenericInput::XInputSetState(DWORD dwUserIndex, INPUT_VIBRATION* pVibration)
 {
-	return ControllerSlots[dwUserIndex].conType;
+	if (pVibration == nullptr || dwUserIndex > 7)
+	{
+		return ERROR_INVALID_PARAMETER;
+	}
+	return ERROR_SUCCESS;
+}
+DWORD GenericInput::XInputGetDSoundAudioDeviceGuids(DWORD dwUserIndex, GUID* pDSoundRenderGuid, GUID* pDSoundCaptureGuid)//Ignore the directsound stuff, the guids are for modern sound devices...
+{
+	/*To support this I will need to add methods to get audio from controllers and micphone support*/
+	return ERROR_DEVICE_NOT_CONNECTED;
+}
+DWORD GenericInput::XInputGetCapabilities(DWORD dwUserIndex, DWORD wFlags, GENERIC_CAPABILITIES* pCapabilities)
+{
+	switch (wFlags)
+	{
+	case INPUT_FLAG_GAMEPAD:
+	{
+		if (ControllerSlots[dwUserIndex].conType == controllerType::XInput)
+		{
+			return ERROR_SUCCESS;
+		}
+	}
+	default:
+	{
+		return ERROR_DEVICE_NOT_CONNECTED;// Non gamepads aren't supported yet.
+	}
+	}
+
+	return ERROR_DEVICE_NOT_CONNECTED;
 }

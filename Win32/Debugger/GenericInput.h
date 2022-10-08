@@ -1,6 +1,4 @@
 #pragma once
-#include "GenericInputController.h"
-#include "XInput.h"
 #define WM_CONTROLLER_CONNECTED 0x8007
 #define WM_CONTROLLER_DISCONNECTED 0x8008
 
@@ -19,9 +17,13 @@
 #define CONTROLLER_BUTTON_DPAD_DOWN 0x0002
 #define CONTROLLER_BUTTON_DPAD_LEFT 0x0004
 #define CONTROLLER_BUTTON_DPAD_RIGHT 0x0008
-#define CONTROLLER_GAMEPAD_GUIDE 0x0400
-
-#define INPUT_FLAG_GAMEPAD 0
+enum controllerType
+{
+    NC = 0,
+    XInput = 1,
+    DS = 2,
+    SDL = 3
+};
 typedef struct _GENERIC_INPUT_GAMEPAD
 {
     WORD                                wButtons;
@@ -39,37 +41,7 @@ typedef struct _GENERIC_INPUT
     GENERIC_INPUT_GAMEPAD               Gamepad;
 }  GENERIC_INPUT_STATE, * PGENERIC_INPUT_STATE;
 
-typedef struct _GENERIC_VIBRATION
-{
-    WORD                                wLeftMotorSpeed;
-    WORD                                wRightMotorSpeed;
-} GENERIC_VIBRATION, * PGENERIC_VIBRATION;
-
-typedef struct _GENERIC_CAPABILITIES {
-    BYTE             Type;
-    BYTE             SubType;
-    WORD             Flags;
-    GENERIC_INPUT_GAMEPAD   Gamepad;
-    GENERIC_VIBRATION Vibration;
-} GENERIC_CAPABILITIES, * PGENERIC_CAPABILITIES;
-
-typedef struct _INPUT_VIBRATION
-{
-    WORD                                wLeftMotorSpeed;
-    WORD                                wRightMotorSpeed;
-} INPUT_VIBRATION, * PINPUT_VIBRATION;
-
-namespace GenericInput
-{
-	void Init(HWND hWnd);
-	LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-    DWORD XInputGetState(DWORD dwUserIndex, GENERIC_INPUT_STATE* pState);
-    DWORD XInputSetState(DWORD dwUserIndex, INPUT_VIBRATION* pVibration);
-
-
-    DWORD XInputGetDSoundAudioDeviceGuids(DWORD dwUserIndex, GUID* pDSoundRenderGuid, GUID* pDSoundCaptureGuid);
-
-    DWORD XInputGetCapabilities(DWORD dwUserIndex, DWORD wFlags, GENERIC_CAPABILITIES* pCapabilities);
-
-
-};
+DWORD GenericInputInit(HWND hWindowHandle, BOOL bExitProcess);
+LRESULT GenericInputDeviceChange(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+DWORD GenericInputGetState(DWORD dwUserIndex, GENERIC_INPUT_STATE* pState);
+DWORD GenericInputGetLayout(DWORD dwUserIndex);
