@@ -864,7 +864,6 @@ DWORD DualSense::GetState(GenericInputController& controller, GENERIC_INPUT_STAT
 	}
 	return ERROR_SUCCESS;
 }
-
 DWORD DualSense::SetState(GenericInputController& controller, LPVOID* pData, DWORD dSize)
 {
 	if (dSize > 512)
@@ -872,15 +871,15 @@ DWORD DualSense::SetState(GenericInputController& controller, LPVOID* pData, DWO
 		return ERROR_INVALID_PARAMETER;
 	}
 	try {
-		vOutput.resize(dSize);
+		OutputBuffer.resize(dSize);
 	}
 	catch (std::bad_alloc)
 	{
 		return ERROR_OUTOFMEMORY;
 	}
 
-	CopyMemory(vOutput.data(), pData, dSize);
-	uint32_t CRC32 = GetCRC32(vOutput, CRC32_SEED);
+	CopyMemory(OutputBuffer.data(), pData, dSize);
+	uint32_t CRC32 = GetCRC32(OutputBuffer, CRC32_SEED);
 
 	return ERROR_SUCCESS;
 }
