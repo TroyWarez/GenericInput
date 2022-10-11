@@ -66,6 +66,10 @@ namespace GenericInput
     DWORD XInputGetState(DWORD dwUserIndex, GENERIC_INPUT_STATE* pState);
     DWORD XInputSetState(DWORD dwUserIndex, INPUT_VIBRATION* pVibration);
 
+	BOOL CALLBACK EnumWindowsProc(
+		_In_ HWND   hwnd,
+		_In_ LPARAM lParam
+	);
 
     DWORD XInputGetDSoundAudioDeviceGuids(DWORD dwUserIndex, GUID* pDSoundRenderGuid, GUID* pDSoundCaptureGuid);
 

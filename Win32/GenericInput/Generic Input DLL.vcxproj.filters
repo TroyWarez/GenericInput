@@ -60,7 +60,7 @@
     <ClInclude Include="WinMM.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameInpup.h">
+    <ClInclude Include="GameInput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -101,7 +101,7 @@
     <ClCompile Include="WinMM.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameInpup.cpp">
+    <ClCompile Include="GameInput.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

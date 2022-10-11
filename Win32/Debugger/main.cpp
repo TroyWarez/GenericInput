@@ -25,7 +25,7 @@ typedef DWORD WINAPI XInputGetState
 	_In_  DWORD         dwUserIndex,  // Index of the gamer associated with the device
 	_Out_ XINPUT_STATE* pState        // Receives the current state
 );
-int main(void)
+int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow);
 {
 	HMODULE hGenericInputLib = LoadLibrary(L"GenericInput.dll");
 	XINPUT_STATE xState = { 0 };
@@ -113,7 +113,6 @@ int main(void)
 			OutputDebugStringW(L"Unknown Error occured\n");
 		}
 		}
-
 	}
 	return 0;
 }

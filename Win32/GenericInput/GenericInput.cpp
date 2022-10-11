@@ -174,7 +174,29 @@ DWORD GenericInput::XInputGetState(DWORD dwUserIndex, GENERIC_INPUT_STATE* pStat
 	}
 	if (ControllerSlots[dwUserIndex].Path == L"" && ControllerSlots[dwUserIndex].BTPath == L"")
 	{
-		return ERROR_DEVICE_NOT_CONNECTED;
+		HANDLE hModule = GetModuleHandle(NULL);
+		if (hModule != nullptr)
+		{
+			HWND hWindow = nullptr;
+
+			EnumWindows(EnumWindowsProc, (LPARAM)&hWindow);
+			hWindow = FindWindow(L"", L"");
+
+			if (hWindow == nullptr)
+			{
+				return ERROR_INVALID_PARAMETER;
+			}
+			else
+			{
+				GetWindow(hWindow, 0);
+				Init(hWindow);
+				return ERROR_SUCCESS;
+			}
+		}
+		else
+		{
+			return ERROR_DEVICE_NOT_CONNECTED;
+		}
 	}
 	if (ControllerSlots[dwUserIndex].DeviceHandle == 0 && ControllerSlots[dwUserIndex].conType != XInput)
 	{
@@ -217,6 +239,14 @@ DWORD GenericInput::XInputSetState(DWORD dwUserIndex, INPUT_VIBRATION* pVibratio
 	}
 	return ERROR_SUCCESS;
 }
+
+BOOL CALLBACK GenericInput::EnumWindowsProc(_In_ HWND hwnd, _In_ LPARAM lParam)
+{
+	Init(hwnd);
+
+	return FALSE;
+}
+
 DWORD GenericInput::XInputGetDSoundAudioDeviceGuids(DWORD dwUserIndex, GUID* pDSoundRenderGuid, GUID* pDSoundCaptureGuid)//Ignore the directsound stuff, the guids are for modern sound devices...
 {
 	/*To support this I will need to add methods to get audio from controllers and micphone support*/
