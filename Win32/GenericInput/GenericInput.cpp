@@ -4,6 +4,7 @@
 #include "Bluetooth.h"
 #include "ControllerScanner.h"
 #include "DualSense.h"
+#include "GameInput.h"
 Bluetooth btManager;
 Window windowManager;
 Scanner controllerScanner;
@@ -216,8 +217,7 @@ DWORD GenericInput::XInputGetState(DWORD dwUserIndex, GENERIC_INPUT_STATE* pStat
 	{
 	case XInput:
 	{
-		
-		break;
+		return GameInput::GetState(ControllerSlots[dwUserIndex], pState);
 	}
 	case DS://DualSense
 	{
