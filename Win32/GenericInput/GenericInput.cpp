@@ -189,8 +189,6 @@ DWORD GenericInput::XInputGetState(DWORD dwUserIndex, GENERIC_INPUT_STATE* pStat
 			}
 			else
 			{
-				GetWindow(hWindow, 0);
-				Init(hWindow);
 				return ERROR_SUCCESS;
 			}
 		}

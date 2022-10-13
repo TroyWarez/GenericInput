@@ -18,11 +18,15 @@ DWORD GameInput::GetState(GenericInputController& controller, GENERIC_INPUT_STAT
 		{
 			return GetLastError();
 		}
+		else
+		{
+			GameInputPath.data()
+		}
 
 	}
 	else
 	{
-		
+
 	}
 
 }
