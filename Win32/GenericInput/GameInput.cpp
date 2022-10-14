@@ -1,32 +1,45 @@
 #include "pch.h"
 #include "GenericInput.h"
 #include "GameInput.h"
-std::vector<WCHAR> GameInputPath;
+#ifdef NTDDI_WIN10_19H1 
+IGameInput* iGameInput = nullptr;
+HMODULE hGameInput = nullptr;
+typedef HRESULT GameInputCreate(IGameInput** gameInput);
+GameInputCreate* GameCreate;
+#endif
 
 DWORD GameInput::GetState(GenericInputController& controller, GENERIC_INPUT_STATE* pState)
 {
-	if (GameInputPath.size() == NULL)
+#ifdef NTDDI_WIN10_19H1 
+	if (hGameInput == nullptr)
 	{
-		try {
-			GameInputPath.resize(MAX_PATH);
-		}
-		catch (std::bad_alloc)
+#ifdef UNICODE
+		std::vector<WCHAR> GameInputPath = { };
+		if (GetWindowsDirectoryW(GameInputPath.data(), MAX_PATH) != NULL)
 		{
-			return ERROR_PATH_NOT_FOUND;
+			lstrcatW(GameInputPath.data(), L"\\System32\\GameInput.dll");
+			hGameInput = LoadLibraryW(GameInputPath.data());
+			if (hGameInput)
+			{
+				GameCreate = (GameInputCreate*)GetProcAddress(hGameInput, "GameInputCreate");
+				GameCreate(&iGameInput);
+			}
 		}
-		if (GetSystemDirectoryW(GameInputPath.data(), GameInputPath.size()) == NULL)
+#else
+		std::vector<CHAR> GameInputPath = { };
+		if (GetWindowsDirectoryA(GameInputPath.data(), MAX_PATH) != NULL)
 		{
-			return GetLastError();
-		}
-		else
-		{
-			GameInputPath.data()
-		}
-
+			lstrcatA(GameInputPath.data(), L"\\System32\\GameInput.dll");
+			hGameInput = LoadLibraryA(GameInputPath.data());
+			if (hGameInput)
+			{
+				GameCreate = (GameInputCreate*)GetProcAddress(hGameInput, "GameInputCreate");
+				GameCreate(&iGameInput);
+			}
 	}
-	else
-	{
-
+#endif
+		
 	}
-
+#endif
+	return ERROR_SUCCESS;
 }

@@ -1,4 +1,8 @@
 #pragma once
+class IGameInputReading : public IUnknown
+{
+
+};
 class IGameInputDispatcher : public IUnknown
 {
 
@@ -24,7 +28,7 @@ class IGameInput : public IUnknown
 		GameInputKindRacingWheel = 0x00080000,
 		GameInputKindUiNavigation = 0x01000000,
 		GameInputKindAny = 0x0FFFFFFF
-	} GameInputKind
+	} GameInputKind;
 
 	HRESULT CreateAggregateDevice(
 		GameInputKind inputKind,
@@ -77,5 +81,5 @@ class IGameInput : public IUnknown
 };
 namespace GameInput
 {
-	DWORD GameInput::GetState(GenericInputController& controller, GENERIC_INPUT_STATE* pState);
+	DWORD GetState(GenericInputController& controller, GENERIC_INPUT_STATE* pState);
 }
