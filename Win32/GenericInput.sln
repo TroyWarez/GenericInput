@@ -12,6 +12,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Generic Input", "Lib\Generi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDL2H", "SDL2H\SDL2H.vcxproj", "{E0E22F34-426E-48F6-80CD-15CD4AFBF3EE}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Debugger", "Debugger\Debugger.vcxproj", "{3E094890-009C-4F19-94F4-2518E3C612D0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -44,6 +46,14 @@ Global
 		{E0E22F34-426E-48F6-80CD-15CD4AFBF3EE}.Release|x64.Build.0 = Release|x64
 		{E0E22F34-426E-48F6-80CD-15CD4AFBF3EE}.Release|x86.ActiveCfg = Release|Win32
 		{E0E22F34-426E-48F6-80CD-15CD4AFBF3EE}.Release|x86.Build.0 = Release|Win32
+		{3E094890-009C-4F19-94F4-2518E3C612D0}.Debug|x64.ActiveCfg = Debug|x64
+		{3E094890-009C-4F19-94F4-2518E3C612D0}.Debug|x64.Build.0 = Debug|x64
+		{3E094890-009C-4F19-94F4-2518E3C612D0}.Debug|x86.ActiveCfg = Debug|Win32
+		{3E094890-009C-4F19-94F4-2518E3C612D0}.Debug|x86.Build.0 = Debug|Win32
+		{3E094890-009C-4F19-94F4-2518E3C612D0}.Release|x64.ActiveCfg = Release|x64
+		{3E094890-009C-4F19-94F4-2518E3C612D0}.Release|x64.Build.0 = Release|x64
+		{3E094890-009C-4F19-94F4-2518E3C612D0}.Release|x86.ActiveCfg = Release|Win32
+		{3E094890-009C-4F19-94F4-2518E3C612D0}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
