@@ -13,6 +13,7 @@ class IGameInputDevice : public IUnknown
 };
 class IGameInput : public IUnknown
 {
+public:
 	typedef enum GameInputKind
 	{
 		GameInputKindUnknown = 0x00000000,
@@ -33,51 +34,51 @@ class IGameInput : public IUnknown
 	HRESULT CreateAggregateDevice(
 		GameInputKind inputKind,
 		IGameInputDevice** device
-	);
+	) { }
 	HRESULT CreateDispatcher(
 		IGameInputDispatcher** dispatcher
-	);
+	) { }
 	HRESULT EnableOemDeviceSupport(
 		uint16_t vendorId,
 		uint16_t productId,
 		uint8_t interfaceNumber,
 		uint8_t collectionNumber
-	);
+	) { }
 	HRESULT FindDeviceFromObject(
 		IUnknown* value,
 		IGameInputDevice** device
-	);
+	) { }
 	HRESULT FindDeviceFromPlatformHandle(
 		HANDLE value,
 		IGameInputDevice** device
-	);
+	) { }
 	HRESULT FindDeviceFromPlatformString(
 		LPCWSTR value,
 		IGameInputDevice** device
-	);
+	) { }
 	HRESULT GetCurrentReading(
 		GameInputKind inputKind,
 		IGameInputDevice* device,
 		IGameInputReading** reading
-	);
+	) { }
 	uint64_t GetCurrentTimestamp(
-	);
+	) { }
 	HRESULT GetDeviceFromId(
 		const APP_LOCAL_DEVICE_ID* value,
 		IGameInputDevice** device
-	);
+	) { }
 	HRESULT GetNextReading(
 		IGameInputReading* referenceReading,
 		GameInputKind inputKind,
 		IGameInputDevice* device,
 		IGameInputReading** reading
-	);
+	) { }
 	HRESULT GetPreviousReading(
 		IGameInputReading* referenceReading,
 		GameInputKind inputKind,
 		IGameInputDevice* device,
 		IGameInputReading** reading
-	);
+	) { }
 };
 namespace GameInput
 {
