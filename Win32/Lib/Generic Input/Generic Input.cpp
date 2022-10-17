@@ -52,7 +52,7 @@ DWORD GenericInputInit(HWND hWindowHandle, BOOL bExitProcess)
 			MessageBox(hWindowHandle, L"GenericInput.dll is corrupted. Try reinstalling the program to fix this problem.", L"System Error", (MB_OK | MB_ICONERROR));
 			ExitProcess(1);
 		}
-		pGetState = (GetState*)GetProcAddress(hGenericInput, "GetState");
+		pGetState = (GetState*)GetProcAddress(hGenericInput, "XInputGetState");
 		if (pGetState == nullptr)
 		{
 			MessageBox(hWindowHandle, L"GenericInput.dll is corrupted. Try reinstalling the program to fix this problem.", L"System Error", (MB_OK | MB_ICONERROR));
