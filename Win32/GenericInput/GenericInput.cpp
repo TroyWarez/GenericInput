@@ -221,6 +221,10 @@ DWORD GenericInput::XInputGetState(DWORD dwUserIndex, GENERIC_INPUT_STATE* pStat
 	{
 		return DualSense::GetState(ControllerSlots[dwUserIndex], (DualSense::GENERIC_INPUT_STATE*)pState);
 	}
+	case NT://Pro controller
+	{
+		//return DualSense::GetState(ControllerSlots[dwUserIndex], (DualSense::GENERIC_INPUT_STATE*)pState);
+	}
 	case SDL:
 	{
 		break;
