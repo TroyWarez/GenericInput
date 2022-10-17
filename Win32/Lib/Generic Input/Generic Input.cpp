@@ -75,22 +75,22 @@ DWORD GenericInputInit(HWND hWindowHandle, BOOL bExitProcess)
 		pInit = (Init*)GetProcAddress(hGenericInput, "Init");
 		if (pInit == nullptr)
 		{
-			return ERROR_GEN_FAILURE;
+			return ERROR_FILE_NOT_FOUND;
 		}
 		pProc = (Proc*)GetProcAddress(hGenericInput, "WndProc");
 		if (pProc == nullptr)
 		{
-			return ERROR_GEN_FAILURE;
+			return ERROR_FILE_NOT_FOUND;
 		}
 		pGetState = (GetState*)GetProcAddress(hGenericInput, "XInputGetState");
 		if (pGetState == nullptr)
 		{
-			return ERROR_GEN_FAILURE;
+			return ERROR_FILE_NOT_FOUND;
 		}
 		pGetType = (GetType*)GetProcAddress(hGenericInput, "GetType");
 		if (pGetType == nullptr)
 		{
-			return ERROR_GEN_FAILURE;
+			return ERROR_FILE_NOT_FOUND;
 		}
 	}
 #pragma warning( pop )
@@ -104,7 +104,7 @@ LRESULT GenericInputDeviceChange(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 	{
 		return pProc(hWnd, message, wParam, lParam);
 	}
-	return ERROR_GEN_FAILURE;
+	return ERROR_FILE_NOT_FOUND;
 }
 DWORD GenericInputGetState(DWORD dwUserIndex, GENERIC_INPUT_STATE* pState)
 {
@@ -112,7 +112,7 @@ DWORD GenericInputGetState(DWORD dwUserIndex, GENERIC_INPUT_STATE* pState)
 	{
 		return pGetState(dwUserIndex, pState);
 	}
-	return ERROR_GEN_FAILURE;
+	return ERROR_FILE_NOT_FOUND;
 }
 DWORD GenericInputGetLayout(DWORD dwUserIndex)
 {
@@ -120,5 +120,5 @@ DWORD GenericInputGetLayout(DWORD dwUserIndex)
 	{
 		return pGetType(dwUserIndex);
 	}
-	return ERROR_GEN_FAILURE;
+	return ERROR_FILE_NOT_FOUND;
 }
