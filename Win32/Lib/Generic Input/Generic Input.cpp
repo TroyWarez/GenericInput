@@ -82,7 +82,7 @@ DWORD GenericInputInit(HWND hWindowHandle, BOOL bExitProcess)
 		{
 			return ERROR_GEN_FAILURE;
 		}
-		pGetState = (GetState*)GetProcAddress(hGenericInput, "GetState");
+		pGetState = (GetState*)GetProcAddress(hGenericInput, "XInputGetState");
 		if (pGetState == nullptr)
 		{
 			return ERROR_GEN_FAILURE;
