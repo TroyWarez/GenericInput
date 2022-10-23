@@ -132,6 +132,11 @@ void InputManager::GamepadUpdate(DWORD dwUserIndex)
             // Change the gui button prompts
             break;
          }
+         case NT: // Nintendo Controller
+         {
+            // Change the gui button prompts
+            break;
+         }
          // Found in the game controller database at compile time. 
          case SDL: // Generic Controller
          {
