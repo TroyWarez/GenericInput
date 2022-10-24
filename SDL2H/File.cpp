@@ -154,7 +154,7 @@ bool File::CreateHeaderFromStringW(std::wstring Path, std::string& Raw_SDL_DB)
 		}
 	}
 #endif // WIN32
-	HeaderData.append(" \n#pragma once\n#include \"pch.h\"\nconst GAMEPAD_DATA gamepadDB[] = {\n");
+	HeaderData.append("\n#pragma once\n#include \"pch.h\"\nconst GAMEPAD_DATA gamepadDB[] = {\n");
 	size_t StartPos = 0;
 	size_t Pos = 0;
 	while (Pos < Raw_SDL_DB.size()) {
