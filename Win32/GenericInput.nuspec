@@ -9,10 +9,16 @@
     </metadata>
      
     <files>
-        <file src="lib\**\*.*"       target="native\lib"     />
-        <file src="include\**\*.*"   target="native\include" />
-        <file src="bin\**\*.*"            target="native\bin"     />
-        <file src="README.md"        target="native"      />
+        <file src="x64\Debug\dGenericInput.lib"       target="native\lib"     />
+        <file src="x64\Release\rGenericInput.lib"       target="native\lib"     />
+        <file src="Debug\dGenericInput.lib"       target="native\lib\x86"     />
+        <file src="Release\rGenericInput.lib"       target="native\lib\x86"     />
+        <file src="Lib\Generic Input\GenericInput.h"   target="native\include" />
+        <file src="x64\Debug\dGenericInput.dll"            target="native\bin"     />
+        <file src="x64\Release\rGenericInput.dll"            target="native\bin"     />
+        <file src="Debug\dGenericInput.dll"            target="native\bin\x86"     />
+        <file src="Release\rGenericInput.dll"            target="native\bin\x86"     />
+        <file src="..\README.md"        target="native"      />
         <file src="GenericInput.props"   target="native" />
     </files>
 </package>
