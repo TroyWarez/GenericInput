@@ -90,14 +90,13 @@ bool File::CreateHeaderFromStringW(std::wstring Path, std::string& Raw_SDL_DB)
 	HeaderData = " \t// ";
 	SYSTEMTIME sysTime = { };
 	FILETIME fileSysTime = { };
-	GetSystemTime(&sysTime);
-
+	GetLocalTime(&sysTime);
 	HeaderData.append(std::to_string(sysTime.wYear));
 	HeaderData.append("-");
 	HeaderData.append(std::to_string(sysTime.wMonth));
 	HeaderData.append("-");
 	HeaderData.append(std::to_string(sysTime.wDay));
-
+	HeaderData.append(" ");
 
 	HeaderData.append(std::to_string(sysTime.wHour));
 	HeaderData.append(":");
@@ -108,37 +107,37 @@ bool File::CreateHeaderFromStringW(std::wstring Path, std::string& Raw_SDL_DB)
 	{
 		case 0:
 		{
-			HeaderData.append("Sunday");
+			HeaderData.append(" Sunday");
 			break;
 		}
 		case 1:
 		{
-			HeaderData.append("Monday");
+			HeaderData.append(" Monday");
 			break;
 		}
 		case 2:
 		{
-			HeaderData.append("Tuesday");
+			HeaderData.append(" Tuesday");
 			break;
 		}
 		case 3:
 		{
-			HeaderData.append("Wednesday");
+			HeaderData.append(" Wednesday");
 			break;
 		}
 		case 4:
 		{
-			HeaderData.append("Thursday");
+			HeaderData.append(" Thursday");
 			break;
 		}
 		case 5:
 		{
-			HeaderData.append("Friday");
+			HeaderData.append(" Friday");
 			break;
 		}
 		case 6:
 		{
-			HeaderData.append("Saturday");
+			HeaderData.append(" Saturday");
 			break;
 		}
 		default:
