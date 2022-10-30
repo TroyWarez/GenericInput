@@ -1,6 +1,6 @@
 # GenericInput
 
-GenericInput is a Windows C/C++ controller library for developers.
+GenericInput is a input library that aims to make it eaiser to use controllers on Microsoft Windows.
 
 # Adding the header
 ```c++
