@@ -222,7 +222,6 @@
     <ClInclude Include="DirectInput.h" />
     <ClInclude Include="DualSense.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="GameInput.h" />
     <ClInclude Include="Registry.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Window.h" />
@@ -239,7 +238,6 @@
     <ClCompile Include="DirectInput.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="DualSense.cpp" />
-    <ClCompile Include="GameInput.cpp" />
     <ClCompile Include="Registry.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="GenericInput.cpp" />
@@ -256,7 +254,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Generic Input.def" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\Microsoft.Gaming.XboxGameBar.5.8.220627001\build\native\Microsoft.Gaming.XboxGameBar.targets" Condition="Exists('..\packages\Microsoft.Gaming.XboxGameBar.5.8.220627001\build\native\Microsoft.Gaming.XboxGameBar.targets')" />
+  </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Gaming.XboxGameBar.5.8.220627001\build\native\Microsoft.Gaming.XboxGameBar.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Gaming.XboxGameBar.5.8.220627001\build\native\Microsoft.Gaming.XboxGameBar.targets'))" />
+  </Target>
 </Project>

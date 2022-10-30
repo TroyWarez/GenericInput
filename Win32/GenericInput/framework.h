@@ -13,8 +13,6 @@
 #include <Bthdef.h>
 #include <setupapi.h>
 #include <Cfgmgr32.h>
-#include <windows.foundation.collections.h>
-#include <Windows.Gaming.Input.h>
 #include <vector>
 #include <string>
 #include <algorithm>
