@@ -5,8 +5,6 @@ GenericInput is a input library that aims to make it eaiser to use controllers o
 GameInput Redistributable
 # Initializing GenericInput
 Initialize GenericInput by passing a Window Handle and a boolean to tell GenericInput whether or not to close your application upon failure.
-
-# You can also use GenericInput without calling init:
 ```c++
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
