@@ -1,35 +1,10 @@
 # GenericInput
 
-GenericInput is a Windows C/C++ controller library for developers.
-
-# Adding the header
-```c++
-// header.h : include file for standard system include files,
-// or project specific include files
-//
-// Windows Header Files
-#include <windows.h>
-// GenericInput.h can be used as a drop in replacment for some of the methods found in XInput.h
-#include "GenericInput.h"
-```
-
-# Adding the .lib file
-```c++
-#ifdef _DEBUG
-#pragma comment(lib, "dGenericInput.lib")
-#else
-#pragma comment(lib, "rGenericInput.lib")
-#endif
-// header.h : include file for standard system include files,
-// or project specific include files
-//
-// Windows Header Files
-#include <windows.h>
-// GenericInput.h can be used as a drop in replacment for some of the methods found in XInput.h
-#include "GenericInput.h"
-```
+GenericInput is a input library that aims to make it eaiser to use controllers on Microsoft Windows.
+# Dependencies
+GameInput Redistributable
 # Initializing GenericInput
-Initialize GenericInput by passing a Window Handle and a boolean to tell GenericInput whether or not to close your application upon failure:
+Initialize GenericInput by passing a Window Handle and a boolean to tell GenericInput whether or not to close your application upon failure.
 ```c++
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
