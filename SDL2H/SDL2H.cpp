@@ -20,6 +20,11 @@ int WINAPI WinMain(
 	UNREFERENCED_PARAMETER(hInstance);
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(nShowCmd);
+
+	while (IsDebuggerPresent() == FALSE)
+	{
+		Sleep(500);
+	}
 	std::string SDL_DB;
 
 	std::string CommandLineA = (LPSTR)lpCmdLine;
@@ -40,7 +45,7 @@ int WINAPI WinMain(
 	if (vCommandLineArgurments.size() != 3)
 	{
 #ifdef _DEBUG
-		MessageBox(NULL, L"Invalid argurments \n", L"Invalid argurments! ", MB_OK | MB_ICONERROR);
+		MessageBox(NULL, L"Invalid arguments \n", L"Invalid arguments! ", MB_OK | MB_ICONERROR);
 #endif // _DEBUG
 		return 1;
 	}
