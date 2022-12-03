@@ -108,6 +108,5 @@
     <None Include="Generic Input.def">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="packages.config" />
   </ItemGroup>
 </Project>

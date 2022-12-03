@@ -21,10 +21,6 @@ int WINAPI WinMain(
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(nShowCmd);
 
-	while (IsDebuggerPresent() == FALSE)
-	{
-		Sleep(500);
-	}
 	std::string SDL_DB;
 
 	std::string CommandLineA = (LPSTR)lpCmdLine;
