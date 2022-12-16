@@ -11,6 +11,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Generic Input", "Lib\Generi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDL2H", "SDL2H\SDL2H.vcxproj", "{E0E22F34-426E-48F6-80CD-15CD4AFBF3EE}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Gamepad Tool", "Gamepad Tool\Gamepad Tool.vcxproj", "{ECECFF00-7D0F-45D3-B068-A1BD00357EA5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B13A9AE4-E1F8-48B4-83D2-2796F4090477} = {B13A9AE4-E1F8-48B4-83D2-2796F4090477}
+		{E0E22F34-426E-48F6-80CD-15CD4AFBF3EE} = {E0E22F34-426E-48F6-80CD-15CD4AFBF3EE}
+		{E1787663-6F50-48F8-B7FB-58D1D9DE2CC7} = {E1787663-6F50-48F8-B7FB-58D1D9DE2CC7}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -43,6 +50,14 @@ Global
 		{E0E22F34-426E-48F6-80CD-15CD4AFBF3EE}.Release|x64.Build.0 = Release|x64
 		{E0E22F34-426E-48F6-80CD-15CD4AFBF3EE}.Release|x86.ActiveCfg = Release|Win32
 		{E0E22F34-426E-48F6-80CD-15CD4AFBF3EE}.Release|x86.Build.0 = Release|Win32
+		{ECECFF00-7D0F-45D3-B068-A1BD00357EA5}.Debug|x64.ActiveCfg = Debug|x64
+		{ECECFF00-7D0F-45D3-B068-A1BD00357EA5}.Debug|x64.Build.0 = Debug|x64
+		{ECECFF00-7D0F-45D3-B068-A1BD00357EA5}.Debug|x86.ActiveCfg = Debug|Win32
+		{ECECFF00-7D0F-45D3-B068-A1BD00357EA5}.Debug|x86.Build.0 = Debug|Win32
+		{ECECFF00-7D0F-45D3-B068-A1BD00357EA5}.Release|x64.ActiveCfg = Release|x64
+		{ECECFF00-7D0F-45D3-B068-A1BD00357EA5}.Release|x64.Build.0 = Release|x64
+		{ECECFF00-7D0F-45D3-B068-A1BD00357EA5}.Release|x86.ActiveCfg = Release|Win32
+		{ECECFF00-7D0F-45D3-B068-A1BD00357EA5}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

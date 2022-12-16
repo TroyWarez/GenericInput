@@ -74,6 +74,6 @@ namespace GenericInput
     DWORD XInputGetDSoundAudioDeviceGuids(DWORD dwUserIndex, GUID* pDSoundRenderGuid, GUID* pDSoundCaptureGuid);
 
     DWORD XInputGetCapabilities(DWORD dwUserIndex, DWORD wFlags, GENERIC_CAPABILITIES* pCapabilities);
-
+    DWORD GetType(DWORD dwUserIndex);
 
 };

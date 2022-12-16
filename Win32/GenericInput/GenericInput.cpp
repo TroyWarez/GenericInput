@@ -272,3 +272,7 @@ DWORD GenericInput::XInputGetCapabilities(DWORD dwUserIndex, DWORD wFlags, GENER
 
 	return ERROR_DEVICE_NOT_CONNECTED;
 }
+DWORD GenericInput::GetType(DWORD dwUserIndex)
+{
+	return ControllerSlots[dwUserIndex].conType;
+}

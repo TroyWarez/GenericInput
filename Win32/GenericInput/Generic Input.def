@@ -18,3 +18,4 @@ EXPORTS
    joySetThreshold  @30
    Init   @31
    WndProc   @32
+   GetType @33
