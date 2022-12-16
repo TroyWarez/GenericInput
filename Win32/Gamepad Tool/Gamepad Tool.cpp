@@ -111,7 +111,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    {
 	   return FALSE;
    }
-
+   GENERIC_INPUT_STATE State = { 0 };
+   GenericInputGetState(0, &State);
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
 

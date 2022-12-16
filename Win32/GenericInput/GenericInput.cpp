@@ -250,7 +250,7 @@ BOOL CALLBACK GenericInput::EnumWindowsProc(_In_ HWND hwnd, _In_ LPARAM lParam)
 
 DWORD GenericInput::XInputGetDSoundAudioDeviceGuids(DWORD dwUserIndex, GUID* pDSoundRenderGuid, GUID* pDSoundCaptureGuid)//Ignore the directsound stuff, the guids are for modern sound devices...
 {
-	/*To support this I will need to add methods to get audio from controllers and micphone support*/
+	/*To support this I will need to add methods to get audio from controllers and microphone support*/
 	return ERROR_DEVICE_NOT_CONNECTED;
 }
 DWORD GenericInput::XInputGetCapabilities(DWORD dwUserIndex, DWORD wFlags, GENERIC_CAPABILITIES* pCapabilities)
