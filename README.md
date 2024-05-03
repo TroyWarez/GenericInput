@@ -1,5 +1,5 @@
 # GenericInput
-# Due to professional obligations, GenericInputs development was shelved. GenericInput is now under active development again with a planned 1.0 release of late 2024. 
+# GenericInput development has been restarted.
 GenericInput is a HID controller input library written in C++ that aims clone proprietary controller libraries. macOS is not supported 
 # Dependencies
 GameInput Redistributable
