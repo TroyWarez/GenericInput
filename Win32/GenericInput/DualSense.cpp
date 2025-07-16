@@ -201,12 +201,12 @@ DWORD DualSense::GetState(GenericInputController& controller, GENERIC_INPUT_STAT
 			return GetLastError();
 		}
 
-		if (controller.InputBuffer[0] == 0x31)
+		if (controller.InputBuffer[0] == 0x1)
 		{
-			pState->Gamepad.sThumbLX = XByteToShort[controller.InputBuffer[2]];
-			pState->Gamepad.sThumbLY = YByteToShort[controller.InputBuffer[3]];
-			pState->Gamepad.sThumbRX = XByteToShort[controller.InputBuffer[4]];
-			pState->Gamepad.sThumbRY = YByteToShort[controller.InputBuffer[5]];
+			pState->Gamepad.sThumbLX = XByteToShort[controller.InputBuffer[1]];
+			pState->Gamepad.sThumbLY = YByteToShort[controller.InputBuffer[2]];
+			pState->Gamepad.sThumbRX = XByteToShort[controller.InputBuffer[3]];
+			pState->Gamepad.sThumbRY = YByteToShort[controller.InputBuffer[4]];
 
 			pState->Gamepad.bLeftTrigger = controller.InputBuffer[6];
 			pState->Gamepad.bRightTrigger = controller.InputBuffer[7];

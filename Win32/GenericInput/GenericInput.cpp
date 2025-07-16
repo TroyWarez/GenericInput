@@ -9,8 +9,15 @@ Window windowManager;
 Scanner controllerScanner;
 static GenericInputController ControllerSlots[MAX_CONTROLLERS] = { 0 };
 static DWORD LastError;
+static bool RegisterWindowFlag = false;
 LRESULT GenericInput::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	if (!RegisterWindowFlag)
+	{
+		windowManager.RegisterWindow(hWnd);
+		controllerScanner.ScanForControllers(hWnd, ControllerSlots);
+		RegisterWindowFlag = true;
+	}
 	switch (message) {
 	case WM_DEVICECHANGE: {
 		switch (wParam)
@@ -163,18 +170,10 @@ DWORD GenericInput::XInputGetState(DWORD dwUserIndex, GENERIC_INPUT_STATE* pStat
 	}
 	if (ControllerSlots[dwUserIndex].Path == L"" && ControllerSlots[dwUserIndex].BTPath == L"")
 	{
-		HANDLE hModule = GetModuleHandle(NULL);
-		if (hModule != nullptr)
+		if (!RegisterWindowFlag)
 		{
-			HWND hWindow = nullptr;
-
-			EnumWindows(EnumWindowsProc, (LPARAM)&hWindow);
-			hWindow = FindWindow(L"", L"");
-
-			if (hWindow == nullptr)
-			{
-				return ERROR_INVALID_PARAMETER;
-			}
+			DWORD currentPid = GetProcessId(GetCurrentProcess());
+			EnumWindows(EnumWindowsProc, currentPid);
 		}
 		else
 		{
@@ -229,7 +228,16 @@ DWORD GenericInput::XInputSetState(DWORD dwUserIndex, INPUT_VIBRATION* pVibratio
 
 BOOL CALLBACK GenericInput::EnumWindowsProc(_In_ HWND hwnd, _In_ LPARAM lParam)
 {
-	return FALSE;
+	DWORD lpdwProcessId = 0;
+	GetWindowThreadProcessId(hwnd, &lpdwProcessId);
+	if (lpdwProcessId == lParam)
+	{
+		controllerScanner.ScanForControllers(hwnd, ControllerSlots);
+		windowManager.RegisterWindow(hwnd);
+		RegisterWindowFlag = true;
+		return FALSE;
+	}
+	return TRUE;
 }
 
 DWORD GenericInput::XInputGetDSoundAudioDeviceGuids(DWORD dwUserIndex, GUID* pDSoundRenderGuid, GUID* pDSoundCaptureGuid)//Ignore the directsound stuff, the guids are for modern sound devices...

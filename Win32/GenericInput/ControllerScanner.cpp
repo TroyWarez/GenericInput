@@ -116,7 +116,6 @@ void Scanner::ScanForControllers(HWND hWnd, GenericInputController ControllerSlo
 			}
 		}
 	}
-	return;
 }
 BOOL Scanner::isController(std::wstring& DevicePath, GenericInputController& ControllerData)
 {

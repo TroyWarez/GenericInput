@@ -2,7 +2,8 @@
 //
 
 #include "pch.h"
-
+#include <dbt.h>
+#include <setupapi.h>
 #pragma warning( push )
 #pragma warning( disable : 4191)
 typedef struct _GENERIC_INPUT_GAMEPAD {
@@ -81,6 +82,26 @@ DWORD GenericInputInit(HWND hWindowHandle, BOOL bExitProcess)
 		}
 	}
 #pragma warning( pop )
+
+	DEV_BROADCAST_DEVICEINTERFACE_W db = { 0 };
+	db.dbcc_size = sizeof(db),
+		db.dbcc_devicetype = DBT_DEVTYP_DEVICEINTERFACE,
+		db.dbcc_classguid = GUID_DEVINTERFACE_XINPUT,
+		RegisterDeviceNotificationW(hWindowHandle, &db, DEVICE_NOTIFY_WINDOW_HANDLE);
+
+	DEV_BROADCAST_DEVICEINTERFACE_W db2 = { 0 };
+	db2.dbcc_size = sizeof(db2),
+
+		db2.dbcc_devicetype = DBT_DEVTYP_DEVICEINTERFACE,
+		db2.dbcc_classguid = GUID_DEVINTERFACE_BLUETOOTH,
+		RegisterDeviceNotificationW(hWindowHandle, &db2, DEVICE_NOTIFY_WINDOW_HANDLE);
+
+	DEV_BROADCAST_DEVICEINTERFACE_W db3 = { 0 };
+	db3.dbcc_size = sizeof(db3),
+		db3.dbcc_devicetype = DBT_DEVTYP_DEVICEINTERFACE,
+		db3.dbcc_classguid = GUID_DEVINTERFACE_HID,
+		RegisterDeviceNotificationW(hWindowHandle, &db3, DEVICE_NOTIFY_WINDOW_HANDLE);
+
 	return ERROR_SUCCESS;
 }
 LRESULT GenericInputDeviceChange(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

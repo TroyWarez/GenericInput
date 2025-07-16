@@ -11,6 +11,13 @@
 #pragma warning( push )
 #pragma warning( disable : 5039)
 #include <Windows.h>
+#include <initguid.h>
+DEFINE_GUID(GUID_DEVINTERFACE_XINPUT, 0xec87f1e3, 0xc13b, 0x4100, 0xb5, 0xf7, 0x8b, 0x84, 0xd5, 0x42, 0x60, 0xcb);
+#define GUID_CLASS_XINPUT GUID_DEVINTERFACE_XINPUT
+//{e0cbf06c-cd8b-4647-bb8a-263b43f0f974}
+DEFINE_GUID(GUID_DEVINTERFACE_BLUETOOTH, 0xE0CBF06C, 0xCD8B, 0x4647, 0xBB, 0x8A, 0x26, 0x3B, 0x43, 0xF0, 0xF9, 0x74);
+#define GUID_CLASS_BLUETOOTH GUID_DEVINTERFACE_BLUETOOTH
+#include <Hidclass.h>
 #pragma warning( pop )
 
 #endif //PCH_H

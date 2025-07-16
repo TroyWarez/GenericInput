@@ -60,7 +60,6 @@ typedef struct _INPUT_VIBRATION
 
 namespace GenericInput
 {
-	void Init(HWND hWnd);
 	LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     DWORD XInputGetState(DWORD dwUserIndex, GENERIC_INPUT_STATE* pState);
     DWORD XInputSetState(DWORD dwUserIndex, INPUT_VIBRATION* pVibration);
