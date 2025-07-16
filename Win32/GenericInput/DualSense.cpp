@@ -190,18 +190,22 @@ DWORD DualSense::GetState(GenericInputController& controller, GENERIC_INPUT_STAT
 		{
 			try {
 				controller.InputBuffer.resize(controller.InputBufferSize);
+				controller.InputBuffer[0] = 0x31;
 			}
 			catch (std::bad_alloc)
 			{
 				return ERROR_GEN_FAILURE;
 			}
 		}
-		if (ReadFile(controller.DeviceHandle, controller.InputBuffer.data(), (DWORD)controller.InputBuffer.size(), NULL, NULL) == FALSE)
+// 		if (ReadFile(controller.DeviceHandle, controller.InputBuffer.data(), (DWORD)controller.InputBuffer.size(), NULL, NULL) == FALSE)
+// 		{
+// 			return GetLastError();
+// 		}
+		if (HidD_GetInputReport(controller.DeviceHandle, controller.InputBuffer.data(), (DWORD)controller.InputBufferSize))
 		{
-			return GetLastError();
-		}
 
-		if (controller.InputBuffer[0] == 0x1)
+
+		if (controller.InputBuffer[0] == 0x31)
 		{
 			pState->Gamepad.sThumbLX = XByteToShort[controller.InputBuffer[1]];
 			pState->Gamepad.sThumbLY = YByteToShort[controller.InputBuffer[2]];
@@ -518,6 +522,7 @@ DWORD DualSense::GetState(GenericInputController& controller, GENERIC_INPUT_STAT
 
 			break;
 		}
+				}
 		break;
 	}
 	case USB:
