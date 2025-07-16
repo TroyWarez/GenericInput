@@ -1,6 +1,5 @@
 #pragma once
 #include "GenericInputController.h"
-#include "XInput.h"
 #define WM_CONTROLLER_CONNECTED 0x8007
 #define WM_CONTROLLER_DISCONNECTED 0x8008
 

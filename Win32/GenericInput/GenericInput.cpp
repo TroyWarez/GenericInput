@@ -9,17 +9,6 @@ Window windowManager;
 Scanner controllerScanner;
 static GenericInputController ControllerSlots[MAX_CONTROLLERS] = { 0 };
 static DWORD LastError;
-void GenericInput::Init(HWND hWnd)
-{
-	if (IsWindow(hWnd) == TRUE)
-	{
-		if (windowManager.RegisterWindow(hWnd) == FALSE)
-		{
-			OutputDebugString(L"ERROR: Failed to register window for device notifications.");
-		}
-	}
-	controllerScanner.ScanForControllers(hWnd, ControllerSlots);
-}
 LRESULT GenericInput::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message) {
@@ -186,10 +175,6 @@ DWORD GenericInput::XInputGetState(DWORD dwUserIndex, GENERIC_INPUT_STATE* pStat
 			{
 				return ERROR_INVALID_PARAMETER;
 			}
-			else
-			{
-				return ERROR_SUCCESS;
-			}
 		}
 		else
 		{
@@ -223,6 +208,7 @@ DWORD GenericInput::XInputGetState(DWORD dwUserIndex, GENERIC_INPUT_STATE* pStat
 	case NT://Pro controller
 	{
 		//return DualSense::GetState(ControllerSlots[dwUserIndex], (DualSense::GENERIC_INPUT_STATE*)pState);
+		break;
 	}
 	case SDL:
 	{
@@ -243,8 +229,6 @@ DWORD GenericInput::XInputSetState(DWORD dwUserIndex, INPUT_VIBRATION* pVibratio
 
 BOOL CALLBACK GenericInput::EnumWindowsProc(_In_ HWND hwnd, _In_ LPARAM lParam)
 {
-	Init(hwnd);
-
 	return FALSE;
 }
 

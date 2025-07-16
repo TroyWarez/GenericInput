@@ -6,7 +6,7 @@ HRESULT DirectInput::DirectInput8Create(
     DWORD dwVersion,
     REFIID riidltf,
     LPVOID* ppvOut,
-    LPUNKNOWN punkOuter
+    IUnknown* punkOuter
 )
 {
     return DI_OK;

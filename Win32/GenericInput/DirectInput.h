@@ -7,7 +7,7 @@ namespace DirectInput
         DWORD dwVersion,
         REFIID riidltf,
         LPVOID* ppvOut,
-        LPUNKNOWN punkOuter
+        IUnknown* punkOuter
     );
     HRESULT GetdfDIJoystick();//Add func prototypes
     HRESULT joyConfigChanged();

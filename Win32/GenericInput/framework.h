@@ -16,8 +16,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
-#include <windows.foundation.collections.h>
-#include <Windows.Gaming.Input.h>
+#include <unknwn.h>
 #define CONTROLLER_BUTTON_A 0x1000
 #define CONTROLLER_BUTTON_B 0x2000
 #define CONTROLLER_BUTTON_X 0x4000

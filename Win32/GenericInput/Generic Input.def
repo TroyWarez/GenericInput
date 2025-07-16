@@ -16,6 +16,5 @@ EXPORTS
    joyReleaseCapture  @28
    joySetCapture  @29
    joySetThreshold  @30
-   Init   @31
-   WndProc   @32
-   GetType @33
+   WndProc   @31
+   GetType @32
