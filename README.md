@@ -1,6 +1,7 @@
 # GenericInput
-
-GenericInput is a input library that aims to make it eaiser to use controllers on Microsoft Windows.
+# GenericInput development has been restarted.
+GenericInput is a HID controller input library written in C++ that aims to clone proprietary controller libraries. 
+### macOS is not supported. 
 # Dependencies
 GameInput Redistributable
 # Initializing GenericInput
