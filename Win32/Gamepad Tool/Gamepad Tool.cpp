@@ -60,7 +60,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         else
         {
 			GENERIC_INPUT_STATE State = { 0 };
-			DWORD er = GenericInputGetState(1, &State);
+			DWORD er = GenericInputGetState(0, &State);
+            int a = 2;
         }
     }
 

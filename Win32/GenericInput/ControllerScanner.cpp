@@ -72,6 +72,13 @@ void Scanner::ScanForControllers(HWND hWnd, GenericInputController ControllerSlo
 				}
 				controller.conType = DS;
 			}
+			if (controller.Atributes.VendorID == 0x054c && controller.Atributes.ProductID == 0x05c4 ||
+				controller.Atributes.VendorID == 0x054c && controller.Atributes.ProductID == 0x09cc ||
+				controller.Atributes.VendorID == 0x054c && controller.Atributes.ProductID == 0x0BA0 ||
+				controller.Atributes.VendorID == 0x054c && controller.Atributes.ProductID == 0x0BA1 ) {
+
+				controller.conType = DS4;
+			}
 			for (size_t j = 0; j < xinputHIDArtibs.size(); j++)
 			{
 				if (memcmp(&controller.Atributes, &xinputHIDArtibs[j], sizeof(HIDD_ATTRIBUTES)) == 0)

@@ -5,8 +5,10 @@ enum controllerType
 {
 	XInput = 1,
 	DS = 2,
-	NT = 3,
-	SDL = 4
+	DS4 = 3,
+	DS3 = 4,
+	NT = 5,
+	SDL = 6
 };
 struct GenericInputController
 {

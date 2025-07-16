@@ -221,6 +221,7 @@
     <ClInclude Include="Devices.h" />
     <ClInclude Include="DirectInput.h" />
     <ClInclude Include="DualSense.h" />
+    <ClInclude Include="DualShock4.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Registry.h" />
     <ClInclude Include="resource.h" />
@@ -238,6 +239,7 @@
     <ClCompile Include="DirectInput.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="DualSense.cpp" />
+    <ClCompile Include="DualShock4.cpp" />
     <ClCompile Include="Registry.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="GenericInput.cpp" />
