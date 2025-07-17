@@ -505,6 +505,10 @@ DWORD DualShock4::GetState(GenericInputController& controller, GENERIC_INPUT_STA
 			}
 			}
 
+
+			pState->Gamepad.bLeftTrigger = controller.InputBuffer[8];
+			pState->Gamepad.bRightTrigger = controller.InputBuffer[9];
+
 			switch (controller.InputBuffer[6] & 0xf0)
 			{
 			case 0x10:
@@ -602,49 +606,123 @@ DWORD DualShock4::GetState(GenericInputController& controller, GENERIC_INPUT_STA
 				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSHOULDER | CONTROLLER_BUTTON_LEFTSHOULDER;
 				break;
 			}
+			case 0x4:
+			{
+				if (!pState->Gamepad.bLeftTrigger)
+				{
+					pState->Gamepad.bLeftTrigger = 0xff;
+				}
+				break;
+			}
 			case 0x5:
 			{
 				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_LEFTSHOULDER;
+				if (!pState->Gamepad.bLeftTrigger)
+				{
+					pState->Gamepad.bLeftTrigger = 0xff;
+				}
 				break;
 			}
 			case 0x6:
 			{
 				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSHOULDER;
+				if (!pState->Gamepad.bLeftTrigger)
+				{
+					pState->Gamepad.bLeftTrigger = 0xff;
+				}
 				break;
 			}
 			case 0x7:
 			{
 				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSHOULDER | CONTROLLER_BUTTON_LEFTSHOULDER;
+				if (!pState->Gamepad.bLeftTrigger)
+				{
+					pState->Gamepad.bLeftTrigger = 0xff;
+				}
+				break;
+			}
+			case 0x8:
+			{
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_LEFTSHOULDER;
+				if (!pState->Gamepad.bLeftTrigger)
+				{
+					pState->Gamepad.bLeftTrigger = 0xff;
+				}
 				break;
 			}
 			case 0x9:
 			{
 				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_LEFTSHOULDER;
+				if (!pState->Gamepad.bRightTrigger)
+				{
+					pState->Gamepad.bRightTrigger = 0xff;
+				}
 				break;
 			}
 			case 0xA:
 			{
 				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSHOULDER;
+				if (!pState->Gamepad.bRightTrigger)
+				{
+					pState->Gamepad.bRightTrigger = 0xff;
+				}
 				break;
 			}
 			case 0xB:
 			{
 				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSHOULDER | CONTROLLER_BUTTON_LEFTSHOULDER;
+				if (!pState->Gamepad.bRightTrigger)
+				{
+					pState->Gamepad.bRightTrigger = 0xff;
+				}
+				break;
+			}
+			case 0xC:
+			{
+				if (!pState->Gamepad.bRightTrigger)
+				{
+					pState->Gamepad.bRightTrigger = 0xff;
+				}
+				pState->Gamepad.bLeftTrigger = 0xff;
 				break;
 			}
 			case 0xD:
 			{
 				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_LEFTSHOULDER;
+				if (!pState->Gamepad.bRightTrigger)
+				{
+					pState->Gamepad.bRightTrigger = 0xff;
+				}
+				if (!pState->Gamepad.bLeftTrigger)
+				{
+					pState->Gamepad.bLeftTrigger = 0xff;
+				}
 				break;
 			}
 			case 0xE:
 			{
 				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSHOULDER;
+				if (!pState->Gamepad.bRightTrigger)
+				{
+					pState->Gamepad.bRightTrigger = 0xff;
+				}
+				if (!pState->Gamepad.bLeftTrigger)
+				{
+					pState->Gamepad.bLeftTrigger = 0xff;
+				}
 				break;
 			}
 			case 0xF:
 			{
 				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_RIGHTSHOULDER | CONTROLLER_BUTTON_LEFTSHOULDER;
+				if (!pState->Gamepad.bRightTrigger)
+				{
+					pState->Gamepad.bRightTrigger = 0xff;
+				}
+				if (!pState->Gamepad.bLeftTrigger)
+				{
+					pState->Gamepad.bLeftTrigger = 0xff;
+				}
 				break;
 			}
 			break;
@@ -668,9 +746,6 @@ DWORD DualShock4::GetState(GenericInputController& controller, GENERIC_INPUT_STA
 				break;
 			}
 			}
-
-			pState->Gamepad.bLeftTrigger = controller.InputBuffer[8];
-			pState->Gamepad.bRightTrigger = controller.InputBuffer[9];
 
 			break;
 		}
