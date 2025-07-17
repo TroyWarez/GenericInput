@@ -363,7 +363,6 @@ DWORD DualShock4::GetState(GenericInputController& controller, GENERIC_INPUT_STA
 		{
 			try {
 				controller.InputBuffer.resize(controller.InputBufferSize);
-				controller.InputBuffer[0] = 0x01;
 			}
 			catch (std::bad_alloc)
 			{
@@ -651,45 +650,28 @@ DWORD DualShock4::GetState(GenericInputController& controller, GENERIC_INPUT_STA
 			break;
 			}
 
+			switch (controller.InputBuffer[7] & 0x0f)
+			{
+			case 0x1:// The home button was pressed
+			{
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_GUIDE;
+				break;
+			}
+			case 0x2:// The touch pad button was pressed
+			{
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_START;
+				break;
+			}
+			case 0x3:// The touch pad and home button were pressed
+			{
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_GUIDE | CONTROLLER_BUTTON_START;
+				break;
+			}
+			}
 
 			pState->Gamepad.bLeftTrigger = controller.InputBuffer[8];
 			pState->Gamepad.bRightTrigger = controller.InputBuffer[9];
 
-			switch (controller.InputBuffer[10] & 0x0f)//Mic button and touch pad button needed to be dealt with differently
-			{
-			case 0x1:
-			{
-				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_GUIDE;
-				break;
-			}
-			case 0x2:
-			{
-				break;
-			}
-			case 0x3:
-			{
-				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_GUIDE;
-				break;
-			}
-			case 0x4:
-			{
-				break;
-			}
-			case 0x5:
-			{
-				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_GUIDE;
-				break;
-			}
-			case 0x6:
-			{
-				break;
-			}
-			case 0x7:
-			{
-				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_GUIDE;
-				break;
-			}
-			}
 			break;
 		}
 
