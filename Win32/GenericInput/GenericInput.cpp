@@ -5,12 +5,27 @@
 #include "ControllerScanner.h"
 #include "DualSense.h"
 #include "DualShock4.h"
+#include "ProController.h"
 Bluetooth btManager;
 Window windowManager;
 Scanner controllerScanner;
 static GenericInputController ControllerSlots[MAX_CONTROLLERS] = { 0 };
 static DWORD LastError;
 static bool RegisterWindowFlag = false;
+static BOOL CALLBACK GenericInput::EnumWindowsProc(_In_ HWND hwnd, _In_ LPARAM lParam)
+{
+	DWORD lpdwProcessId = 0;
+	GetWindowThreadProcessId(hwnd, &lpdwProcessId);
+	if (lpdwProcessId == lParam)
+	{
+		controllerScanner.ScanForControllers(hwnd, ControllerSlots);
+		windowManager.RegisterWindow(hwnd);
+		RegisterWindowFlag = true;
+		return FALSE;
+	}
+	return TRUE;
+}
+
 LRESULT GenericInput::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	if (!RegisterWindowFlag)
@@ -211,8 +226,7 @@ DWORD GenericInput::XInputGetState(DWORD dwUserIndex, GENERIC_INPUT_STATE* pStat
 	}
 	case NT://Pro controller
 	{
-		//return DualSense::GetState(ControllerSlots[dwUserIndex], (DualSense::GENERIC_INPUT_STATE*)pState);
-		break;
+		return ProController::GetState(ControllerSlots[dwUserIndex], (ProController::GENERIC_INPUT_STATE*)pState);
 	}
 	case SDL:
 	{
@@ -230,21 +244,6 @@ DWORD GenericInput::XInputSetState(DWORD dwUserIndex, INPUT_VIBRATION* pVibratio
 	}
 	return ERROR_SUCCESS;
 }
-
-BOOL CALLBACK GenericInput::EnumWindowsProc(_In_ HWND hwnd, _In_ LPARAM lParam)
-{
-	DWORD lpdwProcessId = 0;
-	GetWindowThreadProcessId(hwnd, &lpdwProcessId);
-	if (lpdwProcessId == lParam)
-	{
-		controllerScanner.ScanForControllers(hwnd, ControllerSlots);
-		windowManager.RegisterWindow(hwnd);
-		RegisterWindowFlag = true;
-		return FALSE;
-	}
-	return TRUE;
-}
-
 DWORD GenericInput::XInputGetDSoundAudioDeviceGuids(DWORD dwUserIndex, GUID* pDSoundRenderGuid, GUID* pDSoundCaptureGuid)//Ignore the directsound stuff, the guids are for modern sound devices...
 {
 	/*To support this I will need to add methods to get audio from controllers and microphone support*/

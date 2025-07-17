@@ -53,7 +53,7 @@ void Scanner::ScanForControllers(HWND hWnd, GenericInputController ControllerSlo
 					controller.ullbtDeviceInfo = 0;
 					if (Registry::GetBluetoothAddress(controller) == FALSE)
 					{
-						OutputDebugString(L"Failed to get bluetooth address.");
+						OutputDebugString(L"Failed to get the bluetooth address.");
 						continue;
 					}
 					else if (btManager.IsBluetoothDeviceConnected(controller.ullbtDeviceInfo) == FALSE)
@@ -88,6 +88,12 @@ void Scanner::ScanForControllers(HWND hWnd, GenericInputController ControllerSlo
 				}
 				controller.conType = DS4;
 			}
+
+			if (controller.Atributes.VendorID == 0x057e && controller.Atributes.ProductID == 0x2009 ||
+				controller.Atributes.VendorID == 0x057e && controller.Atributes.ProductID == 0x2069) {
+				controller.conType = NT;
+			}
+
 			for (size_t j = 0; j < xinputHIDArtibs.size(); j++)
 			{
 				if (memcmp(&controller.Atributes, &xinputHIDArtibs[j], sizeof(HIDD_ATTRIBUTES)) == 0)
