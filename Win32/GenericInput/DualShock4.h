@@ -22,7 +22,10 @@ namespace DualShock4
 	};
 
 	DWORD GetState(GenericInputController& controller, GENERIC_INPUT_STATE* pState);
-
+	BOOL IsDualshock4Connected(std::wstring& DevicePath);
+	const USHORT DualShock4DongleVID = 0x054c;
+	const USHORT DualShock4DonglePID = 0x0BA0;
+	const USHORT DualShock4DongleDFUPID = 0x0BA1;
 	static DWORD SetState(GenericInputController& controller, LPVOID* pData, DWORD dSize);
 
 	static std::vector <BYTE> OutputBuffer;

@@ -5,6 +5,7 @@
 #include "Bluetooth.h"
 #include "Registry.h"
 #include "DualSense.h"
+#include "DualShock4.h"
 
 #define WM_CONTROLLER_CONNECTED 0x8007
 #define WM_CONTROLLER_DISCONNECTED 0x8008
@@ -77,6 +78,14 @@ void Scanner::ScanForControllers(HWND hWnd, GenericInputController ControllerSlo
 				controller.Atributes.VendorID == 0x054c && controller.Atributes.ProductID == 0x0BA0 ||
 				controller.Atributes.VendorID == 0x054c && controller.Atributes.ProductID == 0x0BA1 ) {
 
+				if (controller.BusType == L"USB" && controller.Atributes.VendorID == 0x054c && controller.Atributes.ProductID == 0x0BA0 ||
+					controller.BusType == L"USB" && controller.Atributes.VendorID == 0x054c && controller.Atributes.ProductID == 0x0BA1)
+				{
+					if (DualShock4::IsDualshock4Connected(controller.Path) == FALSE)
+					{
+						continue;
+					}
+				}
 				controller.conType = DS4;
 			}
 			for (size_t j = 0; j < xinputHIDArtibs.size(); j++)

@@ -12,37 +12,36 @@ BOOL DualSense::GetWiredMAC(std::wstring& DevicePath, BTH_ADDR& ullbtDeviceInfo)
 	{
 		return FALSE;
 	}
+	BOOL bResult = FALSE;
 	HIDD_ATTRIBUTES DeviceAttrib = { 0 };
-	if (HidD_GetAttributes(DeviceH, &DeviceAttrib) == FALSE || (DeviceAttrib.VendorID != DualSenseVID  && DeviceAttrib.ProductID != DualSensePID))
+	if (HidD_GetAttributes(DeviceH, &DeviceAttrib))
 	{
-		return FALSE;
-	}
-	PHIDP_PREPARSED_DATA PreparsedData = nullptr;
-	if (HidD_GetPreparsedData(DeviceH, &PreparsedData) == FALSE)
-	{
-		return FALSE;
-	}
-	HIDP_CAPS deviceCaps = { 0 };
+		PHIDP_PREPARSED_DATA PreparsedData = nullptr;
+		if (HidD_GetPreparsedData(DeviceH, &PreparsedData))
+		{
+			HIDP_CAPS deviceCaps = { 0 };
 
-	if (HidP_GetCaps(PreparsedData, &deviceCaps) == HIDP_STATUS_SUCCESS && deviceCaps.InputReportByteLength != 64) {
-		return FALSE;
+			if (HidP_GetCaps(PreparsedData, &deviceCaps) == HIDP_STATUS_SUCCESS && deviceCaps.InputReportByteLength == Bluetooth) {
+				if (PreparsedData)
+				{
+					HidD_FreePreparsedData(PreparsedData);
+				}
+				BYTE ControllerMAC[20] = { 0 };
+				ControllerMAC[0] = 0x09;
+				if (HidD_GetFeature(DeviceH, ControllerMAC, sizeof(ControllerMAC)))
+				{
+					memcpy(&ullbtDeviceInfo, &ControllerMAC[1], 6);
+					return FALSE;
+				}
+			}
+		}
 	}
-	if (PreparsedData)
-	{
-		HidD_FreePreparsedData(PreparsedData);
-	}
-	BYTE ControllerMAC[20] = { 0 };
-	ControllerMAC[0] = 0x09;
-	if (HidD_GetFeature(DeviceH, ControllerMAC, 20) == FALSE)
-	{
-		return FALSE;
-	}
+
 	if (DeviceH)
 	{
 		CloseHandle(DeviceH);
 	}
-	memcpy(&ullbtDeviceInfo, &ControllerMAC[1], 6);
-	return TRUE;
+	return bResult;
 }
 DWORD DualSense::GetState(GenericInputController& controller, GENERIC_INPUT_STATE* pState)
 {

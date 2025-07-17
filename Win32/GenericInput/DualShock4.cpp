@@ -1,6 +1,49 @@
 #include "pch.h"
 #include "DualShock4.h"
+BOOL DualShock4::IsDualshock4Connected(std::wstring& DevicePath)
+{
+	HANDLE DeviceH = CreateFile(DevicePath.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING, NULL, NULL);
+	if (DeviceH == INVALID_HANDLE_VALUE)
+	{
+		return FALSE;
+	}
+	BOOL bResult = FALSE;
+	HIDD_ATTRIBUTES DeviceAttrib = { 0 };
+	if (HidD_GetAttributes(DeviceH, &DeviceAttrib))
+	{
+		if (DeviceAttrib.VendorID == DualShock4DongleVID && DeviceAttrib.ProductID == DualShock4DonglePID || (DeviceAttrib.VendorID == DualShock4DongleVID && DeviceAttrib.ProductID == DualShock4DongleDFUPID))
+		{
+			PHIDP_PREPARSED_DATA PreparsedData = nullptr;
+			if (HidD_GetPreparsedData(DeviceH, &PreparsedData))
+			{
+				HIDP_CAPS deviceCaps = { 0 };
 
+				if (HidP_GetCaps(PreparsedData, &deviceCaps) == HIDP_STATUS_SUCCESS && deviceCaps.InputReportByteLength == USB_Dongle) {
+					if (PreparsedData)
+					{
+						HidD_FreePreparsedData(PreparsedData);
+					}
+					BYTE ControllerVID_PID[5] = { 0 };
+					ControllerVID_PID[0] = 0xE3;
+					if (HidD_GetFeature(DeviceH, ControllerVID_PID, sizeof(ControllerVID_PID)))
+					{
+						const USHORT* VID = (USHORT*)&ControllerVID_PID[1];
+						const USHORT* PID = (USHORT*)&ControllerVID_PID[3];
+						if (*(VID) != 0 || *(PID) != 0)
+						{
+							bResult = TRUE;
+						}
+					}
+				}
+			}
+		}
+	}
+	if (DeviceH)
+	{
+		CloseHandle(DeviceH);
+	}
+	return bResult;
+}
 DWORD DualShock4::GetState(GenericInputController& controller, GENERIC_INPUT_STATE* pState)
 {
 	if (controller.DeviceHandle == 0 || controller.DeviceHandle == INVALID_HANDLE_VALUE || pState == nullptr)
