@@ -1,6 +1,7 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by Open Input DLL.rc
+// Used by Generic Input DLL.rc
+//
 
 // Next default values for new objects
 // 

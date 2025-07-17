@@ -44,7 +44,7 @@ DWORD DualShock4::GetState(GenericInputController& controller, GENERIC_INPUT_STA
 
 	switch ((connectionType)controller.InputBufferSize)
 	{
-	case Bluetooth:
+	case Bluetooth:// Untested
 	{
 		if (controller.InputBuffer.size() != controller.InputBufferSize)
 		{
@@ -654,6 +654,42 @@ DWORD DualShock4::GetState(GenericInputController& controller, GENERIC_INPUT_STA
 
 			pState->Gamepad.bLeftTrigger = controller.InputBuffer[8];
 			pState->Gamepad.bRightTrigger = controller.InputBuffer[9];
+
+			switch (controller.InputBuffer[10] & 0x0f)//Mic button and touch pad button needed to be dealt with differently
+			{
+			case 0x1:
+			{
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_GUIDE;
+				break;
+			}
+			case 0x2:
+			{
+				break;
+			}
+			case 0x3:
+			{
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_GUIDE;
+				break;
+			}
+			case 0x4:
+			{
+				break;
+			}
+			case 0x5:
+			{
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_GUIDE;
+				break;
+			}
+			case 0x6:
+			{
+				break;
+			}
+			case 0x7:
+			{
+				pState->Gamepad.wButtons |= CONTROLLER_BUTTON_GUIDE;
+				break;
+			}
+			}
 			break;
 		}
 
