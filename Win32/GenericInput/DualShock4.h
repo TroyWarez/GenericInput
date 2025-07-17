@@ -18,7 +18,7 @@ namespace DualShock4
 	enum connectionType
 	{
 		USB_Dongle = 64,
-		Bluetooth = 9
+		Bluetooth = 547
 	};
 
 	DWORD GetState(GenericInputController& controller, GENERIC_INPUT_STATE* pState);
