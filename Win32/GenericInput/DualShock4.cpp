@@ -356,7 +356,6 @@ DWORD DualShock4::GetState(GenericInputController& controller, GENERIC_INPUT_STA
 		}
 
 		break;
-		break;
 	}
 	case USB_Dongle:
 	{
