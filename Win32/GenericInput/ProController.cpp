@@ -41,6 +41,7 @@ DWORD ProController::GetState(GenericInputController* controller, GENERIC_INPUT_
 	{
 	case Bluetooth:
 	{
+		InputBufferBt[0] = 0x3f;
 		if (ReadFile(controller->DeviceHandle, InputBufferBt, sizeof(InputBufferBt), NULL, NULL) == FALSE)
 		{
 			return GetLastError();
