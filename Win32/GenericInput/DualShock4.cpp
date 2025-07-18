@@ -71,11 +71,6 @@ DWORD DualShock4::GetState(GenericInputController* controller, GENERIC_INPUT_STA
 	}
 	pState->dwPacketNumber = controller->dwPacketNumber;
 
-	if (IsDualshock4Connected(controller->Path) == FALSE)
-	{
-		return ERROR_SUCCESS;
-	}
-
 	PHIDP_PREPARSED_DATA pData = { 0 };
 	HIDP_CAPS deviceCaps = { 0 };
 
@@ -481,6 +476,10 @@ DWORD DualShock4::GetState(GenericInputController* controller, GENERIC_INPUT_STA
 	}
 	case USB_Dongle:
 	{
+		if (IsDualshock4Connected(controller->Path) == FALSE)
+		{
+			return ERROR_SUCCESS;
+		}
 		ZeroMemory(InputBufferUsb, sizeof(InputBufferUsb));
 		if (ReadFile(controller->DeviceHandle, InputBufferUsb, sizeof(InputBufferUsb), NULL, NULL) == FALSE)
 		{
