@@ -1,74 +1,65 @@
 #include "pch.h"
 #include "ProController.h"
-DWORD ProController::GetState(GenericInputController& controller, GENERIC_INPUT_STATE* pState)
+DWORD ProController::GetState(GenericInputController* controller, GENERIC_INPUT_STATE* pState)
 {
-	if (controller.DeviceHandle == 0 || controller.DeviceHandle == INVALID_HANDLE_VALUE || pState == nullptr)
+	if (controller->DeviceHandle == 0 || controller->DeviceHandle == INVALID_HANDLE_VALUE || pState == nullptr)
 	{
 		return ERROR_INVALID_PARAMETER;
 	}
 	DWORD Flags = 0;
-	if (GetHandleInformation(controller.DeviceHandle, &Flags) == FALSE)
+	if (GetHandleInformation(controller->DeviceHandle, &Flags) == FALSE)
 	{
 		return GetLastError();
 	}
-	if (controller.dwPacketNumber < 10241)
+	if (controller->dwPacketNumber < 10241)
 	{
-		controller.dwPacketNumber++;
+		controller->dwPacketNumber++;
 	}
 	else
 	{
-		controller.dwPacketNumber = 0L;
+		controller->dwPacketNumber = 0L;
 	}
-	pState->dwPacketNumber = controller.dwPacketNumber;
-	if (controller.InputBufferSize == 0)
+	pState->dwPacketNumber = controller->dwPacketNumber;
+	if (InputBuffer.size() == 0)
 	{
-		PHIDP_PREPARSED_DATA pData = nullptr;
+		_HIDP_PREPARSED_DATA* pData = { 0 };
 		HIDP_CAPS deviceCaps = { 0 };
-		controller.InputBuffer.clear();
-		if (HidD_GetPreparsedData(controller.DeviceHandle, &pData) == FALSE)
+		InputBuffer.clear();
+
+		if (HidD_GetPreparsedData(controller->DeviceHandle, &pData) == FALSE)
 		{
 			return GetLastError();
 		}
 		if (HidP_GetCaps(pData, &deviceCaps) != HIDP_STATUS_SUCCESS)
 		{
+			HidD_FreePreparsedData(pData);
 			return GetLastError();
 		}
-		if (pData)
+		if (HidD_FreePreparsedData(pData) == FALSE)
 		{
-			HidD_FreePreparsedData(pData);
+			return GetLastError();
 		}
 
-		controller.InputBufferSize = deviceCaps.InputReportByteLength;
+		InputBuffer.resize(deviceCaps.InputReportByteLength);
 	}
 
-	switch ((connectionType)controller.InputBufferSize)
+	switch ((connectionType)InputBuffer.size())
 	{
 	case Bluetooth:
 	{
-		if (controller.InputBuffer.size() != controller.InputBufferSize)
-		{
-			try {
-				controller.InputBuffer.resize(controller.InputBufferSize);
-				controller.InputBuffer[0] = 0x3f;
-			}
-			catch (std::bad_alloc)
-			{
-				return ERROR_GEN_FAILURE;
-			}
-		}
-		if (ReadFile(controller.DeviceHandle, controller.InputBuffer.data(), (DWORD)controller.InputBuffer.size(), NULL, NULL) == FALSE)
+		if (ReadFile(controller->DeviceHandle, InputBuffer.data(), (DWORD)InputBuffer.size(), NULL, NULL) == FALSE)
 		{
 			return GetLastError();
 		}
 
-		if (controller.InputBuffer[0] == 0x3f)
+		if (InputBuffer[0] == 0x3f)
 		{
-			pState->Gamepad.sThumbLX = XByteToShort[controller.InputBuffer[11]];
-			pState->Gamepad.sThumbLY = YByteToShort[controller.InputBuffer[11]];
-			pState->Gamepad.sThumbRX = XByteToShort[controller.InputBuffer[3]];
-			pState->Gamepad.sThumbRY = YByteToShort[controller.InputBuffer[4]];
+			pState->Gamepad.sThumbLX = XByteToShort[InputBuffer[11]];
+			pState->Gamepad.sThumbLY = YByteToShort[InputBuffer[11]];
+			pState->Gamepad.sThumbRX = XByteToShort[InputBuffer[3]];
+			pState->Gamepad.sThumbRY = YByteToShort[InputBuffer[4]];
 
-			switch (controller.InputBuffer[1] & 0x0f)
+			switch (InputBuffer[1] & 0x0f)
 			{
 			case 0x1:
 			{
@@ -148,7 +139,7 @@ DWORD ProController::GetState(GenericInputController& controller, GENERIC_INPUT_
 			break;
 			}
 
-			switch (controller.InputBuffer[1] & 0xf0)
+			switch (InputBuffer[1] & 0xf0)
 			{
 			case 0x10:
 			{
@@ -242,7 +233,7 @@ DWORD ProController::GetState(GenericInputController& controller, GENERIC_INPUT_
 			break;
 			}
 
-			switch (controller.InputBuffer[2] & 0x0f)
+			switch (InputBuffer[2] & 0x0f)
 			{
 			case 0x1:
 			{
@@ -287,7 +278,7 @@ DWORD ProController::GetState(GenericInputController& controller, GENERIC_INPUT_
 			break;
 			}
 
-			switch (controller.InputBuffer[2] & 0xf0)
+			switch (InputBuffer[2] & 0xf0)
 			{
 			case 0x10:// The home button was pressed
 			{
@@ -307,7 +298,7 @@ DWORD ProController::GetState(GenericInputController& controller, GENERIC_INPUT_
 			break;
 			}
 
-			switch (controller.InputBuffer[3] & 0x0f)
+			switch (InputBuffer[3] & 0x0f)
 			{
 			case 0x0:
 			{
@@ -358,29 +349,29 @@ DWORD ProController::GetState(GenericInputController& controller, GENERIC_INPUT_
 	}
 	case USB: //Untested
 	{
-		if (controller.InputBuffer.size() != controller.InputBufferSize)
+		if (InputBuffer.size() != InputBuffer.size())
 		{
 			try {
-				controller.InputBuffer.resize(controller.InputBufferSize);
+				InputBuffer.resize(InputBuffer.size());
 			}
 			catch (std::bad_alloc)
 			{
 				return ERROR_GEN_FAILURE;
 			}
 		}
-		if (ReadFile(controller.DeviceHandle, controller.InputBuffer.data(), (DWORD)controller.InputBuffer.size(), NULL, NULL) == FALSE)
+		if (ReadFile(controller->DeviceHandle, InputBuffer.data(), (DWORD)InputBuffer.size(), NULL, NULL) == FALSE)
 		{
 			return GetLastError();
 		}
 
-		if (controller.InputBuffer[0] == 0x3f)
+		if (InputBuffer[0] == 0x3f)
 		{
-			pState->Gamepad.sThumbLX = XByteToShort[controller.InputBuffer[1]];
-			pState->Gamepad.sThumbLY = YByteToShort[controller.InputBuffer[2]];
-			pState->Gamepad.sThumbRX = XByteToShort[controller.InputBuffer[3]];
-			pState->Gamepad.sThumbRY = YByteToShort[controller.InputBuffer[4]];
+			pState->Gamepad.sThumbLX = XByteToShort[InputBuffer[1]];
+			pState->Gamepad.sThumbLY = YByteToShort[InputBuffer[2]];
+			pState->Gamepad.sThumbRX = XByteToShort[InputBuffer[3]];
+			pState->Gamepad.sThumbRY = YByteToShort[InputBuffer[4]];
 
-			switch (controller.InputBuffer[5] & 0xf0)
+			switch (InputBuffer[5] & 0xf0)
 			{
 			case 0x10:
 			{
@@ -460,7 +451,7 @@ DWORD ProController::GetState(GenericInputController& controller, GENERIC_INPUT_
 			break;
 			}
 
-			switch (controller.InputBuffer[5] & 0x0f)
+			switch (InputBuffer[5] & 0x0f)
 			{
 			case 0x0:
 			{
@@ -505,10 +496,10 @@ DWORD ProController::GetState(GenericInputController& controller, GENERIC_INPUT_
 			}
 
 
-			pState->Gamepad.bLeftTrigger = controller.InputBuffer[8];
-			pState->Gamepad.bRightTrigger = controller.InputBuffer[9];
+			pState->Gamepad.bLeftTrigger = InputBuffer[8];
+			pState->Gamepad.bRightTrigger = InputBuffer[9];
 
-			switch (controller.InputBuffer[6] & 0xf0)
+			switch (InputBuffer[6] & 0xf0)
 			{
 			case 0x10:
 			{
@@ -588,7 +579,7 @@ DWORD ProController::GetState(GenericInputController& controller, GENERIC_INPUT_
 			break;
 			}
 
-			switch (controller.InputBuffer[6] & 0x0f)
+			switch (InputBuffer[6] & 0x0f)
 			{
 			case 0x1:
 			{
@@ -727,7 +718,7 @@ DWORD ProController::GetState(GenericInputController& controller, GENERIC_INPUT_
 			break;
 			}
 
-			switch (controller.InputBuffer[7] & 0x0f)
+			switch (InputBuffer[7] & 0x0f)
 			{
 			case 0x1:// The home button was pressed
 			{

@@ -22,10 +22,11 @@ namespace ProController
 		Bluetooth = 362
 	};
 
-	DWORD GetState(GenericInputController& controller, GENERIC_INPUT_STATE* pState);
+	DWORD GetState(GenericInputController* controller, GENERIC_INPUT_STATE* pState);
 	static DWORD SetState(GenericInputController& controller, LPVOID* pData, DWORD dSize);
 
 	static std::vector <BYTE> OutputBuffer;
+	static std::vector <BYTE> InputBuffer;
 
 };
 

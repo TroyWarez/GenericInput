@@ -218,15 +218,15 @@ DWORD GenericInput::XInputGetState(DWORD dwUserIndex, GENERIC_INPUT_STATE* pStat
 	}
 	case DS://DualSense
 	{
-		return DualSense::GetState(ControllerSlots[dwUserIndex], (DualSense::GENERIC_INPUT_STATE*)pState);
+		return DualSense::GetState(&ControllerSlots[dwUserIndex], (DualSense::GENERIC_INPUT_STATE*)pState);
 	}
 	case DS4://DualSense
 	{
-		return DualShock4::GetState(ControllerSlots[dwUserIndex], (DualShock4::GENERIC_INPUT_STATE*)pState);
+		return DualShock4::GetState(&ControllerSlots[dwUserIndex], (DualShock4::GENERIC_INPUT_STATE*)pState);
 	}
 	case NT://Pro controller
 	{
-		return ProController::GetState(ControllerSlots[dwUserIndex], (ProController::GENERIC_INPUT_STATE*)pState);
+		return ProController::GetState(&ControllerSlots[dwUserIndex], (ProController::GENERIC_INPUT_STATE*)pState);
 	}
 	case SDL:
 	{

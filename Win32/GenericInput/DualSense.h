@@ -23,11 +23,13 @@ enum connectionType
 
 BOOL GetWiredMAC(std::wstring& DevicePath, BTH_ADDR& ullbtDeviceInfo);
 
-DWORD GetState(GenericInputController& controller, GENERIC_INPUT_STATE* pState);
+DWORD GetState(GenericInputController* controller, GENERIC_INPUT_STATE* pState);
 
 static DWORD SetState(GenericInputController& controller, LPVOID* pData, DWORD dSize);
 
 static std::vector <BYTE> OutputBuffer;
 
+static BYTE InputBufferBt[Bluetooth];
+static BYTE InputBufferUsb[USB];
 };
 

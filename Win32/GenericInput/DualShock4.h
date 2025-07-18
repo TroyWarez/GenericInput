@@ -21,7 +21,7 @@ namespace DualShock4
 		Bluetooth = 547
 	};
 
-	DWORD GetState(GenericInputController& controller, GENERIC_INPUT_STATE* pState);
+	DWORD GetState(GenericInputController* controller, GENERIC_INPUT_STATE* pState);
 	BOOL IsDualshock4Connected(std::wstring& DevicePath);
 	const USHORT DualShock4DongleVID = 0x054c;
 	const USHORT DualShock4DonglePID = 0x0BA0;
@@ -29,6 +29,7 @@ namespace DualShock4
 	static DWORD SetState(GenericInputController& controller, LPVOID* pData, DWORD dSize);
 
 	static std::vector <BYTE> OutputBuffer;
+	static std::vector <BYTE> InputBuffer;
 
 };
 

@@ -13,16 +13,13 @@ BOOL DualShock4::IsDualshock4Connected(std::wstring& DevicePath)
 	{
 		if (DeviceAttrib.VendorID == DualShock4DongleVID && DeviceAttrib.ProductID == DualShock4DonglePID || (DeviceAttrib.VendorID == DualShock4DongleVID && DeviceAttrib.ProductID == DualShock4DongleDFUPID))
 		{
-			PHIDP_PREPARSED_DATA PreparsedData = nullptr;
+			_HIDP_PREPARSED_DATA* PreparsedData = nullptr;
 			if (HidD_GetPreparsedData(DeviceH, &PreparsedData))
 			{
 				HIDP_CAPS deviceCaps = { 0 };
 
 				if (HidP_GetCaps(PreparsedData, &deviceCaps) == HIDP_STATUS_SUCCESS && deviceCaps.InputReportByteLength == USB_Dongle) {
-					if (PreparsedData)
-					{
-						HidD_FreePreparsedData(PreparsedData);
-					}
+
 					BYTE ControllerVID_PID[5] = { 0 };
 					ControllerVID_PID[0] = 0xE3;
 					if (HidD_GetFeature(DeviceH, ControllerVID_PID, sizeof(ControllerVID_PID)))
@@ -35,6 +32,10 @@ BOOL DualShock4::IsDualshock4Connected(std::wstring& DevicePath)
 						}
 					}
 				}
+				if (HidD_FreePreparsedData(PreparsedData) == FALSE)
+				{
+					bResult = FALSE;
+				}
 			}
 		}
 	}
@@ -44,32 +45,33 @@ BOOL DualShock4::IsDualshock4Connected(std::wstring& DevicePath)
 	}
 	return bResult;
 }
-DWORD DualShock4::GetState(GenericInputController& controller, GENERIC_INPUT_STATE* pState)
+DWORD DualShock4::GetState(GenericInputController* controller, GENERIC_INPUT_STATE* pState)
 {
-	if (controller.DeviceHandle == 0 || controller.DeviceHandle == INVALID_HANDLE_VALUE || pState == nullptr)
+	if (controller == nullptr || controller->DeviceHandle == 0 || controller->DeviceHandle == INVALID_HANDLE_VALUE || pState == nullptr)
 	{
 		return ERROR_INVALID_PARAMETER;
 	}
 	DWORD Flags = 0;
-	if (GetHandleInformation(controller.DeviceHandle, &Flags) == FALSE)
+	if (GetHandleInformation(controller->DeviceHandle, &Flags) == FALSE)
 	{
 		return GetLastError();
 	}
-	if (controller.dwPacketNumber < 10241)
+	if (controller->dwPacketNumber < 10241)
 	{
-		controller.dwPacketNumber++;
+		controller->dwPacketNumber++;
 	}
 	else
 	{
-		controller.dwPacketNumber = 0L;
+		controller->dwPacketNumber = 0L;
 	}
-	pState->dwPacketNumber = controller.dwPacketNumber;
-	if (controller.InputBufferSize == 0)
+	pState->dwPacketNumber = controller->dwPacketNumber;
+	if (InputBuffer.size() == 0)
 	{
-		PHIDP_PREPARSED_DATA pData = nullptr;
+		PHIDP_PREPARSED_DATA pData = { 0 };
 		HIDP_CAPS deviceCaps = { 0 };
-		controller.InputBuffer.clear();
-		if (HidD_GetPreparsedData(controller.DeviceHandle, &pData) == FALSE)
+		InputBuffer.clear();
+
+		if (HidD_GetPreparsedData(controller->DeviceHandle, &pData) == FALSE)
 		{
 			return GetLastError();
 		}
@@ -77,42 +79,31 @@ DWORD DualShock4::GetState(GenericInputController& controller, GENERIC_INPUT_STA
 		{
 			return GetLastError();
 		}
-		if (pData)
-		{
-			HidD_FreePreparsedData(pData);
-		}
-
-		controller.InputBufferSize = deviceCaps.InputReportByteLength;
-	}
-
-	switch ((connectionType)controller.InputBufferSize)
-	{
-	case Bluetooth:
-	{
-		if (controller.InputBuffer.size() != controller.InputBufferSize)
-		{
-			try {
-				controller.InputBuffer.resize(controller.InputBufferSize);
-				controller.InputBuffer[0] = 0x01;
-			}
-			catch (std::bad_alloc)
-			{
-				return ERROR_GEN_FAILURE;
-			}
-		}
-		if (!HidD_GetInputReport(controller.DeviceHandle, controller.InputBuffer.data(), (DWORD)controller.InputBufferSize))
+		if (HidD_FreePreparsedData(pData) == FALSE)
 		{
 			return GetLastError();
 		}
 
-		if (controller.InputBuffer[0] == 0x01)
-		{
-				pState->Gamepad.sThumbLX = XByteToShort[controller.InputBuffer[1]];
-				pState->Gamepad.sThumbLY = YByteToShort[controller.InputBuffer[2]];
-				pState->Gamepad.sThumbRX = XByteToShort[controller.InputBuffer[3]];
-				pState->Gamepad.sThumbRY = YByteToShort[controller.InputBuffer[4]];
+		InputBuffer.resize(deviceCaps.InputReportByteLength);
+	}
 
-				switch (controller.InputBuffer[5] & 0xf0)
+	switch ((connectionType)InputBuffer.size())
+	{
+	case Bluetooth:
+	{
+		if (!HidD_GetInputReport(controller->DeviceHandle, InputBuffer.data(), (DWORD)InputBuffer.size()))
+		{
+			return GetLastError();
+		}
+
+		if (InputBuffer[0] == 0x01)
+		{
+				pState->Gamepad.sThumbLX = XByteToShort[InputBuffer[1]];
+				pState->Gamepad.sThumbLY = YByteToShort[InputBuffer[2]];
+				pState->Gamepad.sThumbRX = XByteToShort[InputBuffer[3]];
+				pState->Gamepad.sThumbRY = YByteToShort[InputBuffer[4]];
+
+				switch (InputBuffer[5] & 0xf0)
 				{
 				case 0x10:
 				{
@@ -192,7 +183,7 @@ DWORD DualShock4::GetState(GenericInputController& controller, GENERIC_INPUT_STA
 				break;
 				}
 
-				switch (controller.InputBuffer[5] & 0x0f)
+				switch (InputBuffer[5] & 0x0f)
 				{
 				case 0x0:
 				{
@@ -237,10 +228,10 @@ DWORD DualShock4::GetState(GenericInputController& controller, GENERIC_INPUT_STA
 				}
 
 
-				pState->Gamepad.bLeftTrigger = controller.InputBuffer[8];
-				pState->Gamepad.bRightTrigger = controller.InputBuffer[9];
+				pState->Gamepad.bLeftTrigger = InputBuffer[8];
+				pState->Gamepad.bRightTrigger = InputBuffer[9];
 
-				switch (controller.InputBuffer[6] & 0xf0)
+				switch (InputBuffer[6] & 0xf0)
 				{
 				case 0x10:
 				{
@@ -320,7 +311,7 @@ DWORD DualShock4::GetState(GenericInputController& controller, GENERIC_INPUT_STA
 				break;
 				}
 
-				switch (controller.InputBuffer[6] & 0x0f)
+				switch (InputBuffer[6] & 0x0f)
 				{
 				case 0x1:
 				{
@@ -459,7 +450,7 @@ DWORD DualShock4::GetState(GenericInputController& controller, GENERIC_INPUT_STA
 				break;
 				}
 
-				switch (controller.InputBuffer[7] & 0x0f)
+				switch (InputBuffer[7] & 0x0f)
 				{
 				case 0x1:// The home button was pressed
 				{
@@ -485,29 +476,19 @@ DWORD DualShock4::GetState(GenericInputController& controller, GENERIC_INPUT_STA
 	}
 	case USB_Dongle:
 	{
-		if (controller.InputBuffer.size() != controller.InputBufferSize)
-		{
-			try {
-				controller.InputBuffer.resize(controller.InputBufferSize);
-			}
-			catch (std::bad_alloc)
-			{
-				return ERROR_GEN_FAILURE;
-			}
-		}
-		if (ReadFile(controller.DeviceHandle, controller.InputBuffer.data(), (DWORD)controller.InputBuffer.size(), NULL, NULL) == FALSE)
+		if (ReadFile(controller->DeviceHandle, InputBuffer.data(), (DWORD)InputBuffer.size(), NULL, NULL) == FALSE)
 		{
 			return GetLastError();
 		}
 
-		if (controller.InputBuffer[0] == 0x01)
+		if (InputBuffer[0] == 0x01)
 		{
-			pState->Gamepad.sThumbLX = XByteToShort[controller.InputBuffer[1]];
-			pState->Gamepad.sThumbLY = YByteToShort[controller.InputBuffer[2]];
-			pState->Gamepad.sThumbRX = XByteToShort[controller.InputBuffer[3]];
-			pState->Gamepad.sThumbRY = YByteToShort[controller.InputBuffer[4]];
+			pState->Gamepad.sThumbLX = XByteToShort[InputBuffer[1]];
+			pState->Gamepad.sThumbLY = YByteToShort[InputBuffer[2]];
+			pState->Gamepad.sThumbRX = XByteToShort[InputBuffer[3]];
+			pState->Gamepad.sThumbRY = YByteToShort[InputBuffer[4]];
 
-			switch (controller.InputBuffer[5] & 0xf0)
+			switch (InputBuffer[5] & 0xf0)
 			{
 			case 0x10:
 			{
@@ -587,7 +568,7 @@ DWORD DualShock4::GetState(GenericInputController& controller, GENERIC_INPUT_STA
 			break;
 			}
 
-			switch (controller.InputBuffer[5] & 0x0f)
+			switch (InputBuffer[5] & 0x0f)
 			{
 			case 0x0:
 			{
@@ -632,10 +613,10 @@ DWORD DualShock4::GetState(GenericInputController& controller, GENERIC_INPUT_STA
 			}
 
 
-			pState->Gamepad.bLeftTrigger = controller.InputBuffer[8];
-			pState->Gamepad.bRightTrigger = controller.InputBuffer[9];
+			pState->Gamepad.bLeftTrigger = InputBuffer[8];
+			pState->Gamepad.bRightTrigger = InputBuffer[9];
 
-			switch (controller.InputBuffer[6] & 0xf0)
+			switch (InputBuffer[6] & 0xf0)
 			{
 			case 0x10:
 			{
@@ -715,7 +696,7 @@ DWORD DualShock4::GetState(GenericInputController& controller, GENERIC_INPUT_STA
 			break;
 			}
 
-			switch (controller.InputBuffer[6] & 0x0f)
+			switch (InputBuffer[6] & 0x0f)
 			{
 			case 0x1:
 			{
@@ -854,7 +835,7 @@ DWORD DualShock4::GetState(GenericInputController& controller, GENERIC_INPUT_STA
 			break;
 			}
 
-			switch (controller.InputBuffer[7] & 0x0f)
+			switch (InputBuffer[7] & 0x0f)
 			{
 			case 0x1:// The home button was pressed
 			{

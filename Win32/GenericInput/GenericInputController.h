@@ -28,7 +28,6 @@ struct GenericInputController
 	std::wstring XInputPath;
 	std::wstring BTPath;
 	HANDLE DeviceHandle;
-	std::vector <BYTE> InputBuffer;
 	DWORD InputBufferSize;
 	DWORD dwPacketNumber;
 };
