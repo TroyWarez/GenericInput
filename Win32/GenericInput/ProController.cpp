@@ -48,10 +48,10 @@ DWORD ProController::GetState(GenericInputController* controller, GENERIC_INPUT_
 
 		if (InputBufferBt[0] == 0x3f)
 		{
-			pState->Gamepad.sThumbLX = XByteToShort[InputBufferBt[11]];
-			pState->Gamepad.sThumbLY = YByteToShort[InputBufferBt[11]];
-			pState->Gamepad.sThumbRX = XByteToShort[InputBufferBt[3]];
-			pState->Gamepad.sThumbRY = YByteToShort[InputBufferBt[4]];
+			pState->Gamepad.sThumbLX = XByteToShort[InputBufferBt[5]];
+			pState->Gamepad.sThumbLY = YByteToShort[InputBufferBt[7]];
+			pState->Gamepad.sThumbRX = XByteToShort[InputBufferBt[9]];
+			pState->Gamepad.sThumbRY = YByteToShort[InputBufferBt[11]];// Broken 224
 
 			switch (InputBufferBt[1] & 0x0f)
 			{
