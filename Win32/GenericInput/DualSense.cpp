@@ -63,7 +63,25 @@ DWORD DualSense::GetState(GenericInputController* controller, GENERIC_INPUT_STAT
 		controller->dwPacketNumber = 0L;
 	}
 	pState->dwPacketNumber = controller->dwPacketNumber;
-	switch (Bluetooth)
+
+	PHIDP_PREPARSED_DATA pData = { 0 };
+	HIDP_CAPS deviceCaps = { 0 };
+
+	if (HidD_GetPreparsedData(controller->DeviceHandle, &pData) == FALSE)
+	{
+		return GetLastError();
+	}
+	if (HidP_GetCaps(pData, &deviceCaps) != HIDP_STATUS_SUCCESS)
+	{
+		return GetLastError();
+	}
+	if (HidD_FreePreparsedData(pData) == FALSE)
+	{
+		return GetLastError();
+	}
+
+
+	switch (deviceCaps.InputReportByteLength)
 	{
 	case Bluetooth:
 	{

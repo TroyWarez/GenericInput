@@ -65,45 +65,40 @@ DWORD DualShock4::GetState(GenericInputController* controller, GENERIC_INPUT_STA
 		controller->dwPacketNumber = 0L;
 	}
 	pState->dwPacketNumber = controller->dwPacketNumber;
-	if (InputBuffer.size() == 0)
+
+	PHIDP_PREPARSED_DATA pData = { 0 };
+	HIDP_CAPS deviceCaps = { 0 };
+
+	if (HidD_GetPreparsedData(controller->DeviceHandle, &pData) == FALSE)
 	{
-		PHIDP_PREPARSED_DATA pData = { 0 };
-		HIDP_CAPS deviceCaps = { 0 };
-		InputBuffer.clear();
-
-		if (HidD_GetPreparsedData(controller->DeviceHandle, &pData) == FALSE)
-		{
-			return GetLastError();
-		}
-		if (HidP_GetCaps(pData, &deviceCaps) != HIDP_STATUS_SUCCESS)
-		{
-			return GetLastError();
-		}
-		if (HidD_FreePreparsedData(pData) == FALSE)
-		{
-			return GetLastError();
-		}
-
-		InputBuffer.resize(deviceCaps.InputReportByteLength);
+		return GetLastError();
+	}
+	if (HidP_GetCaps(pData, &deviceCaps) != HIDP_STATUS_SUCCESS)
+	{
+		return GetLastError();
+	}
+	if (HidD_FreePreparsedData(pData) == FALSE)
+	{
+		return GetLastError();
 	}
 
-	switch ((connectionType)InputBuffer.size())
+	switch ((connectionType)deviceCaps.InputReportByteLength)
 	{
 	case Bluetooth:
 	{
-		if (!HidD_GetInputReport(controller->DeviceHandle, InputBuffer.data(), (DWORD)InputBuffer.size()))
+		if (!HidD_GetInputReport(controller->DeviceHandle, InputBufferBt, sizeof(InputBufferBt)))
 		{
 			return GetLastError();
 		}
 
-		if (InputBuffer[0] == 0x01)
+		if (InputBufferBt[0] == 0x01)
 		{
-				pState->Gamepad.sThumbLX = XByteToShort[InputBuffer[1]];
-				pState->Gamepad.sThumbLY = YByteToShort[InputBuffer[2]];
-				pState->Gamepad.sThumbRX = XByteToShort[InputBuffer[3]];
-				pState->Gamepad.sThumbRY = YByteToShort[InputBuffer[4]];
+				pState->Gamepad.sThumbLX = XByteToShort[InputBufferBt[1]];
+				pState->Gamepad.sThumbLY = YByteToShort[InputBufferBt[2]];
+				pState->Gamepad.sThumbRX = XByteToShort[InputBufferBt[3]];
+				pState->Gamepad.sThumbRY = YByteToShort[InputBufferBt[4]];
 
-				switch (InputBuffer[5] & 0xf0)
+				switch (InputBufferBt[5] & 0xf0)
 				{
 				case 0x10:
 				{
@@ -183,7 +178,7 @@ DWORD DualShock4::GetState(GenericInputController* controller, GENERIC_INPUT_STA
 				break;
 				}
 
-				switch (InputBuffer[5] & 0x0f)
+				switch (InputBufferBt[5] & 0x0f)
 				{
 				case 0x0:
 				{
@@ -228,10 +223,10 @@ DWORD DualShock4::GetState(GenericInputController* controller, GENERIC_INPUT_STA
 				}
 
 
-				pState->Gamepad.bLeftTrigger = InputBuffer[8];
-				pState->Gamepad.bRightTrigger = InputBuffer[9];
+				pState->Gamepad.bLeftTrigger = InputBufferBt[8];
+				pState->Gamepad.bRightTrigger = InputBufferBt[9];
 
-				switch (InputBuffer[6] & 0xf0)
+				switch (InputBufferBt[6] & 0xf0)
 				{
 				case 0x10:
 				{
@@ -311,7 +306,7 @@ DWORD DualShock4::GetState(GenericInputController* controller, GENERIC_INPUT_STA
 				break;
 				}
 
-				switch (InputBuffer[6] & 0x0f)
+				switch (InputBufferBt[6] & 0x0f)
 				{
 				case 0x1:
 				{
@@ -450,7 +445,7 @@ DWORD DualShock4::GetState(GenericInputController* controller, GENERIC_INPUT_STA
 				break;
 				}
 
-				switch (InputBuffer[7] & 0x0f)
+				switch (InputBufferBt[7] & 0x0f)
 				{
 				case 0x1:// The home button was pressed
 				{
@@ -476,19 +471,19 @@ DWORD DualShock4::GetState(GenericInputController* controller, GENERIC_INPUT_STA
 	}
 	case USB_Dongle:
 	{
-		if (ReadFile(controller->DeviceHandle, InputBuffer.data(), (DWORD)InputBuffer.size(), NULL, NULL) == FALSE)
+		if (ReadFile(controller->DeviceHandle, InputBufferUsb, sizeof(InputBufferUsb), NULL, NULL) == FALSE)
 		{
 			return GetLastError();
 		}
 
-		if (InputBuffer[0] == 0x01)
+		if (InputBufferUsb[0] == 0x01)
 		{
-			pState->Gamepad.sThumbLX = XByteToShort[InputBuffer[1]];
-			pState->Gamepad.sThumbLY = YByteToShort[InputBuffer[2]];
-			pState->Gamepad.sThumbRX = XByteToShort[InputBuffer[3]];
-			pState->Gamepad.sThumbRY = YByteToShort[InputBuffer[4]];
+			pState->Gamepad.sThumbLX = XByteToShort[InputBufferUsb[1]];
+			pState->Gamepad.sThumbLY = YByteToShort[InputBufferUsb[2]];
+			pState->Gamepad.sThumbRX = XByteToShort[InputBufferUsb[3]];
+			pState->Gamepad.sThumbRY = YByteToShort[InputBufferUsb[4]];
 
-			switch (InputBuffer[5] & 0xf0)
+			switch (InputBufferUsb[5] & 0xf0)
 			{
 			case 0x10:
 			{
@@ -568,7 +563,7 @@ DWORD DualShock4::GetState(GenericInputController* controller, GENERIC_INPUT_STA
 			break;
 			}
 
-			switch (InputBuffer[5] & 0x0f)
+			switch (InputBufferUsb[5] & 0x0f)
 			{
 			case 0x0:
 			{
@@ -613,10 +608,10 @@ DWORD DualShock4::GetState(GenericInputController* controller, GENERIC_INPUT_STA
 			}
 
 
-			pState->Gamepad.bLeftTrigger = InputBuffer[8];
-			pState->Gamepad.bRightTrigger = InputBuffer[9];
+			pState->Gamepad.bLeftTrigger = InputBufferUsb[8];
+			pState->Gamepad.bRightTrigger = InputBufferUsb[9];
 
-			switch (InputBuffer[6] & 0xf0)
+			switch (InputBufferUsb[6] & 0xf0)
 			{
 			case 0x10:
 			{
@@ -696,7 +691,7 @@ DWORD DualShock4::GetState(GenericInputController* controller, GENERIC_INPUT_STA
 			break;
 			}
 
-			switch (InputBuffer[6] & 0x0f)
+			switch (InputBufferUsb[6] & 0x0f)
 			{
 			case 0x1:
 			{
@@ -835,7 +830,7 @@ DWORD DualShock4::GetState(GenericInputController* controller, GENERIC_INPUT_STA
 			break;
 			}
 
-			switch (InputBuffer[7] & 0x0f)
+			switch (InputBufferUsb[7] & 0x0f)
 			{
 			case 0x1:// The home button was pressed
 			{

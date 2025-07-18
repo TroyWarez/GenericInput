@@ -29,7 +29,8 @@ namespace DualShock4
 	static DWORD SetState(GenericInputController& controller, LPVOID* pData, DWORD dSize);
 
 	static std::vector <BYTE> OutputBuffer;
-	static std::vector <BYTE> InputBuffer;
+	static BYTE InputBufferBt[Bluetooth];
+	static BYTE InputBufferUsb[USB_Dongle];
 
 };
 

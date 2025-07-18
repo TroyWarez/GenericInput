@@ -18,7 +18,7 @@ namespace ProController
 	} GENERIC_INPUT_STATE, * PGENERIC_INPUT_STATE;
 	enum connectionType
 	{
-		USB = 0,
+		USB = 513,
 		Bluetooth = 362
 	};
 
@@ -26,7 +26,8 @@ namespace ProController
 	static DWORD SetState(GenericInputController& controller, LPVOID* pData, DWORD dSize);
 
 	static std::vector <BYTE> OutputBuffer;
-	static std::vector <BYTE> InputBuffer;
+	static BYTE InputBufferBt[Bluetooth];
+	static BYTE InputBufferUsb[USB];
 
 };
 
