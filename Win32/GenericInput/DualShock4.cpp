@@ -91,6 +91,7 @@ DWORD DualShock4::GetState(GenericInputController* controller, GENERIC_INPUT_STA
 	{
 	case Bluetooth:
 	{
+		InputBufferBt[0] = 0x01;
 		if (!HidD_GetInputReport(controller->DeviceHandle, InputBufferBt, sizeof(InputBufferBt)))
 		{
 			return GetLastError();
