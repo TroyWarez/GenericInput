@@ -11,7 +11,11 @@ BOOL DualShock4::IsDualshock4Connected(std::wstring& DevicePath)
 	HIDD_ATTRIBUTES DeviceAttrib = { 0 };
 	if (HidD_GetAttributes(DeviceH, &DeviceAttrib))
 	{
-		if (DeviceAttrib.VendorID == DualShock4DongleVID && DeviceAttrib.ProductID == DualShock4DonglePID || (DeviceAttrib.VendorID == DualShock4DongleVID && DeviceAttrib.ProductID == DualShock4DongleDFUPID))
+		if (DeviceAttrib.VendorID != DualShock4DongleVID || (DeviceAttrib.ProductID != DualShock4DonglePID && DeviceAttrib.ProductID != DualShock4DongleDFUPID))
+		{
+			return TRUE;
+		}
+		else if (DeviceAttrib.VendorID == DualShock4DongleVID && DeviceAttrib.ProductID == DualShock4DonglePID || (DeviceAttrib.VendorID == DualShock4DongleVID && DeviceAttrib.ProductID == DualShock4DongleDFUPID))
 		{
 			_HIDP_PREPARSED_DATA* PreparsedData = nullptr;
 			if (HidD_GetPreparsedData(DeviceH, &PreparsedData))
@@ -51,6 +55,7 @@ DWORD DualShock4::GetState(GenericInputController* controller, GENERIC_INPUT_STA
 	{
 		return ERROR_INVALID_PARAMETER;
 	}
+
 	DWORD Flags = 0;
 	if (GetHandleInformation(controller->DeviceHandle, &Flags) == FALSE)
 	{
@@ -65,6 +70,11 @@ DWORD DualShock4::GetState(GenericInputController* controller, GENERIC_INPUT_STA
 		controller->dwPacketNumber = 0L;
 	}
 	pState->dwPacketNumber = controller->dwPacketNumber;
+
+	if (IsDualshock4Connected(controller->Path) == FALSE)
+	{
+		return ERROR_SUCCESS;
+	}
 
 	PHIDP_PREPARSED_DATA pData = { 0 };
 	HIDP_CAPS deviceCaps = { 0 };
@@ -471,6 +481,7 @@ DWORD DualShock4::GetState(GenericInputController* controller, GENERIC_INPUT_STA
 	}
 	case USB_Dongle:
 	{
+		ZeroMemory(InputBufferUsb, sizeof(InputBufferUsb));
 		if (ReadFile(controller->DeviceHandle, InputBufferUsb, sizeof(InputBufferUsb), NULL, NULL) == FALSE)
 		{
 			return GetLastError();

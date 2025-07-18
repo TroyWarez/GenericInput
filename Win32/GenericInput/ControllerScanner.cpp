@@ -78,14 +78,6 @@ void Scanner::ScanForControllers(HWND hWnd, GenericInputController ControllerSlo
 				controller.Atributes.VendorID == 0x054c && controller.Atributes.ProductID == 0x0BA0 ||
 				controller.Atributes.VendorID == 0x054c && controller.Atributes.ProductID == 0x0BA1 ) {
 
-				if (controller.BusType == L"USB" && controller.Atributes.VendorID == 0x054c && controller.Atributes.ProductID == 0x0BA0 ||
-					controller.BusType == L"USB" && controller.Atributes.VendorID == 0x054c && controller.Atributes.ProductID == 0x0BA1)
-				{
-					if (DualShock4::IsDualshock4Connected(controller.Path) == FALSE)
-					{
-						continue;
-					}
-				}
 				controller.conType = DS4;
 			}
 
