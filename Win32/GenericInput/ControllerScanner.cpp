@@ -62,7 +62,9 @@ void Scanner::ScanForControllers(HWND hWnd, GenericInputController ControllerSlo
 					}
 				}
 			}
-			if (controller.Atributes.VendorID == 0x054c && controller.Atributes.ProductID == 0x0ce6) {
+			if (controller.Atributes.VendorID == 0x054c && controller.Atributes.ProductID == 0x0ce6 ||
+				controller.Atributes.VendorID == 0x054c && controller.Atributes.ProductID == 0x0df2 ||
+				controller.Atributes.VendorID == 0x054c && controller.Atributes.ProductID == 0x0e5f) {
 
 				if (controller.BusType == L"USB")
 				{
