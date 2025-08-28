@@ -179,12 +179,7 @@ BOOL Scanner::FindUSBArtibs(std::wstring& USBDevicePath, HIDD_ATTRIBUTES& hidArt
 		}
 		else if (HidD_GetAttributes(hDevice, &hidArtib) == TRUE)
 		{
-			WCHAR SerialNumber[2045] = { 0 };
-			ULONG BufferLen = sizeof(SerialNumber);
-			if (HidD_GetSerialNumberString(hDevice, SerialNumber, BufferLen) == TRUE)
-			{
-				SerialString = SerialNumber;
-			}
+			SerialString = L"";
 			CloseHandle(hDevice);
 			return TRUE;
 		}
