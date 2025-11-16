@@ -1,9 +1,5 @@
 # GenericInput
-# GenericInput development has been restarted.
 GenericInput is a HID controller input library written in C++ that aims to clone proprietary controller libraries. 
-### macOS is not supported. 
-# Dependencies
-GameInput Redistributable
 # Initializing GenericInput
 Initialize GenericInput by passing a Window Handle and a boolean to tell GenericInput whether or not to close your application upon failure.
 ```c++
