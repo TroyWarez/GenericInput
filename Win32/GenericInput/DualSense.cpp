@@ -2,7 +2,7 @@
 #include "DualSense.h"
 #include "CRC32.h"
 
-#define PS_OUTPUT_CRC32_SEED 0xA2
+constexpr int PS_OUTPUT_CRC32_SEED = 0xA2;
 const USHORT DualSenseVID = 0x054c;
 const USHORT DualSensePID = 0x0ce6;
 BOOL DualSense::GetWiredMAC(std::wstring& DevicePath, BTH_ADDR& ullbtDeviceInfo)

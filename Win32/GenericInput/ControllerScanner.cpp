@@ -1,18 +1,18 @@
 #include "pch.h"
+#include "GenericInputController.h"
 #include "ControllerScanner.h"
 #include "Devices.h"
 #include "controllerDB.h"
 #include "Bluetooth.h"
 #include "Registry.h"
 #include "DualSense.h"
-#include "DualShock4.h"
 
-#define WM_CONTROLLER_CONNECTED 0x8007
-#define WM_CONTROLLER_DISCONNECTED 0x8008
+constexpr int WM_CONTROLLER_CONNECTED = 0x8007;
+constexpr int WM_CONTROLLER_DISCONNECTED = 0x8008;
 
 using namespace Devices;
 extern Bluetooth btManager;
-void Scanner::ScanForControllers(HWND hWnd, GenericInputController ControllerSlots[])
+void Scanner::ScanForControllers(HWND hWnd, std::span<GenericInputController, MAX_CONTROLLERS> ControllerSlots)
 {
 	std::vector<std::wstring> hidDevicePaths;
 	std::vector<std::wstring> hidDeviceBusType;
@@ -34,7 +34,7 @@ void Scanner::ScanForControllers(HWND hWnd, GenericInputController ControllerSlo
 	}
 	if (hidDeviceBusType.size() != hidDevicePaths.size())
 	{
-		OutputDebugString(L"CRITICAL ERROR: The number of device paths and bus types aren't the same size!\n");
+		OutputDebugString(L"CRITICAL GENERIC INPUT ERROR: The number of device paths and bus types aren't the same size!\n");
 		return;
 	}
 	for (size_t i = 0; i < hidDevicePaths.size(); i++)
@@ -106,7 +106,7 @@ void Scanner::ScanForControllers(HWND hWnd, GenericInputController ControllerSlo
 					controller = { 0 };
 					break;
 				}
-				else if (ControllerSlots[i].Path == L"")
+				if (ControllerSlots[i].Path == L"")
 				{
 					ControllerSlots[i] = controller;
 					PostMessageW(hWnd, WM_CONTROLLER_CONNECTED, i, NULL);
@@ -121,7 +121,7 @@ void Scanner::ScanForControllers(HWND hWnd, GenericInputController ControllerSlo
 						PostMessageW(hWnd, WM_CONTROLLER_CONNECTED, i, NULL);
 						break;
 					}
-					else if (ControllerSlots[i].BusType == L"USB")
+					if (ControllerSlots[i].BusType == L"USB")
 					{
 						ControllerSlots[i].Path = controller.Path;
 						PostMessageW(hWnd, WM_CONTROLLER_CONNECTED, i, NULL);

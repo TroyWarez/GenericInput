@@ -1,7 +1,9 @@
 #include "pch.h"
 #include "framework.h"
 #include "CRC32.h"
-#define CRC32POLY 0x04C11DB7
+
+constexpr int CRC32POLY = 0x04C11DB7;
+
 uint32_t CRC32LUT[256] = {
     0x00000000, 0x77073096, 0xee0e612c, 0x990951ba,
     0x076dc419, 0x706af48f, 0xe963a535, 0x9e6495a3,

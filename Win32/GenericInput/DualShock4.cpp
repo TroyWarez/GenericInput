@@ -2,7 +2,7 @@
 #include "DualShock4.h"
 BOOL DualShock4::IsDualshock4Connected(std::wstring& DevicePath)
 {
-	HANDLE DeviceH = CreateFile(DevicePath.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING, NULL, NULL);
+	HANDLE DeviceH = CreateFile(DevicePath.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, nullptr, OPEN_EXISTING, 0, nullptr);
 	if (DeviceH == INVALID_HANDLE_VALUE)
 	{
 		return FALSE;
@@ -482,7 +482,7 @@ DWORD DualShock4::GetState(GenericInputController* controller, GENERIC_INPUT_STA
 			return ERROR_SUCCESS;
 		}
 		ZeroMemory(InputBufferUsb, sizeof(InputBufferUsb));
-		if (ReadFile(controller->DeviceHandle, InputBufferUsb, sizeof(InputBufferUsb), NULL, NULL) == FALSE)
+		if (ReadFile(controller->DeviceHandle, InputBufferUsb, sizeof(InputBufferUsb), nullptr, nullptr) == FALSE)
 		{
 			return GetLastError();
 		}

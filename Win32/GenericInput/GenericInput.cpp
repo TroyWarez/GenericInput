@@ -9,7 +9,7 @@
 Bluetooth btManager;
 Window windowManager;
 Scanner controllerScanner;
-static GenericInputController ControllerSlots[MAX_CONTROLLERS] = { 0 };
+static GenericInputController ControllerSlots[MAX_CONTROLLERS];
 static DWORD LastError;
 static bool RegisterWindowFlag = false;
 static BOOL CALLBACK GenericInput::EnumWindowsProc(_In_ HWND hwnd, _In_ LPARAM lParam)
@@ -48,31 +48,31 @@ LRESULT GenericInput::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 
 					BTH_L2CAP_EVENT_INFO* eventInfo = (BTH_L2CAP_EVENT_INFO*)hdev_broadcast->dbch_data;
 					BLUETOOTH_DEVICE_INFO btDeviceInfo = { 0 };
-						for (size_t i = 0; i < MAX_CONTROLLERS; i++)
+					for (size_t i = 0; i < MAX_CONTROLLERS; i++)
+					{
+						if (ControllerSlots[i].ullbtDeviceInfo == eventInfo->bthAddress && eventInfo->connected == 0)
 						{
-							if (ControllerSlots[i].ullbtDeviceInfo == eventInfo->bthAddress && eventInfo->connected == 0)
+							if (ControllerSlots[i].BTPath != L"")
 							{
-								if (ControllerSlots[i].BTPath != L"")
-								{
-									if (ControllerSlots[i].Path == L"")
-									{
-										ControllerSlots[i] = { 0 };
-										PostMessage(hWnd, WM_CONTROLLER_DISCONNECTED, i, NULL);
-									}
-									ControllerSlots[i].BTPath = L"";
-								}
-								else if (ControllerSlots[i].Path != L"" && ControllerSlots[i].BusType == L"BTHENUM")
+								if (ControllerSlots[i].Path == L"")
 								{
 									ControllerSlots[i] = { 0 };
 									PostMessage(hWnd, WM_CONTROLLER_DISCONNECTED, i, NULL);
 								}
-								return 0;
+								ControllerSlots[i].BTPath = L"";
 							}
-							if (ControllerSlots[i].ullbtDeviceInfo == eventInfo->bthAddress && eventInfo->connected == 1 && ControllerSlots[i].BusType == L"BTHENUM")
+							else if (ControllerSlots[i].Path != L"" && ControllerSlots[i].BusType == L"BTHENUM")
 							{
-								return 0;
+								ControllerSlots[i] = { 0 };
+								PostMessage(hWnd, WM_CONTROLLER_DISCONNECTED, i, NULL);
 							}
+							return 0;
 						}
+						if (ControllerSlots[i].ullbtDeviceInfo == eventInfo->bthAddress && eventInfo->connected == 1 && ControllerSlots[i].BusType == L"BTHENUM")
+						{
+							return 0;
+						}
+					}
 					if (eventInfo->connected == 1) {
 						controllerScanner.ScanForControllers(hWnd, ControllerSlots);
 					}

@@ -1,5 +1,5 @@
 #pragma once
-#define DI_OK S_OK
+constexpr int DI_OK = S_OK;
 namespace DirectInput
 {
     HRESULT DirectInput8Create(

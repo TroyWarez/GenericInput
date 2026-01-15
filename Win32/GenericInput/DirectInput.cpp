@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "DirectInput.h"
-#include "GenericInput.h"
 HRESULT DirectInput::DirectInput8Create(
     HINSTANCE hinst,
     DWORD dwVersion,

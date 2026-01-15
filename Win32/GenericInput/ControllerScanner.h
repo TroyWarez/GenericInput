@@ -2,7 +2,7 @@
 class Scanner
 {
 public:
-	void ScanForControllers(HWND hWnd, GenericInputController ControllerSlots[]);
+	void ScanForControllers(HWND hWnd, std::span<GenericInputController, MAX_CONTROLLERS> ControllerSlots);
 private:
 	BOOL FindUSBArtibs(std::wstring& USBDevicePath, HIDD_ATTRIBUTES& hidArtib, std::wstring& SerialString);
 	BOOL isController(std::wstring& DevicePath, GenericInputController& hidArtib);
