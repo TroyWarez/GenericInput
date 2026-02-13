@@ -9,6 +9,7 @@
 Bluetooth btManager;
 Window windowManager;
 Scanner controllerScanner;
+extern HMODULE g_xinputModule = nullptr;
 static GenericInputController ControllerSlots[MAX_CONTROLLERS];
 static DWORD LastError;
 static bool RegisterWindowFlag = false;
@@ -268,7 +269,8 @@ DWORD GenericInput::XInputGetCapabilities(DWORD dwUserIndex, DWORD wFlags, GENER
 
 	return ERROR_DEVICE_NOT_CONNECTED;
 }
-DWORD GenericInput::GetType(DWORD dwUserIndex)
+DWORD GenericInput::XInputEnable(BOOL enable)
 {
-	return ControllerSlots[dwUserIndex].conType;
+
+	return ERROR_DEVICE_NOT_CONNECTED;
 }

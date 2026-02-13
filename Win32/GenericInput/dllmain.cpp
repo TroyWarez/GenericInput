@@ -4,6 +4,12 @@
 #include "ControllerScanner.h"
 #include <array>
 
+// const std::array<std::string, 4> xinputDlls = {
+//     "XINPUT1_4.dll",
+//     "XINPUT1_3.dll",
+//     "XINPUT9_1_0.dll",
+//     "XINPUT1_2.dll"
+// };
 extern Window windowManager;
 
 HMODULE g_xinputModule = nullptr;
@@ -21,9 +27,9 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     case DLL_PROCESS_ATTACH:
     case DLL_THREAD_ATTACH:
     {
-        WCHAR path[MAX_PATH] = { '/0' };
-        GetSystemDirectoryW(path, MAX_PATH);
-        g_xinputModule = LoadLibraryW((std::wstring(path) + L"\\XInput1_4.dll").c_str());
+        std::array<WCHAR, MAX_PATH>  path = { L'\0' };
+        GetSystemDirectoryW(path.data(), MAX_PATH);
+        g_xinputModule = LoadLibraryW((std::wstring(path.data()) + L"\\XInput1_3.dll").c_str());
         
         if (g_xinputModule)
         {
