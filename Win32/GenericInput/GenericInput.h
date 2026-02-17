@@ -1,5 +1,6 @@
 #pragma once
 #include "GenericInputController.h"
+#include <xinput.h>
 constexpr int WM_CONTROLLER_CONNECTED = 0x8007;
 constexpr int WM_CONTROLLER_DISCONNECTED = 0x8008;
 
@@ -52,10 +53,28 @@ namespace GenericInput
 		_In_ HWND   hwnd,
 		_In_ LPARAM lParam
 	);
-
-    DWORD XInputGetDSoundAudioDeviceGuids(DWORD dwUserIndex, GUID* pDSoundRenderGuid, GUID* pDSoundCaptureGuid);
-
-    DWORD XInputGetCapabilities(DWORD dwUserIndex, DWORD wFlags, GENERIC_CAPABILITIES* pCapabilities);
     DWORD GetType(DWORD dwUserIndex);
+};
+
+namespace XInput1_3
+{
+	// from xinput.h
+	DWORD WINAPI XInputGetCapabilities
+	(
+		_In_  DWORD                dwUserIndex,   // Index of the gamer associated with the device
+		_In_  DWORD                dwFlags,       // Input flags that identify the device type
+		_Out_ XINPUT_CAPABILITIES* pCapabilities  // Receives the capabilities
+	) WIN_NOEXCEPT;
+    DWORD XInputGetDSoundAudioDeviceGuids(DWORD dwUserIndex, GUID* pDSoundRenderGuid, GUID* pDSoundCaptureGuid);
+	void WINAPI XInputEnable
+	(
+		_In_ BOOL enable     // [in] Indicates whether xinput is enabled or disabled. 
+	) WIN_NOEXCEPT;
+	DWORD WINAPI XInputGetCapabilities
+	(
+		_In_  DWORD                dwUserIndex,   // Index of the gamer associated with the device
+		_In_  DWORD                dwFlags,       // Input flags that identify the device type
+		_Out_ XINPUT_CAPABILITIES* pCapabilities  // Receives the capabilities
+	) WIN_NOEXCEPT;
 
 };

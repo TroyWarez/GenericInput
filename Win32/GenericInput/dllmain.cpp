@@ -10,6 +10,8 @@
 //     "XINPUT9_1_0.dll",
 //     "XINPUT1_2.dll"
 // };
+
+constexpr LPCWSTR XINPUT_DLL = L"\\XInput1_3.dll";
 extern Window windowManager;
 
 HMODULE g_xinputModule = nullptr;
@@ -27,14 +29,11 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     case DLL_PROCESS_ATTACH:
     case DLL_THREAD_ATTACH:
     {
-        std::array<WCHAR, MAX_PATH>  path = { L'\0' };
-        GetSystemDirectoryW(path.data(), MAX_PATH);
-        g_xinputModule = LoadLibraryW((std::wstring(path.data()) + L"\\XInput1_3.dll").c_str());
-        
-        if (g_xinputModule)
+        if (g_xinputModule == nullptr)
         {
-            GetProcAddress(g_xinputModule, "XInputGetState");
-			GetProcAddress(g_xinputModule, "XInputSetState");
+			std::array<WCHAR, MAX_PATH>  path = { L'\0' };
+			GetSystemDirectoryW(path.data(), MAX_PATH);
+			g_xinputModule = LoadLibraryW((std::wstring(path.data()) + XINPUT_DLL).c_str());
         }
     }
     break;

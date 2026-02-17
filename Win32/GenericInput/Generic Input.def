@@ -5,9 +5,3 @@ EXPORTS
    XInputGetCapabilities   @4
    XInputEnable   @5
    XInputGetDSoundAudioDeviceGuids   @6
-   XInputGetBatteryInfomation   @7
-   XInputGetKeystroke   @8
-   XInputGetStateEx @100 NONAME
-   XInputGetStateEx2 @101 NONAME
-   XInputGetStateEx3 @102 NONAME
-   XInputGetStateEx4 @103 NONAME
