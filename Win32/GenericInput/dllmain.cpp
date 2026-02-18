@@ -34,6 +34,11 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 			std::array<WCHAR, MAX_PATH>  path = { L'\0' };
 			GetSystemDirectoryW(path.data(), MAX_PATH);
 			g_xinputModule = LoadLibraryW((std::wstring(path.data()) + XINPUT_DLL).c_str());
+			if (!g_xinputModule)
+			{
+				MessageBoxW(nullptr, L"Failed to load XInput1_3.dll. Please ensure it is present in the system directory.", L"Error", MB_ICONERROR);
+				return 1;
+			}
         }
     }
     break;
