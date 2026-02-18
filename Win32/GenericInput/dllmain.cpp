@@ -3,6 +3,7 @@
 #include "Window.h"
 #include "ControllerScanner.h"
 #include <array>
+#include <Xinput.h>
 
 // const std::array<std::string, 4> xinputDlls = {
 //     "XINPUT1_4.dll",
