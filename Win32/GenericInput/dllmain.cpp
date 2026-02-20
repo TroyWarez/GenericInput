@@ -23,19 +23,19 @@ struct XInputDll
 const std::array<XInputDll, NXINPUT_DLLS> XinputDlls = {
 
     XInputDll{ { L"XInputGetCapabilities", L"XInputEnable", L"XInputGetBatteryInformation", L"XInputGetKeystroke", L"XInputGetAudioDeviceIds" }, 
-    { 10, 100, 101, 102, 103, 104, 108 }, L"\\XInput1_4.dll" },
+    { 10, 100, 101, 102, 103, 104, 108 }, L"XINPUT1_4.dll" },
 
     XInputDll{ { L"XInputGetCapabilities", L"XInputEnable", L"XInputGetDSoundAudioDeviceGuids", L"XInputGetBatteryInformation", L"XInputGetKeystroke" },
-    { 100, 101, 102, 103, 0, 0 }, L"\\XInput1_3.dll" },
+    { 100, 101, 102, 103, 0, 0 }, L"XINPUT1_3.dll" },
 
     XInputDll{ { L"XInputGetCapabilities", L"XInputGetDSoundAudioDeviceGuids", L"", L"", L"" },
-    { 0, 0, 0, 0, 0, 0, 0 }, L"\\XInput1_2.dll" },
+    { 0, 0, 0, 0, 0, 0, 0 }, L"XINPUT1_2.dll" },
 
 	XInputDll{ { L"XInputGetCapabilities", L"XInputGetDSoundAudioDeviceGuids", L"", L"", L"" },
-	{ 0, 0, 0, 0, 0, 0, 0 }, L"\\XInput1_1.dll" },
+	{ 0, 0, 0, 0, 0, 0, 0 }, L"XINPUT1_1.dll" },
 
     XInputDll{ { L"XInputGetCapabilities", L"XInputEnable", L"XInputGetBatteryInformation", L"XInputGetDSoundAudioDeviceGuids",   L"XInputGetKeystroke" }, 
-    { 0, 0, 0, 0, 0, 0, 0 }, L"\\XInput9_1_0.dll" }
+    { 0, 0, 0, 0, 0, 0, 0 }, L"XINPUT9_1_0.dll" }
 };
 
 extern Window windowManager;
@@ -57,6 +57,53 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     {
         if (g_hXinputModule == nullptr)
         {
+			std::array<WCHAR, MAX_PATH>  path = { L'\0' };
+			GetSystemDirectoryW(path.data(), MAX_PATH);
+
+			// Parse the export table here to determine which XInput version is present and load the correct one, this is to ensure maximum compatibility with older versions of Windows and avoid loading a newer version of XInput that may not be compatible with the system
+
+            // Assuming 'baseAddress' is the loaded image base (e.g., from GetModuleHandle)
+			PBYTE baseAddress = (PBYTE)GetModuleHandle(nullptr);
+			PIMAGE_DOS_HEADER dosHeader = (PIMAGE_DOS_HEADER)baseAddress;
+
+			// Ensure this is a valid PE file
+			if (dosHeader->e_magic == IMAGE_DOS_SIGNATURE) {
+				// Calculate the NT Header address
+				PIMAGE_NT_HEADERS ntHeaders = (PIMAGE_NT_HEADERS)((DWORD_PTR)baseAddress + dosHeader->e_lfanew);
+
+				// Verify the PE signature
+				if (ntHeaders->Signature == IMAGE_NT_SIGNATURE) {
+					PIMAGE_DATA_DIRECTORY importDirectory = &ntHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT];
+					// Check if there are actually any imports
+					if (importDirectory->Size > 0) {
+
+						// 4. Get the pointer to the first Import Descriptor
+						// Note: We must add baseAddress because the header contains Relative Virtual Addresses (RVAs)
+						PIMAGE_IMPORT_DESCRIPTOR importDescriptor = (PIMAGE_IMPORT_DESCRIPTOR)(baseAddress + importDirectory->VirtualAddress);
+
+						// 5. Iterate through the descriptors
+						// The array is null-terminated (Name will be 0 at the end)
+						while (importDescriptor->Name != 0) {
+
+							// --- Get the DLL Name ---
+							LPCSTR dllName = (LPCSTR)(baseAddress + importDescriptor->Name);
+
+							// Check if the DLL name matches any of our XInput DLLs
+                            for (const auto& dll : XinputDlls) {
+                                if (_stricmp(dllName, std::string(dll.XInputDllBinPath.begin(), dll.XInputDllBinPath.end()).c_str()) == 0) {
+                                    // Found a match, load this DLL
+                                    g_hXinputModule = LoadLibraryW((std::wstring(path.data()) + L"\\" + dll.XInputDllBinPath).c_str());
+                                    if (g_hXinputModule) {
+                                        break;
+                                    }
+                                }
+							}
+							importDescriptor++;
+						}
+					}
+				}
+			}
+
 			if (!g_hXinputModule)
 			{
 				MessageBoxW(nullptr, std::wstring(L"Failed to load" XINPUT_DLL ".Please ensure it is present in the system directory.").c_str(), L"Error", MB_ICONERROR);
