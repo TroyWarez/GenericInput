@@ -15,26 +15,26 @@ constexpr size_t NXINPUT_DLLS = 5;
 
 struct XInputDll
 {
-    std::array<std::wstring, NXINPUT_DLL_EXPORTS> ExportSymbols;
+    std::array<std::string, NXINPUT_DLL_EXPORTS> ExportSymbols;
     std::array<DWORD, NXINPUT_DLL_ORDINALS>  ExportOrdinals;
 	std::wstring XInputDllBinPath; // Must be load from the system directory to avoid shenanigans
 };
 
 const std::array<XInputDll, NXINPUT_DLLS> XinputDlls = {
 
-    XInputDll{ { L"XInputGetCapabilities", L"XInputEnable", L"XInputGetBatteryInformation", L"XInputGetKeystroke", L"XInputGetAudioDeviceIds" }, 
+    XInputDll{ { "XInputGetCapabilities", "XInputEnable", "XInputGetBatteryInformation", "XInputGetKeystroke", "XInputGetAudioDeviceIds" }, 
     { 10, 100, 101, 102, 103, 104, 108 }, L"XINPUT1_4.dll" },
 
-    XInputDll{ { L"XInputGetCapabilities", L"XInputEnable", L"XInputGetDSoundAudioDeviceGuids", L"XInputGetBatteryInformation", L"XInputGetKeystroke" },
+    XInputDll{ { "XInputGetCapabilities", "XInputEnable", "XInputGetDSoundAudioDeviceGuids", "XInputGetBatteryInformation", "XInputGetKeystroke" },
     { 100, 101, 102, 103, 0, 0 }, L"XINPUT1_3.dll" },
 
-    XInputDll{ { L"XInputGetCapabilities", L"XInputGetDSoundAudioDeviceGuids", L"", L"", L"" },
+    XInputDll{ { "XInputGetCapabilities", "XInputGetDSoundAudioDeviceGuids", "", "", "" },
     { 0, 0, 0, 0, 0, 0, 0 }, L"XINPUT1_2.dll" },
 
-	XInputDll{ { L"XInputGetCapabilities", L"XInputGetDSoundAudioDeviceGuids", L"", L"", L"" },
+	XInputDll{ { "XInputGetCapabilities", "XInputGetDSoundAudioDeviceGuids", "", "", "" },
 	{ 0, 0, 0, 0, 0, 0, 0 }, L"XINPUT1_1.dll" },
 
-    XInputDll{ { L"XInputGetCapabilities", L"XInputEnable", L"XInputGetBatteryInformation", L"XInputGetDSoundAudioDeviceGuids",   L"XInputGetKeystroke" }, 
+    XInputDll{ { "XInputGetCapabilities", "XInputEnable", "XInputGetBatteryInformation", "XInputGetDSoundAudioDeviceGuids",   "XInputGetKeystroke" }, 
     { 0, 0, 0, 0, 0, 0, 0 }, L"XINPUT9_1_0.dll" }
 };
 
@@ -94,7 +94,18 @@ BOOL APIENTRY DllMain( HMODULE hModule,
                                     // Found a match, load this DLL
                                     g_hXinputModule = LoadLibraryW((std::wstring(path.data()) + L"\\" + dll.XInputDllBinPath).c_str());
                                     if (g_hXinputModule) {
-                                        break;
+                                        for (size_t i = 0; i < dll.ExportSymbols.size(); i++) {
+                                            if (!dll.ExportSymbols[i].empty()) {
+                                                FARPROC procAddress = GetProcAddress(g_hXinputModule, dll.ExportSymbols[i].c_str());
+                                                if (procAddress) {
+                                                    // Store the function pointer in the appropriate location (e.g., a global array or struct)
+                                                    // For example: g_XInputFunctions[dll.ExportOrdinals[i]] = procAddress;
+                                                }
+                                                else
+                                                {
+                                                }
+                                            }
+                                        }
                                     }
                                 }
 							}
