@@ -13,10 +13,18 @@ constexpr size_t NXINPUT_DLL_ORDINALS = 7;
 constexpr size_t NXINPUT_DLLS = 5;
 
 
+
+typedef DWORD(WINAPI* PxInputGetCapabilities)(DWORD, DWORD, XINPUT_CAPABILITIES*);
+typedef void  (WINAPI* PxInputEnable)(BOOL);
+typedef DWORD(WINAPI* PxInputGetBatteryInformation)(DWORD, BYTE, XINPUT_BATTERY_INFORMATION*);
+typedef DWORD(WINAPI* PxInputGetKeystroke)(DWORD, DWORD, PXINPUT_KEYSTROKE);
+typedef DWORD(WINAPI* PxInputGetAudioDeviceIds)(DWORD, LPWSTR, UINT*, LPWSTR, UINT*);
+typedef DWORD(WINAPI* PxInputGetDSoundAudioDeviceGuids)(DWORD, GUID*, GUID*);
+
 struct XInputDll
 {
-    std::array<std::string, NXINPUT_DLL_EXPORTS> ExportSymbols;
-    std::array<DWORD, NXINPUT_DLL_ORDINALS>  ExportOrdinals;
+	std::array<std::string, NXINPUT_DLL_EXPORTS> ImportSymbols;
+	std::array<DWORD, NXINPUT_DLL_ORDINALS> ImportOrdinals;
 	std::wstring XInputDllBinPath; // Must be load from the system directory to avoid shenanigans
 };
 
@@ -41,6 +49,14 @@ const std::array<XInputDll, NXINPUT_DLLS> XinputDlls = {
 extern Window windowManager;
 
 HMODULE g_hXinputModule = nullptr;
+
+PxInputGetCapabilities funcGetCapabilities = nullptr;
+PxInputEnable funcEnable = nullptr;
+PxInputGetBatteryInformation funcGetBatteryInformation = nullptr;
+PxInputGetKeystroke funcGetKeystroke = nullptr;
+PxInputGetAudioDeviceIds funcGetAudioDeviceIds = nullptr;
+PxInputGetDSoundAudioDeviceGuids funcGetDSoundGuids = nullptr;
+
 
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
@@ -94,9 +110,39 @@ BOOL APIENTRY DllMain( HMODULE hModule,
                                     // Found a match, load this DLL
                                     g_hXinputModule = LoadLibraryW((std::wstring(path.data()) + L"\\" + dll.XInputDllBinPath).c_str());
                                     if (g_hXinputModule) {
-                                        for (size_t i = 0; i < dll.ExportSymbols.size(); i++) {
-                                            if (!dll.ExportSymbols[i].empty()) {
-                                                FARPROC procAddress = GetProcAddress(g_hXinputModule, dll.ExportSymbols[i].c_str());
+                                        for (size_t i = 0; i < dll.ImportSymbols.size(); i++) {
+                                            if (!dll.ImportSymbols[i].empty()) {
+                                                for (size_t j = 0; j < dll.ImportSymbols.size(); j++) {
+                                                    if (_stricmp("XInputGetCapabilities", dll.ImportSymbols[j].c_str()) == 0) {
+														funcGetCapabilities =
+															(PxInputGetCapabilities)GetProcAddress(g_hXinputModule, "XInputGetCapabilities");
+                                                    }
+
+													if (_stricmp("XInputEnable", dll.ImportSymbols[j].c_str()) == 0) {
+														funcEnable =
+															(PxInputEnable)GetProcAddress(g_hXinputModule, "XInputEnable");
+													}
+
+													if (_stricmp("XInputGetBatteryInformation", dll.ImportSymbols[j].c_str()) == 0) {
+														funcGetBatteryInformation =
+															(PxInputGetBatteryInformation)GetProcAddress(g_hXinputModule, "XInputGetBatteryInformation");
+													}
+
+													if (_stricmp("XInputGetKeystroke", dll.ImportSymbols[j].c_str()) == 0) {
+														funcGetKeystroke =
+															(PxInputGetKeystroke)GetProcAddress(g_hXinputModule, "XInputGetKeystroke");
+													}
+
+													if (_stricmp("XInputGetAudioDeviceIds", dll.ImportSymbols[j].c_str()) == 0) {
+														funcGetAudioDeviceIds =
+															(PxInputGetAudioDeviceIds)GetProcAddress(g_hXinputModule, "XInputGetAudioDeviceIds");
+													}
+
+													if (_stricmp("XInputGetDSoundAudioDeviceGuids", dll.ImportSymbols[j].c_str()) == 0) {
+														funcGetDSoundGuids = (PxInputGetDSoundAudioDeviceGuids)GetProcAddress(g_hXinputModule, "XInputGetDSoundAudioDeviceGuids");
+													}
+                                                }
+                                                FARPROC procAddress = GetProcAddress(g_hXinputModule, dll.ImportSymbols[i].c_str());
                                                 if (procAddress) {
                                                     // Store the function pointer in the appropriate location (e.g., a global array or struct)
                                                     // For example: g_XInputFunctions[dll.ExportOrdinals[i]] = procAddress;
@@ -106,6 +152,16 @@ BOOL APIENTRY DllMain( HMODULE hModule,
                                                 }
                                             }
                                         }
+
+										for (size_t i = 0; i < dll.ImportOrdinals.size(); i++) {
+											if (dll.ImportOrdinals[i] != 0) {
+												FARPROC procAddress = GetProcAddress(g_hXinputModule, MAKEINTRESOURCEA(dll.ImportOrdinals[i]));
+												if (procAddress) {
+													// Store the function pointer in the appropriate location (e.g., a global array or struct)
+													// For example: g_XInputFunctions[dll.ExportOrdinals[i]] = procAddress;
+												}
+											}
+										}
                                     }
                                 }
 							}
