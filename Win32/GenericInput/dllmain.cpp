@@ -168,6 +168,8 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 														break;
 													case 104:
 														break;
+													case 108:
+														break;
 												}
 												FARPROC procAddress = GetProcAddress(g_hXinputModule, MAKEINTRESOURCEA(dll.ImportOrdinals[i]));
 												if (procAddress) {
