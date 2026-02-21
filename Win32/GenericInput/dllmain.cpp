@@ -13,13 +13,23 @@ constexpr size_t NXINPUT_DLL_ORDINALS = 7;
 constexpr size_t NXINPUT_DLLS = 5;
 
 
-
+typedef DWORD(WINAPI* pXInputGetStateEx)(DWORD, XINPUT_STATE*);
 typedef DWORD(WINAPI* PxInputGetCapabilities)(DWORD, DWORD, XINPUT_CAPABILITIES*);
-typedef void  (WINAPI* PxInputEnable)(BOOL);
+typedef void (WINAPI* PxInputEnable)(BOOL);
 typedef DWORD(WINAPI* PxInputGetBatteryInformation)(DWORD, BYTE, XINPUT_BATTERY_INFORMATION*);
 typedef DWORD(WINAPI* PxInputGetKeystroke)(DWORD, DWORD, PXINPUT_KEYSTROKE);
 typedef DWORD(WINAPI* PxInputGetAudioDeviceIds)(DWORD, LPWSTR, UINT*, LPWSTR, UINT*);
 typedef DWORD(WINAPI* PxInputGetDSoundAudioDeviceGuids)(DWORD, GUID*, GUID*);
+
+HMODULE g_hXinputModule = nullptr;
+
+pXInputGetStateEx funcGetStateEx = nullptr;
+PxInputGetCapabilities funcGetCapabilities = nullptr;
+PxInputEnable funcEnable = nullptr;
+PxInputGetBatteryInformation funcGetBatteryInformation = nullptr;
+PxInputGetKeystroke funcGetKeystroke = nullptr;
+PxInputGetAudioDeviceIds funcGetAudioDeviceIds = nullptr;
+PxInputGetDSoundAudioDeviceGuids funcGetDSoundGuids = nullptr;
 
 struct XInputDll
 {
@@ -31,7 +41,7 @@ struct XInputDll
 const std::array<XInputDll, NXINPUT_DLLS> XinputDlls = {
 
     XInputDll{ { "XInputGetCapabilities", "XInputEnable", "XInputGetBatteryInformation", "XInputGetKeystroke", "XInputGetAudioDeviceIds" }, 
-    { 10, 100, 101, 102, 103, 104, 108 }, L"XINPUT1_4.dll" },
+    { 100, 101, 102, 103, 104, 108, 0 }, L"XINPUT1_4.dll" },
 
     XInputDll{ { "XInputGetCapabilities", "XInputEnable", "XInputGetDSoundAudioDeviceGuids", "XInputGetBatteryInformation", "XInputGetKeystroke" },
     { 100, 101, 102, 103, 0, 0 }, L"XINPUT1_3.dll" },
@@ -47,15 +57,6 @@ const std::array<XInputDll, NXINPUT_DLLS> XinputDlls = {
 };
 
 extern Window windowManager;
-
-HMODULE g_hXinputModule = nullptr;
-
-PxInputGetCapabilities funcGetCapabilities = nullptr;
-PxInputEnable funcEnable = nullptr;
-PxInputGetBatteryInformation funcGetBatteryInformation = nullptr;
-PxInputGetKeystroke funcGetKeystroke = nullptr;
-PxInputGetAudioDeviceIds funcGetAudioDeviceIds = nullptr;
-PxInputGetDSoundAudioDeviceGuids funcGetDSoundGuids = nullptr;
 
 
 BOOL APIENTRY DllMain( HMODULE hModule,
@@ -155,6 +156,19 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 
 										for (size_t i = 0; i < dll.ImportOrdinals.size(); i++) {
 											if (dll.ImportOrdinals[i] != 0) {
+												switch (dll.ImportOrdinals[i]) {
+													case 100:
+														funcGetStateEx = (pXInputGetStateEx)GetProcAddress(g_hXinputModule, MAKEINTRESOURCEA(100));
+														break;
+													case 101:
+														break;
+													case 102:
+														break;
+													case 103:
+														break;
+													case 104:
+														break;
+												}
 												FARPROC procAddress = GetProcAddress(g_hXinputModule, MAKEINTRESOURCEA(dll.ImportOrdinals[i]));
 												if (procAddress) {
 													// Store the function pointer in the appropriate location (e.g., a global array or struct)
