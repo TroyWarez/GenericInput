@@ -170,11 +170,8 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 														break;
 													case 108:
 														break;
-												}
-												FARPROC procAddress = GetProcAddress(g_hXinputModule, MAKEINTRESOURCEA(dll.ImportOrdinals[i]));
-												if (procAddress) {
-													// Store the function pointer in the appropriate location (e.g., a global array or struct)
-													// For example: g_XInputFunctions[dll.ExportOrdinals[i]] = procAddress;
+													default:
+														break;
 												}
 											}
 										}
