@@ -14,6 +14,12 @@ constexpr size_t NXINPUT_DLLS = 5;
 
 
 typedef DWORD(WINAPI* pXInputGetStateEx)(DWORD, XINPUT_STATE*);
+typedef DWORD(WINAPI* XInputWaitForGuideButton)(DWORD, LONGLONG, LONGLONG);
+typedef DWORD(WINAPI* XInputCancelGuideButtonWait)(UINT);
+typedef DWORD(WINAPI* XInputPowerOffController)(UINT);
+typedef DWORD(WINAPI* XInputGetBaseBusInformation)(UINT, LONGLONG, LONGLONG);
+typedef DWORD(WINAPI* XInputGetCapabilitiesEx)(DWORD, LONGLONG, LONGLONG);
+
 typedef DWORD(WINAPI* PxInputGetCapabilities)(DWORD, DWORD, XINPUT_CAPABILITIES*);
 typedef void (WINAPI* PxInputEnable)(BOOL);
 typedef DWORD(WINAPI* PxInputGetBatteryInformation)(DWORD, BYTE, XINPUT_BATTERY_INFORMATION*);
