@@ -6,6 +6,22 @@ constexpr int WM_CONTROLLER_DISCONNECTED = 0x8008;
 
 constexpr int INPUT_FLAG_GAMEPAD = 0;
 
+constexpr bool bHookWndProc = false;
+
+typedef DWORD(WINAPI* pXInputGetStateEx)(DWORD, XINPUT_STATE*);
+typedef DWORD(WINAPI* pXInputWaitForGuideButton)(DWORD, DWORD, LONGLONG);
+typedef DWORD(WINAPI* pXInputCancelGuideButtonWait)(DWORD);
+typedef DWORD(WINAPI* pXInputPowerOffController)(DWORD);
+typedef DWORD(WINAPI* pXInputGetBaseBusInformation)(UINT, LONGLONG, LONGLONG);
+typedef DWORD(WINAPI* pXInputGetCapabilitiesEx)(DWORD, LONGLONG, LONGLONG);
+
+typedef DWORD(WINAPI* pXInputGetCapabilities)(DWORD, DWORD, XINPUT_CAPABILITIES*);
+typedef void (WINAPI* pXInputEnable)(BOOL);
+typedef DWORD(WINAPI* pXInputGetBatteryInformation)(DWORD, BYTE, XINPUT_BATTERY_INFORMATION*);
+typedef DWORD(WINAPI* pXInputGetKeystroke)(DWORD, DWORD, PXINPUT_KEYSTROKE);
+typedef DWORD(WINAPI* pXInputGetAudioDeviceIds)(DWORD, LPWSTR, UINT*, LPWSTR, UINT*);
+typedef DWORD(WINAPI* pXInputGetDSoundAudioDeviceGuids)(DWORD, GUID*, GUID*);
+
 typedef struct _GENERIC_INPUT_GAMEPAD
 {
     WORD                                wButtons;
@@ -56,30 +72,7 @@ namespace GenericInput
     DWORD GetType(DWORD dwUserIndex);
 };
 
-// namespace XInput1_3
-// {
-// 	typedef DWORD(WINAPI* PFN_XInputGetCapabilities)(
-// 		_In_  DWORD                dwUserIndex,
-// 		_In_  DWORD                dwFlags,
-// 		_Out_ XINPUT_CAPABILITIES* pCapabilities
-// 		);
-// 	typedef DWORD WINAPI PFN_XInputGetDSoundAudioDeviceGuids
-// 	(
-// 		_In_  DWORD     dwUserIndex,          // Index of the gamer associated with the device
-// 		_Out_ GUID* pDSoundRenderGuid,    // DSound device ID for render (speakers)
-// 		_Out_ GUID* pDSoundCaptureGuid    // DSound device ID for capture (microphone)
-// 	);
-// 
-// 	typedef void WINAPI PFN_XInputEnable
-// 	(
-// 		_In_ BOOL enable     // [in] Indicates whether xinput is enabled or disabled. 
-// 	) WIN_NOEXCEPT;
-// 
-// 	typedef DWORD WINAPI PFN_XInputGetCapabilities
-// 	(
-// 		_In_  DWORD                dwUserIndex,   // Index of the gamer associated with the device
-// 		_In_  DWORD                dwFlags,       // Input flags that identify the device type
-// 		_Out_ XINPUT_CAPABILITIES* pCapabilities  // Receives the capabilities
-// 	) WIN_NOEXCEPT;
-// 
-// };
+namespace XInput
+{
+
+};

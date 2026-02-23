@@ -9,7 +9,23 @@
 Bluetooth btManager;
 Window windowManager;
 Scanner controllerScanner;
+
 extern HMODULE g_xinputModule;
+
+extern pXInputGetStateEx funcGetStateEx;
+extern pXInputWaitForGuideButton  funcWaitForGuideButton;
+extern pXInputCancelGuideButtonWait  funcCancelGuideButtonWait;
+extern pXInputPowerOffController  funcPowerOffController;
+extern pXInputGetBaseBusInformation  funcBaseBusInformation;
+extern pXInputGetCapabilitiesEx funcGetCapabilitiesEx;
+
+extern pXInputGetCapabilities funcGetCapabilities;
+extern pXInputEnable funcEnable;
+extern pXInputGetBatteryInformation funcGetBatteryInformation;
+extern pXInputGetKeystroke funcGetKeystroke;
+extern pXInputGetAudioDeviceIds funcGetAudioDeviceIds;
+extern pXInputGetDSoundAudioDeviceGuids funcGetDSoundGuids;
+
 static GenericInputController ControllerSlots[MAX_CONTROLLERS];
 static DWORD LastError;
 static bool RegisterWindowFlag = false;
@@ -245,40 +261,6 @@ DWORD GenericInput::XInputSetState(DWORD dwUserIndex, INPUT_VIBRATION* pVibratio
 	}
 	return ERROR_SUCCESS;
 }
-// DWORD XInput1_3::XInputGetDSoundAudioDeviceGuids(DWORD dwUserIndex, GUID* pDSoundRenderGuid, GUID* pDSoundCaptureGuid)//Ignore the directsound stuff, the guids are for modern sound devices...
-// {
-// 	/*To support this I will need to add methods to get audio from controllers and microphone support*/
-// 	return ERROR_DEVICE_NOT_CONNECTED;
-// }
-// DWORD WINAPI XInput1_3::XInputGetCapabilities
-// (
-// 	_In_  DWORD                dwUserIndex,   // Index of the gamer associated with the device
-// 	_In_  DWORD                dwFlags,       // Input flags that identify the device type
-// 	_Out_ XINPUT_CAPABILITIES* pCapabilities  // Receives the capabilities
-// )
-// {
-// 	switch (dwFlags)
-// 	{
-// 	case INPUT_FLAG_GAMEPAD:
-// 	{
-// 		if (ControllerSlots[dwUserIndex].conType == controllerType::XInput)
-// 		{
-// 			return ERROR_SUCCESS;
-// 		}
-// 		break;
-// 	}
-// 	default:
-// 	{
-// 		return ERROR_DEVICE_NOT_CONNECTED;// Non gamepads aren't supported yet.
-// 	}
-// 	}
-// 
-// 	return ERROR_DEVICE_NOT_CONNECTED;
-// }
-// DWORD GenericInput::XInputEnable(BOOL enable)
-// {
-// 	return ERROR_SUCCESS;
-// }
 DWORD GenericInput::GetType(DWORD dwUserIndex)
 {
 	return ControllerSlots[dwUserIndex].conType;

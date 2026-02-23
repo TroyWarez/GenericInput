@@ -19,20 +19,6 @@ constexpr int ORDINAL_103_POWER_OFF_CONTROLLER = 103;
 constexpr int ORDINAL_104_GET_BASE_BUS_INFORMATION = 104;
 constexpr int ORDINAL_108_GET_CAPABILITIES_EX = 108;
 
-typedef DWORD(WINAPI* pXInputGetStateEx)(DWORD, XINPUT_STATE*);
-typedef DWORD(WINAPI* pXInputWaitForGuideButton)(DWORD, DWORD, LONGLONG);
-typedef DWORD(WINAPI* pXInputCancelGuideButtonWait)(DWORD);
-typedef DWORD(WINAPI* pXInputPowerOffController)(DWORD);
-typedef DWORD(WINAPI* pXInputGetBaseBusInformation)(UINT, LONGLONG, LONGLONG);
-typedef DWORD(WINAPI* pXInputGetCapabilitiesEx)(DWORD, LONGLONG, LONGLONG);
-
-typedef DWORD(WINAPI* pXInputGetCapabilities)(DWORD, DWORD, XINPUT_CAPABILITIES*);
-typedef void (WINAPI* pXInputEnable)(BOOL);
-typedef DWORD(WINAPI* pXInputGetBatteryInformation)(DWORD, BYTE, XINPUT_BATTERY_INFORMATION*);
-typedef DWORD(WINAPI* pXInputGetKeystroke)(DWORD, DWORD, PXINPUT_KEYSTROKE);
-typedef DWORD(WINAPI* pXInputGetAudioDeviceIds)(DWORD, LPWSTR, UINT*, LPWSTR, UINT*);
-typedef DWORD(WINAPI* pXInputGetDSoundAudioDeviceGuids)(DWORD, GUID*, GUID*);
-
 HMODULE g_hXinputModule = nullptr;
 
 pXInputGetStateEx funcGetStateEx = nullptr;
