@@ -266,3 +266,36 @@ DWORD GenericInput::GetType(DWORD dwUserIndex)
 {
 	return ControllerSlots[dwUserIndex].conType;
 }
+
+DWORD XInputExports::XInputGetStateEx(DWORD dwUserIndex, XINPUT_STATE* pState)
+{
+	if (funcGetStateEx)
+	{
+		return funcGetStateEx(dwUserIndex, pState);
+	}
+
+	return ERROR_DEVICE_NOT_CONNECTED;
+}
+DWORD XInputExports::XInputWaitForGuideButton(DWORD dwUserIndex, DWORD dwFlag, LONGLONG)
+{
+	if (funcWaitForGuideButton)
+	{
+		return funcWaitForGuideButton(dwUserIndex, dwFlag, 0);
+	}
+
+	return ERROR_DEVICE_NOT_CONNECTED;
+}
+DWORD XInputExports::XInputCancelGuideButtonWait(DWORD dwUserIndex)
+{
+
+}
+DWORD XInputExports::XInputPowerOffController(DWORD dwUserIndex);
+DWORD XInputExports::XInputGetBaseBusInformation(DWORD dwUserIndex, LONGLONG, LONGLONG);
+DWORD XInputExports::XInputGetCapabilitiesEx(DWORD dwUserIndex, LONGLONG, LONGLONG);
+
+DWORD XInputExports::XInputGetCapabilities(DWORD dwUserIndex, DWORD dwFlags, PXINPUT_CAPABILITIES pState);
+void  XInputExports::XInputEnable(BOOL enable);
+DWORD XInputExports::XInputGetBatteryInformation(DWORD dwUserIndex, BYTE devType, PXINPUT_BATTERY_INFORMATION pBatteryInformation);
+DWORD XInputExports::XInputGetKeystroke(DWORD dwUserIndex, DWORD dwReserved, PXINPUT_KEYSTROKE pKeystroke);
+DWORD XInputExports::XInputGetAudioDeviceIds(DWORD dwUserIndex, LPWSTR pRenderDeviceId, UINT* pRenderCount, LPWSTR pCaptureDeviceId, UINT* pCaptureCount);
+DWORD XInputExports::XInputGetDSoundAudioDeviceGuids(DWORD dwUserIndex, GUID* pDSoundRenderGuid, GUID* pDSoundCaptureGuid);
