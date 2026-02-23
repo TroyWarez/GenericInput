@@ -12,6 +12,7 @@ Scanner controllerScanner;
 
 extern HMODULE g_xinputModule;
 
+// Ordinals
 extern pXInputGetStateEx funcGetStateEx;
 extern pXInputWaitForGuideButton  funcWaitForGuideButton;
 extern pXInputCancelGuideButtonWait  funcCancelGuideButtonWait;
