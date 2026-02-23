@@ -72,7 +72,7 @@ namespace GenericInput
     DWORD GetType(DWORD dwUserIndex);
 };
 
-namespace XInput
+namespace XInput_dll
 {
 
 };
