@@ -78,8 +78,8 @@ namespace XInputExports
 	DWORD XInputWaitForGuideButton (DWORD dwUserIndex, DWORD dwFlag, LONGLONG lUnkown);
 	DWORD XInputCancelGuideButtonWait (DWORD dwUserIndex);
 	DWORD XInputPowerOffController (DWORD dwUserIndex);
-	DWORD XInputGetBaseBusInformation (DWORD dwUserIndex, LONGLONG lUnkown, LONGLONG lUnkown);
-	DWORD XInputGetCapabilitiesEx (DWORD dwUserIndex, LONGLONG lUnkown, LONGLONG lUnkown);
+	DWORD XInputGetBaseBusInformation (DWORD dwUserIndex, LONGLONG lUnkown, LONGLONG lUnkown2);
+	DWORD XInputGetCapabilitiesEx (DWORD dwUserIndex, LONGLONG lUnkown, LONGLONG lUnkown2);
 
 	DWORD XInputGetCapabilities (DWORD dwUserIndex, DWORD dwFlags, PXINPUT_CAPABILITIES pState);
 	void  XInputEnable (BOOL enable);
