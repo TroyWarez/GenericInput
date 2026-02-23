@@ -7,11 +7,17 @@
 #include <Xinput.h>
 #include "GenericInput.h"
 
-constexpr size_t NXINPUT_DLL_EXPORTS = 5;
-constexpr size_t NXINPUT_DLL_ORDINALS = 7;
+constexpr int NXINPUT_DLL_EXPORTS = 5;
+constexpr int NXINPUT_DLL_ORDINALS = 7;
 
-constexpr size_t NXINPUT_DLLS = 5;
+constexpr int NXINPUT_DLLS = 5;
 
+constexpr int ORDINAL_100_GET_STATE_EX = 100;
+constexpr int ORDINAL_101_WAIT_FOR_GUIDE_BUTTON = 101;
+constexpr int ORDINAL_102_CANCEL_GUIDE_BUTTON_WAIT = 102;
+constexpr int ORDINAL_103_POWER_OFF_CONTROLLER = 103;
+constexpr int ORDINAL_104_GET_BASE_BUS_INFORMATION = 104;
+constexpr int ORDINAL_108_GET_CAPABILITIES_EX = 108;
 
 typedef DWORD(WINAPI* pXInputGetStateEx)(DWORD, XINPUT_STATE*);
 typedef DWORD(WINAPI* XInputWaitForGuideButton)(DWORD, LONGLONG, LONGLONG);
@@ -47,19 +53,29 @@ struct XInputDll
 const std::array<XInputDll, NXINPUT_DLLS> XinputDlls = {
 
     XInputDll{ { "XInputGetCapabilities", "XInputEnable", "XInputGetBatteryInformation", "XInputGetKeystroke", "XInputGetAudioDeviceIds" }, 
-    { 100, 101, 102, 103, 104, 108, 0 }, L"XINPUT1_4.dll" },
+    { ORDINAL_100_GET_STATE_EX,
+	  ORDINAL_101_WAIT_FOR_GUIDE_BUTTON,
+	  ORDINAL_102_CANCEL_GUIDE_BUTTON_WAIT,
+	  ORDINAL_103_POWER_OFF_CONTROLLER,
+	  ORDINAL_104_GET_BASE_BUS_INFORMATION,
+	  ORDINAL_108_GET_CAPABILITIES_EX,
+	  NULL }, L"XINPUT1_4.dll" },
 
     XInputDll{ { "XInputGetCapabilities", "XInputEnable", "XInputGetDSoundAudioDeviceGuids", "XInputGetBatteryInformation", "XInputGetKeystroke" },
-    { 100, 101, 102, 103, 0, 0 }, L"XINPUT1_3.dll" },
+    { ORDINAL_100_GET_STATE_EX,
+	  ORDINAL_101_WAIT_FOR_GUIDE_BUTTON,
+	  ORDINAL_102_CANCEL_GUIDE_BUTTON_WAIT,
+	  ORDINAL_103_POWER_OFF_CONTROLLER,
+	  NULL, NULL }, L"XINPUT1_3.dll" },
 
     XInputDll{ { "XInputGetCapabilities", "XInputGetDSoundAudioDeviceGuids", "", "", "" },
-    { 0, 0, 0, 0, 0, 0, 0 }, L"XINPUT1_2.dll" },
+    { NULL, NULL, NULL, NULL, NULL, NULL, NULL }, L"XINPUT1_2.dll" },
 
 	XInputDll{ { "XInputGetCapabilities", "XInputGetDSoundAudioDeviceGuids", "", "", "" },
-	{ 0, 0, 0, 0, 0, 0, 0 }, L"XINPUT1_1.dll" },
+	{ NULL, NULL, NULL, NULL, NULL, NULL, NULL }, L"XINPUT1_1.dll" },
 
     XInputDll{ { "XInputGetCapabilities", "XInputEnable", "XInputGetBatteryInformation", "XInputGetDSoundAudioDeviceGuids",   "XInputGetKeystroke" }, 
-    { 0, 0, 0, 0, 0, 0, 0 }, L"XINPUT9_1_0.dll" }
+    { NULL, NULL, NULL, NULL, NULL, NULL, NULL }, L"XINPUT9_1_0.dll" }
 };
 
 extern Window windowManager;
@@ -163,18 +179,18 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 										for (size_t i = 0; i < dll.ImportOrdinals.size(); i++) {
 											if (dll.ImportOrdinals[i] != 0) {
 												switch (dll.ImportOrdinals[i]) {
-													case 100:
-														funcGetStateEx = (pXInputGetStateEx)GetProcAddress(g_hXinputModule, MAKEINTRESOURCEA(100));
+													case ORDINAL_100_GET_STATE_EX:
+														funcGetStateEx = (pXInputGetStateEx)GetProcAddress(g_hXinputModule, MAKEINTRESOURCEA(ORDINAL_100_GET_STATE_EX));
 														break;
-													case 101:
+													case ORDINAL_101_WAIT_FOR_GUIDE_BUTTON:
 														break;
-													case 102:
+													case ORDINAL_102_CANCEL_GUIDE_BUTTON_WAIT:
 														break;
-													case 103:
+													case ORDINAL_103_POWER_OFF_CONTROLLER:
 														break;
-													case 104:
+													case ORDINAL_104_GET_BASE_BUS_INFORMATION:
 														break;
-													case 108:
+													case ORDINAL_108_GET_CAPABILITIES_EX:
 														break;
 													default:
 														break;
