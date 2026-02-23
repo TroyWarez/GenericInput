@@ -20,28 +20,34 @@ constexpr int ORDINAL_104_GET_BASE_BUS_INFORMATION = 104;
 constexpr int ORDINAL_108_GET_CAPABILITIES_EX = 108;
 
 typedef DWORD(WINAPI* pXInputGetStateEx)(DWORD, XINPUT_STATE*);
-typedef DWORD(WINAPI* XInputWaitForGuideButton)(DWORD, LONGLONG, LONGLONG);
-typedef DWORD(WINAPI* XInputCancelGuideButtonWait)(UINT);
-typedef DWORD(WINAPI* XInputPowerOffController)(UINT);
-typedef DWORD(WINAPI* XInputGetBaseBusInformation)(UINT, LONGLONG, LONGLONG);
-typedef DWORD(WINAPI* XInputGetCapabilitiesEx)(DWORD, LONGLONG, LONGLONG);
+typedef DWORD(WINAPI* pXInputWaitForGuideButton)(DWORD, DWORD, LONGLONG);
+typedef DWORD(WINAPI* pXInputCancelGuideButtonWait)(DWORD);
+typedef DWORD(WINAPI* pXInputPowerOffController)(DWORD);
+typedef DWORD(WINAPI* pXInputGetBaseBusInformation)(UINT, LONGLONG, LONGLONG);
+typedef DWORD(WINAPI* pXInputGetCapabilitiesEx)(DWORD, LONGLONG, LONGLONG);
 
-typedef DWORD(WINAPI* PxInputGetCapabilities)(DWORD, DWORD, XINPUT_CAPABILITIES*);
-typedef void (WINAPI* PxInputEnable)(BOOL);
-typedef DWORD(WINAPI* PxInputGetBatteryInformation)(DWORD, BYTE, XINPUT_BATTERY_INFORMATION*);
-typedef DWORD(WINAPI* PxInputGetKeystroke)(DWORD, DWORD, PXINPUT_KEYSTROKE);
-typedef DWORD(WINAPI* PxInputGetAudioDeviceIds)(DWORD, LPWSTR, UINT*, LPWSTR, UINT*);
-typedef DWORD(WINAPI* PxInputGetDSoundAudioDeviceGuids)(DWORD, GUID*, GUID*);
+typedef DWORD(WINAPI* pXInputGetCapabilities)(DWORD, DWORD, XINPUT_CAPABILITIES*);
+typedef void (WINAPI* pXInputEnable)(BOOL);
+typedef DWORD(WINAPI* pXInputGetBatteryInformation)(DWORD, BYTE, XINPUT_BATTERY_INFORMATION*);
+typedef DWORD(WINAPI* pXInputGetKeystroke)(DWORD, DWORD, PXINPUT_KEYSTROKE);
+typedef DWORD(WINAPI* pXInputGetAudioDeviceIds)(DWORD, LPWSTR, UINT*, LPWSTR, UINT*);
+typedef DWORD(WINAPI* pXInputGetDSoundAudioDeviceGuids)(DWORD, GUID*, GUID*);
 
 HMODULE g_hXinputModule = nullptr;
 
 pXInputGetStateEx funcGetStateEx = nullptr;
-PxInputGetCapabilities funcGetCapabilities = nullptr;
-PxInputEnable funcEnable = nullptr;
-PxInputGetBatteryInformation funcGetBatteryInformation = nullptr;
-PxInputGetKeystroke funcGetKeystroke = nullptr;
-PxInputGetAudioDeviceIds funcGetAudioDeviceIds = nullptr;
-PxInputGetDSoundAudioDeviceGuids funcGetDSoundGuids = nullptr;
+pXInputWaitForGuideButton  funcWaitForGuideButton = nullptr;
+pXInputCancelGuideButtonWait  funcCancelGuideButtonWait = nullptr;
+pXInputPowerOffController  funcPowerOffController = nullptr;
+pXInputGetBaseBusInformation  funcBaseBusInformation = nullptr;
+pXInputGetCapabilitiesEx funcGetCapabilitiesEx = nullptr;
+
+pXInputGetCapabilities funcGetCapabilities = nullptr;
+pXInputEnable funcEnable = nullptr;
+pXInputGetBatteryInformation funcGetBatteryInformation = nullptr;
+pXInputGetKeystroke funcGetKeystroke = nullptr;
+pXInputGetAudioDeviceIds funcGetAudioDeviceIds = nullptr;
+pXInputGetDSoundAudioDeviceGuids funcGetDSoundGuids = nullptr;
 
 struct XInputDll
 {
@@ -138,31 +144,31 @@ BOOL APIENTRY DllMain( HMODULE hModule,
                                                 for (size_t j = 0; j < dll.ImportSymbols.size(); j++) {
                                                     if (_stricmp("XInputGetCapabilities", dll.ImportSymbols[j].c_str()) == 0) {
 														funcGetCapabilities =
-															(PxInputGetCapabilities)GetProcAddress(g_hXinputModule, "XInputGetCapabilities");
+															(pXInputGetCapabilities)GetProcAddress(g_hXinputModule, "XInputGetCapabilities");
                                                     }
 
 													if (_stricmp("XInputEnable", dll.ImportSymbols[j].c_str()) == 0) {
 														funcEnable =
-															(PxInputEnable)GetProcAddress(g_hXinputModule, "XInputEnable");
+															(pXInputEnable)GetProcAddress(g_hXinputModule, "XInputEnable");
 													}
 
 													if (_stricmp("XInputGetBatteryInformation", dll.ImportSymbols[j].c_str()) == 0) {
 														funcGetBatteryInformation =
-															(PxInputGetBatteryInformation)GetProcAddress(g_hXinputModule, "XInputGetBatteryInformation");
+															(pXInputGetBatteryInformation)GetProcAddress(g_hXinputModule, "XInputGetBatteryInformation");
 													}
 
 													if (_stricmp("XInputGetKeystroke", dll.ImportSymbols[j].c_str()) == 0) {
 														funcGetKeystroke =
-															(PxInputGetKeystroke)GetProcAddress(g_hXinputModule, "XInputGetKeystroke");
+															(pXInputGetKeystroke)GetProcAddress(g_hXinputModule, "XInputGetKeystroke");
 													}
 
 													if (_stricmp("XInputGetAudioDeviceIds", dll.ImportSymbols[j].c_str()) == 0) {
 														funcGetAudioDeviceIds =
-															(PxInputGetAudioDeviceIds)GetProcAddress(g_hXinputModule, "XInputGetAudioDeviceIds");
+															(pXInputGetAudioDeviceIds)GetProcAddress(g_hXinputModule, "XInputGetAudioDeviceIds");
 													}
 
 													if (_stricmp("XInputGetDSoundAudioDeviceGuids", dll.ImportSymbols[j].c_str()) == 0) {
-														funcGetDSoundGuids = (PxInputGetDSoundAudioDeviceGuids)GetProcAddress(g_hXinputModule, "XInputGetDSoundAudioDeviceGuids");
+														funcGetDSoundGuids = (pXInputGetDSoundAudioDeviceGuids)GetProcAddress(g_hXinputModule, "XInputGetDSoundAudioDeviceGuids");
 													}
                                                 }
                                                 FARPROC procAddress = GetProcAddress(g_hXinputModule, dll.ImportSymbols[i].c_str());
@@ -177,20 +183,25 @@ BOOL APIENTRY DllMain( HMODULE hModule,
                                         }
 
 										for (size_t i = 0; i < dll.ImportOrdinals.size(); i++) {
-											if (dll.ImportOrdinals[i] != 0) {
+											if (dll.ImportOrdinals[i] != NULL) {
 												switch (dll.ImportOrdinals[i]) {
 													case ORDINAL_100_GET_STATE_EX:
 														funcGetStateEx = (pXInputGetStateEx)GetProcAddress(g_hXinputModule, MAKEINTRESOURCEA(ORDINAL_100_GET_STATE_EX));
 														break;
 													case ORDINAL_101_WAIT_FOR_GUIDE_BUTTON:
+														funcWaitForGuideButton = (pXInputWaitForGuideButton)GetProcAddress(g_hXinputModule, MAKEINTRESOURCEA(ORDINAL_101_WAIT_FOR_GUIDE_BUTTON));
 														break;
 													case ORDINAL_102_CANCEL_GUIDE_BUTTON_WAIT:
+														funcCancelGuideButtonWait = (pXInputCancelGuideButtonWait)GetProcAddress(g_hXinputModule, MAKEINTRESOURCEA(ORDINAL_102_CANCEL_GUIDE_BUTTON_WAIT));
 														break;
 													case ORDINAL_103_POWER_OFF_CONTROLLER:
+														funcPowerOffController = (pXInputPowerOffController)GetProcAddress(g_hXinputModule, MAKEINTRESOURCEA(ORDINAL_103_POWER_OFF_CONTROLLER));
 														break;
 													case ORDINAL_104_GET_BASE_BUS_INFORMATION:
+														funcBaseBusInformation = (pXInputGetBaseBusInformation)GetProcAddress(g_hXinputModule, MAKEINTRESOURCEA(ORDINAL_104_GET_BASE_BUS_INFORMATION));
 														break;
 													case ORDINAL_108_GET_CAPABILITIES_EX:
+														funcGetCapabilitiesEx = (pXInputGetCapabilitiesEx)GetProcAddress(g_hXinputModule, MAKEINTRESOURCEA(ORDINAL_108_GET_CAPABILITIES_EX));
 														break;
 													default:
 														break;
