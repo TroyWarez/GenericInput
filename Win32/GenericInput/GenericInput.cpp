@@ -9,7 +9,6 @@
 Bluetooth btManager;
 Window windowManager;
 Scanner controllerScanner;
-
 extern HMODULE g_xinputModule;
 
 // Ordinals
@@ -196,7 +195,7 @@ LRESULT GenericInput::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 	}
 	return 0;
 }
-DWORD GenericInput::XInputGetState(DWORD dwUserIndex, GENERIC_INPUT_STATE* pState)
+DWORD GenericInput::XInputGetState(DWORD dwUserIndex, PGENERIC_INPUT_STATE pState)
 {
 	if (pState == nullptr || dwUserIndex > 7)
 	{
@@ -254,7 +253,7 @@ DWORD GenericInput::XInputGetState(DWORD dwUserIndex, GENERIC_INPUT_STATE* pStat
 	}
 	return ERROR_SUCCESS;
 }
-DWORD GenericInput::XInputSetState(DWORD dwUserIndex, INPUT_VIBRATION* pVibration)
+DWORD GenericInput::XInputSetState(DWORD dwUserIndex, PGENERIC_VIBRATION pVibration)
 {
 	if (pVibration == nullptr || dwUserIndex > 7)
 	{
@@ -267,7 +266,7 @@ DWORD GenericInput::GetType(DWORD dwUserIndex)
 	return ControllerSlots[dwUserIndex].conType;
 }
 
-DWORD XInputExports::XInputGetStateEx(DWORD dwUserIndex, XINPUT_STATE* pState)
+DWORD XInputDLL::XInputGetStateEx(DWORD dwUserIndex, PGENERIC_INPUT_STATE pState)
 {
 	if (funcGetStateEx)
 	{
@@ -276,26 +275,103 @@ DWORD XInputExports::XInputGetStateEx(DWORD dwUserIndex, XINPUT_STATE* pState)
 
 	return ERROR_DEVICE_NOT_CONNECTED;
 }
-DWORD XInputExports::XInputWaitForGuideButton(DWORD dwUserIndex, DWORD dwFlag, LONGLONG)
+DWORD XInputDLL::XInputWaitForGuideButton(DWORD dwUserIndex, DWORD dwFlags, PGENERIC_INPUT_STATE pState)
 {
 	if (funcWaitForGuideButton)
 	{
-		return funcWaitForGuideButton(dwUserIndex, dwFlag, 0);
+		return funcWaitForGuideButton(dwUserIndex, dwFlags, 0);
 	}
 
 	return ERROR_DEVICE_NOT_CONNECTED;
 }
-DWORD XInputExports::XInputCancelGuideButtonWait(DWORD dwUserIndex)
+
+DWORD XInputDLL::XInputCancelGuideButtonWait(DWORD dwUserIndex)
 {
+	if (funcCancelGuideButtonWait)
+	{
+		return funcCancelGuideButtonWait(dwUserIndex);
+	}
 
+	return ERROR_DEVICE_NOT_CONNECTED;
 }
-DWORD XInputExports::XInputPowerOffController(DWORD dwUserIndex);
-DWORD XInputExports::XInputGetBaseBusInformation(DWORD dwUserIndex, LONGLONG, LONGLONG);
-DWORD XInputExports::XInputGetCapabilitiesEx(DWORD dwUserIndex, LONGLONG, LONGLONG);
+DWORD XInputDLL::XInputPowerOffController(DWORD dwUserIndex)
+{
+	if (funcPowerOffController)
+	{
+		return funcPowerOffController(dwUserIndex);
+	}
 
-DWORD XInputExports::XInputGetCapabilities(DWORD dwUserIndex, DWORD dwFlags, PXINPUT_CAPABILITIES pState);
-void  XInputExports::XInputEnable(BOOL enable);
-DWORD XInputExports::XInputGetBatteryInformation(DWORD dwUserIndex, BYTE devType, PXINPUT_BATTERY_INFORMATION pBatteryInformation);
-DWORD XInputExports::XInputGetKeystroke(DWORD dwUserIndex, DWORD dwReserved, PXINPUT_KEYSTROKE pKeystroke);
-DWORD XInputExports::XInputGetAudioDeviceIds(DWORD dwUserIndex, LPWSTR pRenderDeviceId, UINT* pRenderCount, LPWSTR pCaptureDeviceId, UINT* pCaptureCount);
-DWORD XInputExports::XInputGetDSoundAudioDeviceGuids(DWORD dwUserIndex, GUID* pDSoundRenderGuid, GUID* pDSoundCaptureGuid);
+	return ERROR_DEVICE_NOT_CONNECTED;
+}
+DWORD XInputDLL::XInputGetBaseBusInformation(DWORD dwUserIndex, PGENERIC_CAPABILITIES pCapabilities, PGENERIC_CAPABILITIES pCapabilities2)
+{
+	if (funcPowerOffController)
+	{
+		return funcPowerOffController(dwUserIndex);
+	}
+
+	return ERROR_DEVICE_NOT_CONNECTED;
+}
+DWORD XInputDLL::XInputGetCapabilitiesEx(DWORD dwUserIndex, PGENERIC_CAPABILITIES pCapabilities, PGENERIC_CAPABILITIES pCapabilities2)
+{
+	if (funcGetCapabilitiesEx)
+	{
+		return funcGetCapabilitiesEx(dwUserIndex, pCapabilities, pCapabilities2);
+	}
+
+	return ERROR_DEVICE_NOT_CONNECTED;
+}
+
+// Documented
+DWORD XInputDLL::XInputGetCapabilities(DWORD dwUserIndex, DWORD dwFlags, PGENERIC_CAPABILITIES pCapabilities)
+{
+	if (funcGetCapabilities)
+	{
+		return funcGetCapabilities(dwUserIndex, dwFlags, pCapabilities);
+	}
+
+	return ERROR_DEVICE_NOT_CONNECTED;
+}
+void XInputDLL::XInputEnable(BOOL enable)
+{
+	if (funcEnable)
+	{
+		return funcEnable(enable);
+	}
+}
+DWORD XInputDLL::XInputGetBatteryInformation(DWORD dwUserIndex, BYTE devType, PGENERIC_BATTERY_INFORMATION pBatteryInformation)
+{
+	if (funcGetBatteryInformation)
+	{
+		return funcGetBatteryInformation(dwUserIndex, devType, pBatteryInformation);
+	}
+
+	return ERROR_DEVICE_NOT_CONNECTED;
+}
+DWORD XInputDLL::XInputGetKeystroke(DWORD dwUserIndex, DWORD dwReserved, PGENERIC_KEYSTROKE pKeystroke)
+{
+	if (funcGetKeystroke)
+	{
+		return funcGetKeystroke(dwUserIndex, dwReserved, pKeystroke);
+	}
+
+	return ERROR_DEVICE_NOT_CONNECTED;
+}
+DWORD XInputDLL::XInputGetAudioDeviceIds(DWORD dwUserIndex, LPWSTR pRenderDeviceId, UINT* pRenderCount, LPWSTR pCaptureDeviceId, UINT* pCaptureCount)
+{
+	if (funcGetAudioDeviceIds)
+	{
+		return funcGetAudioDeviceIds(dwUserIndex, pRenderDeviceId, pRenderCount, pCaptureDeviceId, pCaptureCount);
+	}
+
+	return ERROR_DEVICE_NOT_CONNECTED;
+}
+DWORD XInputDLL::XInputGetDSoundAudioDeviceGuids(DWORD dwUserIndex, GUID* pDSoundRenderGuid, GUID* pDSoundCaptureGuid)
+{
+	if (funcGetDSoundGuids)
+	{
+		return funcGetDSoundGuids(dwUserIndex, pDSoundRenderGuid, pDSoundCaptureGuid);
+	}
+
+	return ERROR_DEVICE_NOT_CONNECTED;
+}

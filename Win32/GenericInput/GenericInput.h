@@ -1,26 +1,11 @@
 #pragma once
 #include "GenericInputController.h"
-#include <xinput.h>
 constexpr int WM_CONTROLLER_CONNECTED = 0x8007;
 constexpr int WM_CONTROLLER_DISCONNECTED = 0x8008;
 
 constexpr int INPUT_FLAG_GAMEPAD = 0;
 
 constexpr bool bHookWndProc = false;
-
-typedef DWORD(WINAPI* pXInputGetStateEx)(DWORD, XINPUT_STATE*);
-typedef DWORD(WINAPI* pXInputWaitForGuideButton)(DWORD, DWORD, LONGLONG);
-typedef DWORD(WINAPI* pXInputCancelGuideButtonWait)(DWORD);
-typedef DWORD(WINAPI* pXInputPowerOffController)(DWORD);
-typedef DWORD(WINAPI* pXInputGetBaseBusInformation)(UINT, LONGLONG, LONGLONG);
-typedef DWORD(WINAPI* pXInputGetCapabilitiesEx)(DWORD, LONGLONG, LONGLONG);
-
-typedef DWORD(WINAPI* pXInputGetCapabilities)(DWORD, DWORD, XINPUT_CAPABILITIES*);
-typedef void (WINAPI* pXInputEnable)(BOOL);
-typedef DWORD(WINAPI* pXInputGetBatteryInformation)(DWORD, BYTE, XINPUT_BATTERY_INFORMATION*);
-typedef DWORD(WINAPI* pXInputGetKeystroke)(DWORD, DWORD, PXINPUT_KEYSTROKE);
-typedef DWORD(WINAPI* pXInputGetAudioDeviceIds)(DWORD, LPWSTR, UINT*, LPWSTR, UINT*);
-typedef DWORD(WINAPI* pXInputGetDSoundAudioDeviceGuids)(DWORD, GUID*, GUID*);
 
 typedef struct _GENERIC_INPUT_GAMEPAD
 {
@@ -53,17 +38,40 @@ typedef struct _GENERIC_CAPABILITIES {
     GENERIC_VIBRATION Vibration;
 } GENERIC_CAPABILITIES, * PGENERIC_CAPABILITIES;
 
-typedef struct _INPUT_VIBRATION
+typedef struct _GENERIC_BATTERY_INFORMATION
 {
-    WORD                                wLeftMotorSpeed;
-    WORD                                wRightMotorSpeed;
-} INPUT_VIBRATION, * PINPUT_VIBRATION;
+	BYTE BatteryType;
+	BYTE BatteryLevel;
+} GENERIC_BATTERY_INFORMATION, * PGENERIC_BATTERY_INFORMATION;
+
+typedef struct _GENERIC_KEYSTROKE
+{
+	WORD    VirtualKey;
+	WCHAR   Unicode;
+	WORD    Flags;
+	BYTE    UserIndex;
+	BYTE    HidCode;
+} GENERIC_KEYSTROKE, * PGENERIC_KEYSTROKE;
+
+typedef DWORD(WINAPI* pXInputGetStateEx)(DWORD, PGENERIC_INPUT_STATE);
+typedef DWORD(WINAPI* pXInputWaitForGuideButton)(DWORD, DWORD, PGENERIC_INPUT_STATE);
+typedef DWORD(WINAPI* pXInputCancelGuideButtonWait)(DWORD);
+typedef DWORD(WINAPI* pXInputPowerOffController)(DWORD);
+typedef DWORD(WINAPI* pXInputGetBaseBusInformation)(UINT, PGENERIC_CAPABILITIES, PGENERIC_CAPABILITIES);
+typedef DWORD(WINAPI* pXInputGetCapabilitiesEx)(DWORD, PGENERIC_CAPABILITIES, PGENERIC_CAPABILITIES);
+
+typedef DWORD(WINAPI* pXInputGetCapabilities)(DWORD, DWORD, PGENERIC_CAPABILITIES);
+typedef void (WINAPI* pXInputEnable)(BOOL);
+typedef DWORD(WINAPI* pXInputGetBatteryInformation)(DWORD, BYTE, PGENERIC_BATTERY_INFORMATION);
+typedef DWORD(WINAPI* pXInputGetKeystroke)(DWORD, DWORD, PGENERIC_KEYSTROKE);
+typedef DWORD(WINAPI* pXInputGetAudioDeviceIds)(DWORD, LPWSTR, UINT*, LPWSTR, UINT*);
+typedef DWORD(WINAPI* pXInputGetDSoundAudioDeviceGuids)(DWORD, GUID*, GUID*);
 
 namespace GenericInput
 {
 	LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-    DWORD XInputGetState(DWORD dwUserIndex, GENERIC_INPUT_STATE* pState);
-    DWORD XInputSetState(DWORD dwUserIndex, INPUT_VIBRATION* pVibration);
+    DWORD XInputGetState(DWORD dwUserIndex, PGENERIC_INPUT_STATE pState);
+    DWORD XInputSetState(DWORD dwUserIndex, PGENERIC_VIBRATION pVibration);
 
 	BOOL CALLBACK EnumWindowsProc(
 		_In_ HWND   hwnd,
@@ -72,19 +80,19 @@ namespace GenericInput
     DWORD GetType(DWORD dwUserIndex);
 };
 
-namespace XInputExports
+namespace XInputDLL
 {
-	DWORD XInputGetStateEx (DWORD dwUserIndex, XINPUT_STATE* pState);
-	DWORD XInputWaitForGuideButton (DWORD dwUserIndex, DWORD dwFlag, LONGLONG lUnkown);
+	DWORD XInputGetStateEx (DWORD dwUserIndex, PGENERIC_INPUT_STATE pState);
+	DWORD XInputWaitForGuideButton (DWORD dwUserIndex, DWORD dwFlags, PGENERIC_INPUT_STATE pState); // Broken
 	DWORD XInputCancelGuideButtonWait (DWORD dwUserIndex);
 	DWORD XInputPowerOffController (DWORD dwUserIndex);
-	DWORD XInputGetBaseBusInformation (DWORD dwUserIndex, LONGLONG lUnkown, LONGLONG lUnkown2);
-	DWORD XInputGetCapabilitiesEx (DWORD dwUserIndex, LONGLONG lUnkown, LONGLONG lUnkown2);
+	DWORD XInputGetBaseBusInformation (DWORD dwUserIndex, PGENERIC_CAPABILITIES pCapabilities, PGENERIC_CAPABILITIES pCapabilities2); // Broken
+	DWORD XInputGetCapabilitiesEx (DWORD dwUserIndex, PGENERIC_CAPABILITIES pCapabilities, PGENERIC_CAPABILITIES pCapabilities2); // Broken
 
-	DWORD XInputGetCapabilities (DWORD dwUserIndex, DWORD dwFlags, PXINPUT_CAPABILITIES pState);
+	DWORD XInputGetCapabilities (DWORD dwUserIndex, DWORD dwFlags, PGENERIC_CAPABILITIES pCapabilities);
 	void  XInputEnable (BOOL enable);
-	DWORD XInputGetBatteryInformation (DWORD dwUserIndex, BYTE devType, PXINPUT_BATTERY_INFORMATION pBatteryInformation);
-	DWORD XInputGetKeystroke (DWORD dwUserIndex, DWORD dwReserved, PXINPUT_KEYSTROKE pKeystroke);
+	DWORD XInputGetBatteryInformation (DWORD dwUserIndex, BYTE devType, PGENERIC_BATTERY_INFORMATION pBatteryInformation);
+	DWORD XInputGetKeystroke (DWORD dwUserIndex, DWORD dwReserved, PGENERIC_KEYSTROKE pKeystroke);
 	DWORD XInputGetAudioDeviceIds (DWORD dwUserIndex, LPWSTR pRenderDeviceId, UINT* pRenderCount, LPWSTR pCaptureDeviceId, UINT* pCaptureCount);
 	DWORD XInputGetDSoundAudioDeviceGuids (DWORD dwUserIndex, GUID* pDSoundRenderGuid, GUID* pDSoundCaptureGuid);
 };

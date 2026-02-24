@@ -3,7 +3,6 @@
 #include "Window.h"
 #include <array>
 #include <string.h>
-#include <Xinput.h>
 #include "GenericInput.h"
 
 constexpr int NXINPUT_DLL_EXPORTS = 5;
@@ -204,7 +203,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 
 			if (!g_hXinputModule)
 			{
-				MessageBoxW(nullptr, std::wstring(L"Failed to load" XINPUT_DLL ".Please ensure it is present in the system directory.").c_str(), L"Error", MB_ICONERROR);
+				MessageBoxW(nullptr, std::wstring(L"Failed to load XInput dll. Please ensure it is present in the system directory.").c_str(), L"Error", MB_ICONERROR);
 				return 1;
 			}
         }
