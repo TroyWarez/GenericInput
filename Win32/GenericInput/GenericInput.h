@@ -8,19 +8,19 @@ constexpr int INPUT_FLAG_GAMEPAD = 0;
 
 constexpr bool bHookWndProc = false;
 
-typedef DWORD pXInputGetStateEx (DWORD, PXINPUT_STATE);
-typedef DWORD pXInputWaitForGuideButton (DWORD, DWORD, LONGLONG);
-typedef DWORD pXInputCancelGuideButtonWait (DWORD);
-typedef DWORD pXInputPowerOffController (DWORD);
-typedef DWORD pXInputGetBaseBusInformation (DWORD, LONGLONG, LONGLONG);
-typedef DWORD pXInputGetCapabilitiesEx (DWORD, LONGLONG, LONGLONG);
+typedef DWORD(WINAPI* pXInputGetStateEx)(DWORD, XINPUT_STATE*);
+typedef DWORD(WINAPI* pXInputWaitForGuideButton)(DWORD, DWORD, LONGLONG);
+typedef DWORD(WINAPI* pXInputCancelGuideButtonWait)(DWORD);
+typedef DWORD(WINAPI* pXInputPowerOffController)(DWORD);
+typedef DWORD(WINAPI* pXInputGetBaseBusInformation)(UINT, LONGLONG, LONGLONG);
+typedef DWORD(WINAPI* pXInputGetCapabilitiesEx)(DWORD, LONGLONG, LONGLONG);
 
-typedef DWORD pXInputGetCapabilities (DWORD, DWORD, PXINPUT_CAPABILITIES);
-typedef void  pXInputEnable (BOOL);
-typedef DWORD pXInputGetBatteryInformation (DWORD, BYTE, PXINPUT_BATTERY_INFORMATION);
-typedef DWORD pXInputGetKeystroke (DWORD, DWORD, PXINPUT_KEYSTROKE);
-typedef DWORD pXInputGetAudioDeviceIds (DWORD, LPWSTR, UINT*, LPWSTR, UINT*);
-typedef DWORD pXInputGetDSoundAudioDeviceGuids (DWORD, GUID*, GUID*);
+typedef DWORD(WINAPI* pXInputGetCapabilities)(DWORD, DWORD, XINPUT_CAPABILITIES*);
+typedef void (WINAPI* pXInputEnable)(BOOL);
+typedef DWORD(WINAPI* pXInputGetBatteryInformation)(DWORD, BYTE, XINPUT_BATTERY_INFORMATION*);
+typedef DWORD(WINAPI* pXInputGetKeystroke)(DWORD, DWORD, PXINPUT_KEYSTROKE);
+typedef DWORD(WINAPI* pXInputGetAudioDeviceIds)(DWORD, LPWSTR, UINT*, LPWSTR, UINT*);
+typedef DWORD(WINAPI* pXInputGetDSoundAudioDeviceGuids)(DWORD, GUID*, GUID*);
 
 typedef struct _GENERIC_INPUT_GAMEPAD
 {
