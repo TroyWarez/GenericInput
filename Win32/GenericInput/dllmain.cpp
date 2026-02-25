@@ -158,14 +158,6 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 														funcGetDSoundGuids = (pXInputGetDSoundAudioDeviceGuids)GetProcAddress(g_hXinputModule, "XInputGetDSoundAudioDeviceGuids");
 													}
                                                 }
-                                                FARPROC procAddress = GetProcAddress(g_hXinputModule, dll.ImportSymbols[i].c_str());
-                                                if (procAddress) {
-                                                    // Store the function pointer in the appropriate location (e.g., a global array or struct)
-                                                    // For example: g_XInputFunctions[dll.ExportOrdinals[i]] = procAddress;
-                                                }
-                                                else
-                                                {
-                                                }
                                             }
                                         }
 
