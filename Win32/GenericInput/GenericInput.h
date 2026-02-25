@@ -83,11 +83,11 @@ namespace GenericInput
 namespace XInputDLL
 {
 	DWORD XInputGetStateEx (DWORD dwUserIndex, PGENERIC_INPUT_STATE pState);
-	DWORD XInputWaitForGuideButton (DWORD dwUserIndex, DWORD dwFlags, PGENERIC_INPUT_STATE pState); // Broken
+	DWORD XInputWaitForGuideButton (DWORD dwUserIndex, DWORD dwFlags, PGENERIC_INPUT_STATE pState);
 	DWORD XInputCancelGuideButtonWait (DWORD dwUserIndex);
 	DWORD XInputPowerOffController (DWORD dwUserIndex);
-	DWORD XInputGetBaseBusInformation (DWORD dwUserIndex, PGENERIC_CAPABILITIES pCapabilities, PGENERIC_CAPABILITIES pCapabilities2); // Broken
-	DWORD XInputGetCapabilitiesEx (DWORD dwUserIndex, PGENERIC_CAPABILITIES pCapabilities, PGENERIC_CAPABILITIES pCapabilities2); // Broken
+	DWORD XInputGetBaseBusInformation (DWORD dwUserIndex, PGENERIC_CAPABILITIES pCapabilities, PGENERIC_CAPABILITIES pCapabilities2);
+	DWORD XInputGetCapabilitiesEx (DWORD dwUserIndex, PGENERIC_CAPABILITIES pCapabilities, PGENERIC_CAPABILITIES pCapabilities2);
 
 	DWORD XInputGetCapabilities (DWORD dwUserIndex, DWORD dwFlags, PGENERIC_CAPABILITIES pCapabilities);
 	void  XInputEnable (BOOL enable);
