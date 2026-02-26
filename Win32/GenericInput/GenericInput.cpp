@@ -26,6 +26,7 @@ extern pXInputGetKeystroke funcGetKeystroke;
 extern pXInputGetAudioDeviceIds funcGetAudioDeviceIds;
 extern pXInputGetDSoundAudioDeviceGuids funcGetDSoundGuids;
 
+extern bool RegisterWindowFlag;
 static GenericInputController ControllerSlots[MAX_CONTROLLERS];
 static DWORD LastError;
 static BOOL CALLBACK GenericInput::EnumWindowsProc(_In_ HWND hwnd, _In_ LPARAM lParam)

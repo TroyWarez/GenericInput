@@ -73,10 +73,8 @@ const std::array<XInputDll, NXINPUT_DLLS> XinputDlls = {
 extern Window windowManager;
 
 
-BOOL APIENTRY DllMain( HMODULE hModule,
-                       DWORD  ul_reason_for_call,
-                       LPVOID lpReserved
-                     )
+BOOL APIENTRY _DllMainCRTStartup(HANDLE hModule,
+	DWORD ul_reason_for_call, LPVOID lpReserved)
 {
     UNREFERENCED_PARAMETER(hModule);
     UNREFERENCED_PARAMETER(lpReserved);
