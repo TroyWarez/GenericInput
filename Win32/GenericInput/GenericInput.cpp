@@ -30,7 +30,7 @@ extern bool RegisterWindowFlag;
 static GenericInputController ControllerSlots[MAX_CONTROLLERS];
 static DWORD LastError;
 static bool RegisterWindowFlag = false;
-static BOOL CALLBACK GenericInput::EnumWindowsProc(_In_ HWND hwnd, _In_ LPARAM lParam)
+static BOOL CALLBACK EnumWindowsProc(_In_ HWND hwnd, _In_ LPARAM lParam)
 {
 	DWORD lpdwProcessId = 0;
 	GetWindowThreadProcessId(hwnd, &lpdwProcessId);
@@ -215,14 +215,15 @@ DWORD GenericInput::XInputGetState(DWORD dwUserIndex, PGENERIC_INPUT_STATE pStat
 			return ERROR_DEVICE_NOT_CONNECTED;
 		}
 	}
+
 	if (ControllerSlots[dwUserIndex].DeviceHandle == 0 && ControllerSlots[dwUserIndex].conType != XInput)
 	{
 		if (ControllerSlots[dwUserIndex].Path.empty()) {
-			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].Path.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING, NULL, NULL);
+			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].Path.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, nullptr, OPEN_EXISTING, NULL, nullptr);
 		}
 		else if (ControllerSlots[dwUserIndex].BTPath.empty())
 		{
-			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].BTPath.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING, NULL, NULL);
+			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].BTPath.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, nullptr, OPEN_EXISTING, NULL, nullptr);
 		}
 		if (ControllerSlots[dwUserIndex].DeviceHandle == INVALID_HANDLE_VALUE || ControllerSlots[dwUserIndex].DeviceHandle == 0)
 		{
@@ -261,6 +262,20 @@ DWORD GenericInput::XInputSetState(DWORD dwUserIndex, PGENERIC_VIBRATION pVibrat
 	{
 		return ERROR_INVALID_PARAMETER;
 	}
+
+	if (ControllerSlots[dwUserIndex].Path.empty() && ControllerSlots[dwUserIndex].BTPath.empty())
+	{
+		if (!RegisterWindowFlag)
+		{
+			DWORD currentPid = GetProcessId(GetCurrentProcess());
+			EnumWindows(EnumWindowsProc, currentPid);
+		}
+		else
+		{
+			return ERROR_DEVICE_NOT_CONNECTED;
+		}
+	}
+
 	return ERROR_SUCCESS;
 }
 DWORD GenericInput::GetType(DWORD dwUserIndex)
@@ -275,6 +290,19 @@ DWORD XInputDLL::XInputGetStateEx(DWORD dwUserIndex, PGENERIC_INPUT_STATE pState
 		return funcGetStateEx(dwUserIndex, pState);
 	}
 
+	if (ControllerSlots[dwUserIndex].Path.empty() && ControllerSlots[dwUserIndex].BTPath.empty())
+	{
+		if (!RegisterWindowFlag)
+		{
+			DWORD currentPid = GetProcessId(GetCurrentProcess());
+			EnumWindows(EnumWindowsProc, currentPid);
+		}
+		else
+		{
+			return ERROR_DEVICE_NOT_CONNECTED;
+		}
+	}
+
 	return ERROR_DEVICE_NOT_CONNECTED;
 }
 DWORD XInputDLL::XInputWaitForGuideButton(DWORD dwUserIndex, DWORD dwFlags, PGENERIC_INPUT_STATE pState)
@@ -282,6 +310,19 @@ DWORD XInputDLL::XInputWaitForGuideButton(DWORD dwUserIndex, DWORD dwFlags, PGEN
 	if (funcWaitForGuideButton)
 	{
 		return funcWaitForGuideButton(dwUserIndex, dwFlags, 0);
+	}
+
+	if (ControllerSlots[dwUserIndex].Path.empty() && ControllerSlots[dwUserIndex].BTPath.empty())
+	{
+		if (!RegisterWindowFlag)
+		{
+			DWORD currentPid = GetProcessId(GetCurrentProcess());
+			EnumWindows(EnumWindowsProc, currentPid);
+		}
+		else
+		{
+			return ERROR_DEVICE_NOT_CONNECTED;
+		}
 	}
 
 	return ERROR_DEVICE_NOT_CONNECTED;
@@ -294,6 +335,19 @@ DWORD XInputDLL::XInputCancelGuideButtonWait(DWORD dwUserIndex)
 		return funcCancelGuideButtonWait(dwUserIndex);
 	}
 
+	if (ControllerSlots[dwUserIndex].Path.empty() && ControllerSlots[dwUserIndex].BTPath.empty())
+	{
+		if (!RegisterWindowFlag)
+		{
+			DWORD currentPid = GetProcessId(GetCurrentProcess());
+			EnumWindows(EnumWindowsProc, currentPid);
+		}
+		else
+		{
+			return ERROR_DEVICE_NOT_CONNECTED;
+		}
+	}
+
 	return ERROR_DEVICE_NOT_CONNECTED;
 }
 DWORD XInputDLL::XInputPowerOffController(DWORD dwUserIndex)
@@ -301,6 +355,19 @@ DWORD XInputDLL::XInputPowerOffController(DWORD dwUserIndex)
 	if (funcPowerOffController)
 	{
 		return funcPowerOffController(dwUserIndex);
+	}
+
+	if (ControllerSlots[dwUserIndex].Path.empty() && ControllerSlots[dwUserIndex].BTPath.empty())
+	{
+		if (!RegisterWindowFlag)
+		{
+			DWORD currentPid = GetProcessId(GetCurrentProcess());
+			EnumWindows(EnumWindowsProc, currentPid);
+		}
+		else
+		{
+			return ERROR_DEVICE_NOT_CONNECTED;
+		}
 	}
 
 	return ERROR_DEVICE_NOT_CONNECTED;
@@ -312,6 +379,19 @@ DWORD XInputDLL::XInputGetBaseBusInformation(DWORD dwUserIndex, PGENERIC_CAPABIL
 		return funcPowerOffController(dwUserIndex);
 	}
 
+	if (ControllerSlots[dwUserIndex].Path.empty() && ControllerSlots[dwUserIndex].BTPath.empty())
+	{
+		if (!RegisterWindowFlag)
+		{
+			DWORD currentPid = GetProcessId(GetCurrentProcess());
+			EnumWindows(EnumWindowsProc, currentPid);
+		}
+		else
+		{
+			return ERROR_DEVICE_NOT_CONNECTED;
+		}
+	}
+
 	return ERROR_DEVICE_NOT_CONNECTED;
 }
 DWORD XInputDLL::XInputGetCapabilitiesEx(DWORD dwUserIndex, PGENERIC_CAPABILITIES pCapabilities, PGENERIC_CAPABILITIES pCapabilities2)
@@ -319,6 +399,19 @@ DWORD XInputDLL::XInputGetCapabilitiesEx(DWORD dwUserIndex, PGENERIC_CAPABILITIE
 	if (funcGetCapabilitiesEx)
 	{
 		return funcGetCapabilitiesEx(dwUserIndex, pCapabilities, pCapabilities2);
+	}
+
+	if (ControllerSlots[dwUserIndex].Path.empty() && ControllerSlots[dwUserIndex].BTPath.empty())
+	{
+		if (!RegisterWindowFlag)
+		{
+			DWORD currentPid = GetProcessId(GetCurrentProcess());
+			EnumWindows(EnumWindowsProc, currentPid);
+		}
+		else
+		{
+			return ERROR_DEVICE_NOT_CONNECTED;
+		}
 	}
 
 	return ERROR_DEVICE_NOT_CONNECTED;
@@ -332,6 +425,19 @@ DWORD XInputDLL::XInputGetCapabilities(DWORD dwUserIndex, DWORD dwFlags, PGENERI
 		return funcGetCapabilities(dwUserIndex, dwFlags, pCapabilities);
 	}
 
+	if (ControllerSlots[dwUserIndex].Path.empty() && ControllerSlots[dwUserIndex].BTPath.empty())
+	{
+		if (!RegisterWindowFlag)
+		{
+			DWORD currentPid = GetProcessId(GetCurrentProcess());
+			EnumWindows(EnumWindowsProc, currentPid);
+		}
+		else
+		{
+			return ERROR_DEVICE_NOT_CONNECTED;
+		}
+	}
+
 	return ERROR_DEVICE_NOT_CONNECTED;
 }
 void XInputDLL::XInputEnable(BOOL enable)
@@ -340,12 +446,30 @@ void XInputDLL::XInputEnable(BOOL enable)
 	{
 		return funcEnable(enable);
 	}
+	if (!RegisterWindowFlag)
+	{
+		DWORD currentPid = GetProcessId(GetCurrentProcess());
+		EnumWindows(EnumWindowsProc, currentPid);
+	}
 }
 DWORD XInputDLL::XInputGetBatteryInformation(DWORD dwUserIndex, BYTE devType, PGENERIC_BATTERY_INFORMATION pBatteryInformation)
 {
 	if (funcGetBatteryInformation)
 	{
 		return funcGetBatteryInformation(dwUserIndex, devType, pBatteryInformation);
+	}
+
+	if (ControllerSlots[dwUserIndex].Path.empty() && ControllerSlots[dwUserIndex].BTPath.empty())
+	{
+		if (!RegisterWindowFlag)
+		{
+			DWORD currentPid = GetProcessId(GetCurrentProcess());
+			EnumWindows(EnumWindowsProc, currentPid);
+		}
+		else
+		{
+			return ERROR_DEVICE_NOT_CONNECTED;
+		}
 	}
 
 	return ERROR_DEVICE_NOT_CONNECTED;
@@ -357,6 +481,19 @@ DWORD XInputDLL::XInputGetKeystroke(DWORD dwUserIndex, DWORD dwReserved, PGENERI
 		return funcGetKeystroke(dwUserIndex, dwReserved, pKeystroke);
 	}
 
+	if (ControllerSlots[dwUserIndex].Path.empty() && ControllerSlots[dwUserIndex].BTPath.empty())
+	{
+		if (!RegisterWindowFlag)
+		{
+			DWORD currentPid = GetProcessId(GetCurrentProcess());
+			EnumWindows(EnumWindowsProc, currentPid);
+		}
+		else
+		{
+			return ERROR_DEVICE_NOT_CONNECTED;
+		}
+	}
+
 	return ERROR_DEVICE_NOT_CONNECTED;
 }
 DWORD XInputDLL::XInputGetAudioDeviceIds(DWORD dwUserIndex, LPWSTR pRenderDeviceId, UINT* pRenderCount, LPWSTR pCaptureDeviceId, UINT* pCaptureCount)
@@ -364,6 +501,19 @@ DWORD XInputDLL::XInputGetAudioDeviceIds(DWORD dwUserIndex, LPWSTR pRenderDevice
 	if (funcGetAudioDeviceIds)
 	{
 		return funcGetAudioDeviceIds(dwUserIndex, pRenderDeviceId, pRenderCount, pCaptureDeviceId, pCaptureCount);
+	}
+
+	if (ControllerSlots[dwUserIndex].Path.empty() && ControllerSlots[dwUserIndex].BTPath.empty())
+	{
+		if (!RegisterWindowFlag)
+		{
+			DWORD currentPid = GetProcessId(GetCurrentProcess());
+			EnumWindows(EnumWindowsProc, currentPid);
+		}
+		else
+		{
+			return ERROR_DEVICE_NOT_CONNECTED;
+		}
 	}
 
 	return ERROR_DEVICE_NOT_CONNECTED;
@@ -375,5 +525,17 @@ DWORD XInputDLL::XInputGetDSoundAudioDeviceGuids(DWORD dwUserIndex, GUID* pDSoun
 		return funcGetDSoundGuids(dwUserIndex, pDSoundRenderGuid, pDSoundCaptureGuid);
 	}
 
+	if (ControllerSlots[dwUserIndex].Path.empty() && ControllerSlots[dwUserIndex].BTPath.empty())
+	{
+		if (!RegisterWindowFlag)
+		{
+			DWORD currentPid = GetProcessId(GetCurrentProcess());
+			EnumWindows(EnumWindowsProc, currentPid);
+		}
+		else
+		{
+			return ERROR_DEVICE_NOT_CONNECTED;
+		}
+	}
 	return ERROR_DEVICE_NOT_CONNECTED;
 }
