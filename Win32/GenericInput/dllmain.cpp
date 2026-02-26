@@ -17,8 +17,6 @@ constexpr int ORDINAL_103_POWER_OFF_CONTROLLER = 103;
 constexpr int ORDINAL_104_GET_BASE_BUS_INFORMATION = 104;
 constexpr int ORDINAL_108_GET_CAPABILITIES_EX = 108;
 
-bool RegisterWindowFlag = false;
-
 HMODULE g_hXinputModule = nullptr;
 
 pXInputGetStateEx funcGetStateEx = nullptr;
@@ -123,7 +121,6 @@ BOOL APIENTRY _DllMainCRTStartup(HANDLE hModule,
                                     // Found a match, load this DLL
                                     g_hXinputModule = LoadLibraryW((std::wstring(path.data()) + L"\\" + dll.XInputDllBinPath).c_str());
                                     if (g_hXinputModule) {
-										RegisterWindowFlag = true; // Set the flag to indicate that we have loaded an XInput DLL, this will allow us to register the window and scan for controllers when a new window is created
                                         for (size_t i = 0; i < dll.ImportSymbols.size(); i++) {
                                             if (!dll.ImportSymbols[i].empty()) {
                                                 for (size_t j = 0; j < dll.ImportSymbols.size(); j++) {
