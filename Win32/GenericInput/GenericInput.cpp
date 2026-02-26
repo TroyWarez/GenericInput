@@ -70,7 +70,7 @@ LRESULT GenericInput::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 					{
 						if (ControllerSlots[i].ullbtDeviceInfo == eventInfo->bthAddress && eventInfo->connected == 0)
 						{
-							if (ControllerSlots[i].BTPath != L"")
+							if (ControllerSlots[i].BTPath.empty())
 							{
 								if (ControllerSlots[i].Path == L"")
 								{
@@ -79,7 +79,7 @@ LRESULT GenericInput::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 								}
 								ControllerSlots[i].BTPath = L"";
 							}
-							else if (ControllerSlots[i].Path != L"" && ControllerSlots[i].BusType == L"BTHENUM")
+							else if (ControllerSlots[i].Path.empty() && ControllerSlots[i].BusType == L"BTHENUM")
 							{
 								ControllerSlots[i] = { 0 };
 								PostMessage(hWnd, WM_CONTROLLER_DISCONNECTED, i, NULL);
@@ -202,7 +202,8 @@ DWORD GenericInput::XInputGetState(DWORD dwUserIndex, PGENERIC_INPUT_STATE pStat
 	{
 		return ERROR_INVALID_PARAMETER;
 	}
-	if (ControllerSlots[dwUserIndex].Path == L"" && ControllerSlots[dwUserIndex].BTPath == L"")
+
+	if (ControllerSlots[dwUserIndex].Path.empty() && ControllerSlots[dwUserIndex].BTPath.empty() )
 	{
 		if (!RegisterWindowFlag)
 		{
@@ -216,10 +217,10 @@ DWORD GenericInput::XInputGetState(DWORD dwUserIndex, PGENERIC_INPUT_STATE pStat
 	}
 	if (ControllerSlots[dwUserIndex].DeviceHandle == 0 && ControllerSlots[dwUserIndex].conType != XInput)
 	{
-		if (ControllerSlots[dwUserIndex].Path != L"") {
+		if (ControllerSlots[dwUserIndex].Path.empty()) {
 			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].Path.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING, NULL, NULL);
 		}
-		else if (ControllerSlots[dwUserIndex].BTPath != L"")
+		else if (ControllerSlots[dwUserIndex].BTPath.empty())
 		{
 			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].BTPath.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING, NULL, NULL);
 		}
