@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "GenericInput.h"
 #include "Window.h"
 #include "Bluetooth.h"
