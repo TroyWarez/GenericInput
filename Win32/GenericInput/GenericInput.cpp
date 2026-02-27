@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "GenericInput.h"
 #include "Window.h"
 #include "Bluetooth.h"
@@ -72,7 +71,7 @@ LRESULT GenericInput::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 						{
 							if (ControllerSlots[i].BTPath.empty())
 							{
-								if (ControllerSlots[i].Path == L"")
+								if (ControllerSlots[i].Path.empty())
 								{
 									ControllerSlots[i] = { 0 };
 									PostMessage(hWnd, WM_CONTROLLER_DISCONNECTED, i, NULL);
@@ -174,7 +173,7 @@ LRESULT GenericInput::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 						if (ControllerSlots[i].conType == XInput) {
 							std::wstring FixedControllerPath = ControllerSlots[i].Path;
 							std::transform(FixedControllerPath.begin(), FixedControllerPath.end(), FixedControllerPath.begin(), ::toupper);
-							if (FixedPath == FixedControllerPath && ControllerSlots[i].BTPath == L"")
+							if (FixedPath == FixedControllerPath && ControllerSlots[i].BTPath.empty())
 							{
 								ControllerSlots[i] = { 0 };
 								PostMessage(hWnd, WM_CONTROLLER_DISCONNECTED, i, NULL);
@@ -192,6 +191,13 @@ LRESULT GenericInput::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 			break;
 		}
 		}
+		break;
+	}
+	case WM_DESTROY:
+	{
+		windowManager.UnregisterWindow();
+		RegisterWindowFlag = false;
+		break;
 	}
 	}
 	return 0;
@@ -282,7 +288,6 @@ DWORD GenericInput::GetType(DWORD dwUserIndex)
 {
 	return ControllerSlots[dwUserIndex].conType;
 }
-
 DWORD XInputDLL::XInputGetStateEx(DWORD dwUserIndex, PGENERIC_INPUT_STATE pState)
 {
 	if (funcGetStateEx)
@@ -327,7 +332,6 @@ DWORD XInputDLL::XInputWaitForGuideButton(DWORD dwUserIndex, DWORD dwFlags, PGEN
 
 	return ERROR_DEVICE_NOT_CONNECTED;
 }
-
 DWORD XInputDLL::XInputCancelGuideButtonWait(DWORD dwUserIndex)
 {
 	if (funcCancelGuideButtonWait)
