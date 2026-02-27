@@ -2,7 +2,7 @@
 #include "pch.h"
 #include "Window.h"
 #include <array>
-#include <string.h>
+#include <cstring>
 #include "GenericInput.h"
 
 constexpr int NXINPUT_DLL_EXPORTS = 5;
@@ -71,8 +71,10 @@ const std::array<XInputDll, NXINPUT_DLLS> XinputDlls = {
 extern Window windowManager;
 
 
-BOOL APIENTRY _DllMainCRTStartup(HANDLE hModule,
-	DWORD ul_reason_for_call, LPVOID lpReserved)
+BOOL APIENTRY DllMain(HMODULE hModule,
+	DWORD  ul_reason_for_call,
+	LPVOID lpReserved
+)
 {
     UNREFERENCED_PARAMETER(hModule);
     UNREFERENCED_PARAMETER(lpReserved);
@@ -193,7 +195,7 @@ BOOL APIENTRY _DllMainCRTStartup(HANDLE hModule,
 
 			if (!g_hXinputModule)
 			{
-				MessageBoxW(nullptr, std::wstring(L"Failed to load XInput dll. Please ensure it is present in the system directory.").c_str(), L"Error", MB_ICONERROR);
+				MessageBoxW(nullptr, L"Failed to load XInput dll. Please ensure it is present in the system directory.", L"Error", MB_ICONERROR);
 				return 1;
 			}
         }
@@ -207,6 +209,19 @@ BOOL APIENTRY _DllMainCRTStartup(HANDLE hModule,
         if (g_hXinputModule)
         {
             FreeLibrary(g_hXinputModule);
+			funcGetStateEx = nullptr;
+			funcWaitForGuideButton = nullptr;
+			funcCancelGuideButtonWait = nullptr;
+			funcPowerOffController = nullptr;
+			funcBaseBusInformation = nullptr;
+			funcGetCapabilitiesEx = nullptr;
+
+			funcGetCapabilities = nullptr;
+			funcEnable = nullptr;
+			funcGetBatteryInformation = nullptr;
+			funcGetKeystroke = nullptr;
+			funcGetAudioDeviceIds = nullptr;
+			funcGetDSoundGuids = nullptr;
             g_hXinputModule = nullptr;
 		}
         break;
