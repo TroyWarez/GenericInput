@@ -82,7 +82,7 @@ BOOL APIENTRY DllMain(HMODULE hModule,
     switch (ul_reason_for_call)
     {
     case DLL_PROCESS_ATTACH:
-	case DLL_THREAD_ATTACH: // Hook Window procedure to detect controller changes and scan for controllers when a new window is created
+	case DLL_THREAD_ATTACH:
     {
         if (g_hXinputModule == nullptr)
         {
@@ -191,12 +191,6 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 						}
 					}
 				}
-			}
-
-			if (!g_hXinputModule)
-			{
-				MessageBoxW(nullptr, L"Failed to load XInput dll. Please ensure it is present in the system directory.", L"Error", MB_ICONERROR);
-				return 1;
 			}
         }
     }
