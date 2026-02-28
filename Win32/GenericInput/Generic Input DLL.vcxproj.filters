@@ -117,7 +117,7 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Generic Input.def">
+    <None Include="Generic Input 1_3.def">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>

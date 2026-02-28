@@ -166,7 +166,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>Cfgmgr32.lib;SetupAPI.lib;Bthprops.lib;Hid.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ModuleDefinitionFile>Generic Input.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>Generic Input 1_3.def</ModuleDefinitionFile>
     </Link>
     <PreBuildEvent>
       <Message>Checking if the controller database header file needs to be rebuilt...</Message>
@@ -203,7 +203,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>Cfgmgr32.lib;SetupAPI.lib;Bthprops.lib;Hid.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ModuleDefinitionFile>Generic Input.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>Generic Input 1_3.def</ModuleDefinitionFile>
     </Link>
     <PreBuildEvent>
       <Command> "$(SolutionDir)$(IntermediateOutputPath)SDL2H.exe" -$(SolutionDir)GenericInput\controllerDB.h-raw.githubusercontent.com-/gabomdq/SDL_GameControllerDB/master/gamecontrollerdb.txt</Command>
@@ -261,7 +261,7 @@
     <ResourceCompile Include="Generic Input DLL.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Generic Input.def" />
+    <None Include="Generic Input 1_3.def" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
