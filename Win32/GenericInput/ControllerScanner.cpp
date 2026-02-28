@@ -172,7 +172,7 @@ BOOL Scanner::FindUSBArtibs(std::wstring& USBDevicePath, HIDD_ATTRIBUTES& hidArt
 	}
 	if (DevicePathType == L"hid")
 	{
-		HANDLE hDevice = CreateFile(USBDevicePath.c_str(), (GENERIC_READ | GENERIC_WRITE), (FILE_SHARE_READ | FILE_SHARE_DELETE | FILE_SHARE_WRITE), NULL, OPEN_EXISTING, NULL, NULL);
+		HANDLE hDevice = CreateFile(USBDevicePath.c_str(), (GENERIC_READ | GENERIC_WRITE), (FILE_SHARE_READ | FILE_SHARE_DELETE | FILE_SHARE_WRITE), nullptr, OPEN_EXISTING, NULL, nullptr);
 		if (hDevice == INVALID_HANDLE_VALUE)
 		{
 			return FALSE;
@@ -199,8 +199,8 @@ BOOL Scanner::FindUSBArtibs(std::wstring& USBDevicePath, HIDD_ATTRIBUTES& hidArt
 	VID.append(USBDevicePath.substr(vidPos + 1, 4));
 	std::wstring PID = L"0x";
 	PID.append(USBDevicePath.substr(pidPos + 1, 4));
-	USHORT tVID = std::stoi(VID, 0, 16);
-	USHORT tPID = std::stoi(PID, 0, 16);
+	USHORT tVID = std::stoi(VID, nullptr, 16);
+	USHORT tPID = std::stoi(PID, nullptr, 16);
 	if (tVID != 0x00)
 	{
 		hidArtib.VendorID = tVID;

@@ -12,7 +12,7 @@ DEFINE_GUID(UUID_BT_SERVICE_HID, 0x00001124, 0x0000, 0x1000, 0x80, 0x00, 0x00, 0
 BOOL Bluetooth::FindBluetoothRadios(std::vector <DEV_BROADCAST_HANDLE>& hBluetoothRadios)
 {
 	//FindAllBluetoothHIDDevices();
-	if (hBluetoothRadios.size() || FindAllDevices(&GUID_BTHPORT_DEVICE_INTERFACE, vBluetoothDevicesPaths, 0) == FALSE)
+	if (hBluetoothRadios.size() || FindAllDevices(&GUID_BTHPORT_DEVICE_INTERFACE, vBluetoothDevicesPaths, nullptr) == FALSE)
 	{
 		return FALSE;
 	}
@@ -21,7 +21,7 @@ BOOL Bluetooth::FindBluetoothRadios(std::vector <DEV_BROADCAST_HANDLE>& hBluetoo
 		DEV_BROADCAST_HANDLE devBroadcast = { 0 };
 		devBroadcast.dbch_size = sizeof(DEV_BROADCAST_HANDLE);
 		devBroadcast.dbch_devicetype = DBT_DEVTYP_HANDLE;
-		devBroadcast.dbch_handle = CreateFile(vBluetoothDevicesPaths[i].c_str(), (GENERIC_READ | GENERIC_WRITE), (FILE_SHARE_READ | FILE_SHARE_DELETE | FILE_SHARE_WRITE), NULL, OPEN_EXISTING, NULL, NULL);
+		devBroadcast.dbch_handle = CreateFile(vBluetoothDevicesPaths[i].c_str(), (GENERIC_READ | GENERIC_WRITE), (FILE_SHARE_READ | FILE_SHARE_DELETE | FILE_SHARE_WRITE), nullptr, OPEN_EXISTING, NULL, nullptr);
 		if (devBroadcast.dbch_handle == INVALID_HANDLE_VALUE)
 		{
 			hBluetoothRadios[i] = { 0 };
@@ -42,7 +42,7 @@ BOOL Bluetooth::IsBluetoothDeviceConnected(BTH_ADDR& btDeviceAddr)
 	btSearchParams.fReturnConnected = TRUE;
 	btSearchParams.cTimeoutMultiplier = 1;
 	HBLUETOOTH_DEVICE_FIND hDevice = BluetoothFindFirstDevice(&btSearchParams, &btDeviceInfo);
-	if (hDevice == NULL)
+	if (hDevice == nullptr)
 	{
 		return FALSE;
 	}

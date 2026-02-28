@@ -8,7 +8,7 @@ BOOL Devices::FindAllDevices(const GUID* ClassGuid, std::vector<std::wstring>& D
 	}
 	PSP_DEVICE_INTERFACE_DETAIL_DATA_W deviceDetails = nullptr;
 	WCHAR* deviceName = nullptr;
-	HDEVINFO hdevInfo = SetupDiGetClassDevs(ClassGuid, NULL, NULL, DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
+	HDEVINFO hdevInfo = SetupDiGetClassDevs(ClassGuid, nullptr, nullptr, DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
 	if (hdevInfo == INVALID_HANDLE_VALUE)
 	{
 		return FALSE;
@@ -21,7 +21,7 @@ BOOL Devices::FindAllDevices(const GUID* ClassGuid, std::vector<std::wstring>& D
 		ULONG DataSize = 0;
 		deviceInterfaceData.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
 		deviceData.cbSize = sizeof(SP_DEVINFO_DATA);
-		if (SetupDiEnumDeviceInterfaces(hdevInfo, NULL, ClassGuid, i, &deviceInterfaceData) == FALSE ||
+		if (SetupDiEnumDeviceInterfaces(hdevInfo, nullptr, ClassGuid, i, &deviceInterfaceData) == FALSE ||
 			SetupDiEnumDeviceInfo(hdevInfo, i, &deviceData) == FALSE)
 		{
 			if (GetLastError() != ERROR_NO_MORE_ITEMS) {
@@ -36,14 +36,14 @@ BOOL Devices::FindAllDevices(const GUID* ClassGuid, std::vector<std::wstring>& D
 		if (DeviceTypes != nullptr) {
 			DWORD Parent = 0;
 			if (CM_Get_Parent(&Parent, deviceData.DevInst, 0) == CR_SUCCESS &&
-				CM_Get_DevNode_Registry_Property(Parent, CM_DRP_ENUMERATOR_NAME, NULL, NULL, &DataSize, 0) != CR_NO_SUCH_VALUE)
+				CM_Get_DevNode_Registry_Property(Parent, CM_DRP_ENUMERATOR_NAME, nullptr, nullptr, &DataSize, 0) != CR_NO_SUCH_VALUE)
 			{
 				if (DataSize) {
 					deviceName = (WCHAR*)HeapAlloc(GetProcessHeap(), 0, DataSize * sizeof(WCHAR) + 2);
-					if (CM_Get_DevNode_Registry_Property(Parent, CM_DRP_ENUMERATOR_NAME, NULL, deviceName, &DataSize, 0) == CR_SUCCESS)
+					if (CM_Get_DevNode_Registry_Property(Parent, CM_DRP_ENUMERATOR_NAME, nullptr, deviceName, &DataSize, 0) == CR_SUCCESS)
 					{
 						if (deviceName != 0) {
-							DeviceTypes->push_back(deviceName);
+							DeviceTypes->emplace_back(deviceName);
 						}
 					}
 					HeapFree(GetProcessHeap(), 0, deviceName);
@@ -52,13 +52,13 @@ BOOL Devices::FindAllDevices(const GUID* ClassGuid, std::vector<std::wstring>& D
 
 		}
 		deviceDetails = (PSP_DEVICE_INTERFACE_DETAIL_DATA_W)HeapAlloc(GetProcessHeap(), 0, MAX_PATH * sizeof(WCHAR) + sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA_W));
-		if (deviceDetails == NULL)
+		if (deviceDetails == nullptr)
 		{
 			SetupDiDestroyDeviceInfoList(hdevInfo);
 			return FALSE;
 		}
 		deviceDetails->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA_W);
-		if (SetupDiGetDeviceInterfaceDetail(hdevInfo, &deviceInterfaceData, deviceDetails, MAX_PATH * sizeof(WCHAR) + sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA_W), NULL, NULL) == TRUE)
+		if (SetupDiGetDeviceInterfaceDetail(hdevInfo, &deviceInterfaceData, deviceDetails, MAX_PATH * sizeof(WCHAR) + sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA_W), nullptr, nullptr) == TRUE)
 		{
 			std::wstring DevicePath = deviceDetails->DevicePath;
 			HeapFree(GetProcessHeap(), 0, deviceDetails);

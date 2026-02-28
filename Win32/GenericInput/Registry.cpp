@@ -2,7 +2,7 @@
 #include "Registry.h"
 BOOL Registry::GetBluetoothAddress(GenericInputController& Controller)
 {
-	HKEY hKeybtEnums = 0;
+	HKEY hKeybtEnums = nullptr;
 	if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"SYSTEM\\CurrentControlSet\\Enum\\BTHENUM", 0, KEY_READ | KEY_ENUMERATE_SUB_KEYS, &hKeybtEnums) != ERROR_SUCCESS || Controller.Path.size() == 0)
 	{
 		return FALSE;
@@ -30,7 +30,7 @@ BOOL Registry::GetBluetoothAddress(GenericInputController& Controller)
 	for (DWORD i = 0; ; i++)
 	{
 	    NewSubKeySize = 1024;
-		if (RegEnumKeyExW(hKeybtEnums, i, SubKeyName, &NewSubKeySize, NULL, NULL, NULL, NULL) == ERROR_NO_MORE_ITEMS)
+		if (RegEnumKeyExW(hKeybtEnums, i, SubKeyName, &NewSubKeySize, nullptr, nullptr, nullptr, nullptr) == ERROR_NO_MORE_ITEMS)
 		{
 			break;
 		}
@@ -41,7 +41,7 @@ BOOL Registry::GetBluetoothAddress(GenericInputController& Controller)
 				return FALSE;
 			}
 
-			hKeybtEnums = 0;
+			hKeybtEnums = nullptr;
 			newSubKey = L"SYSTEM\\CurrentControlSet\\Enum\\BTHENUM";
 			newSubKey.append(L"\\");
 			newSubKey.append(SubKeyName);
@@ -50,7 +50,7 @@ BOOL Registry::GetBluetoothAddress(GenericInputController& Controller)
 				return FALSE;
 			}
 			i = 0;
-			if (RegEnumKeyExW(hKeybtEnums, i, SubKeyName, &NewSubKeySize, NULL, NULL, NULL, NULL) == ERROR_NO_MORE_ITEMS)
+			if (RegEnumKeyExW(hKeybtEnums, i, SubKeyName, &NewSubKeySize, nullptr, nullptr, nullptr, nullptr) == ERROR_NO_MORE_ITEMS)
 			{
 				break;
 			}
@@ -74,7 +74,7 @@ BOOL Registry::GetBluetoothAddress(GenericInputController& Controller)
 			}
 			ULONGLONG BthAdd = 0;
 			DWORD Size = sizeof(ULONGLONG);
-			if (RegQueryValueEx(hKeybtEnums, L"BluetoothAddress", NULL, REG_NONE, (LPBYTE)&BthAdd, &Size) == ERROR_SUCCESS)
+			if (RegQueryValueEx(hKeybtEnums, L"BluetoothAddress", nullptr, REG_NONE, (LPBYTE)&BthAdd, &Size) == ERROR_SUCCESS)
 			{
 				Controller.ullbtDeviceInfo = BthAdd;
 				return TRUE;
