@@ -120,5 +120,14 @@
     <None Include="Generic Input 1_3.def">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="Generic Input 1_1-1_2.def">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="Generic Input 9_1_0.def">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="Generic Input 1_4.def">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
