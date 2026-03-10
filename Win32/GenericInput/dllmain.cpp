@@ -37,7 +37,7 @@ struct XInputDll
 {
 	std::array<std::string, NXINPUT_DLL_EXPORTS> ImportSymbols;
 	std::array<DWORD, NXINPUT_DLL_ORDINALS> ImportOrdinals;
-	std::wstring XInputDllBinPath; // Must be load from the system directory to avoid shenanigans
+	std::string XInputDllBinPath; // Must be load from the system directory to avoid shenanigans
 };
 
 const std::array<XInputDll, NXINPUT_DLLS> XinputDlls = {
@@ -49,23 +49,23 @@ const std::array<XInputDll, NXINPUT_DLLS> XinputDlls = {
 	  ORDINAL_103_POWER_OFF_CONTROLLER,
 	  ORDINAL_104_GET_BASE_BUS_INFORMATION,
 	  ORDINAL_108_GET_CAPABILITIES_EX,
-	  NULL }, L"XINPUT1_4.dll" },
+	  NULL }, "XINPUT1_4.dll" },
 
     XInputDll{ { "XInputGetCapabilities", "XInputEnable", "XInputGetDSoundAudioDeviceGuids", "XInputGetBatteryInformation", "XInputGetKeystroke" },
     { ORDINAL_100_GET_STATE_EX,
 	  ORDINAL_101_WAIT_FOR_GUIDE_BUTTON,
 	  ORDINAL_102_CANCEL_GUIDE_BUTTON_WAIT,
 	  ORDINAL_103_POWER_OFF_CONTROLLER,
-	  NULL, NULL }, L"XINPUT1_3.dll" },
+	  NULL, NULL }, "XINPUT1_3.dll" },
 
     XInputDll{ { "XInputGetCapabilities", "XInputGetDSoundAudioDeviceGuids", "", "", "" },
-    { NULL, NULL, NULL, NULL, NULL, NULL, NULL }, L"XINPUT1_2.dll" },
+    { NULL, NULL, NULL, NULL, NULL, NULL, NULL }, "XINPUT1_2.dll" },
 
 	XInputDll{ { "XInputGetCapabilities", "XInputGetDSoundAudioDeviceGuids", "", "", "" },
-	{ NULL, NULL, NULL, NULL, NULL, NULL, NULL }, L"XINPUT1_1.dll" },
+	{ NULL, NULL, NULL, NULL, NULL, NULL, NULL }, "XINPUT1_1.dll" },
 
     XInputDll{ { "XInputGetCapabilities", "XInputEnable", "XInputGetBatteryInformation", "XInputGetDSoundAudioDeviceGuids",   "XInputGetKeystroke" }, 
-    { NULL, NULL, NULL, NULL, NULL, NULL, NULL }, L"XINPUT9_1_0.dll" }
+    { NULL, NULL, NULL, NULL, NULL, NULL, NULL }, "XINPUT9_1_0.dll" }
 };
 
 extern Window windowManager;
@@ -86,8 +86,8 @@ BOOL APIENTRY DllMain(HMODULE hModule,
     {
         if (g_hXinputModule == nullptr)
         {
-			std::array<WCHAR, MAX_PATH>  path = { L'\0' };
-			GetSystemDirectoryW(path.data(), MAX_PATH);
+			std::array<CHAR, MAX_PATH>  path = { L'\0' };
+			GetSystemDirectoryA(path.data(), MAX_PATH);
 
 			// Parse the export table here to determine which XInput version is present and load the correct one, this is to ensure maximum compatibility with older versions of Windows and avoid loading a newer version of XInput that may not be compatible with the system
 
@@ -121,7 +121,7 @@ BOOL APIENTRY DllMain(HMODULE hModule,
                             for (const auto& dll : XinputDlls) {
 								if (_stricmp(dllName, std::string(dll.XInputDllBinPath.begin(), dll.XInputDllBinPath.end()).c_str()) == 0) { // Fix me: This is a bit hacky, we should probably store the DLL names as std::string instead of std::wstring to avoid this conversion
                                     // Found a match, load this DLL
-                                    g_hXinputModule = LoadLibraryW((std::wstring(path.data()) + L"\\" + dll.XInputDllBinPath).c_str());
+                                    g_hXinputModule = LoadLibraryA((std::string(path.data()) + "\\" + dll.XInputDllBinPath).c_str());
                                     if (g_hXinputModule) {
                                         for (size_t i = 0; i < dll.ImportSymbols.size(); i++) {
                                             if (!dll.ImportSymbols[i].empty()) {
