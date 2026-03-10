@@ -119,7 +119,7 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 
 							// Check if the DLL name matches any of our XInput DLLs
                             for (const auto& dll : XinputDlls) {
-                                if (_stricmp(dllName, std::string(dll.XInputDllBinPath.begin(), dll.XInputDllBinPath.end()).c_str()) == 0) {
+								if (_stricmp(dllName, std::string(dll.XInputDllBinPath.begin(), dll.XInputDllBinPath.end()).c_str()) == 0) { // Fix me: This is a bit hacky, we should probably store the DLL names as std::string instead of std::wstring to avoid this conversion
                                     // Found a match, load this DLL
                                     g_hXinputModule = LoadLibraryW((std::wstring(path.data()) + L"\\" + dll.XInputDllBinPath).c_str());
                                     if (g_hXinputModule) {

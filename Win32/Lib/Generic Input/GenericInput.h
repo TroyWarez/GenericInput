@@ -51,7 +51,5 @@ typedef struct _GENERIC_INPUT
     GENERIC_INPUT_GAMEPAD               Gamepad;
 }  GENERIC_INPUT_STATE, * PGENERIC_INPUT_STATE;
 
-DWORD GenericInputInit(HWND hWindowHandle, BOOL bExitProcess);
-LRESULT GenericInputDeviceChange(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 DWORD GenericInputGetState(DWORD dwUserIndex, GENERIC_INPUT_STATE* pState);
 DWORD GenericInputGetLayout(DWORD dwUserIndex);

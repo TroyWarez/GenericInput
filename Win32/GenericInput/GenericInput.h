@@ -78,7 +78,7 @@ namespace GenericInput
 	LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     DWORD XInputGetState(DWORD dwUserIndex, PGENERIC_INPUT_STATE pState);
     DWORD XInputSetState(DWORD dwUserIndex, PGENERIC_VIBRATION pVibration);
-    DWORD GetType(DWORD dwUserIndex);
+    DWORD GetLayout(DWORD dwUserIndex);
 };
 
 namespace XInputDLL

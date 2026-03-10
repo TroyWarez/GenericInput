@@ -285,7 +285,7 @@ DWORD GenericInput::XInputSetState(DWORD dwUserIndex, PGENERIC_VIBRATION pVibrat
 
 	return ERROR_SUCCESS;
 }
-DWORD GenericInput::GetType(DWORD dwUserIndex)
+DWORD GenericInput::GetLayout(DWORD dwUserIndex)
 {
 	return ControllerSlots[dwUserIndex].conType;
 }

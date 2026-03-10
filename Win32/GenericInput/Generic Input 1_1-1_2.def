@@ -5,4 +5,4 @@ EXPORTS
    XInputGetDSoundAudioDeviceGuids   @4
    XInputGetState   @5
    XInputSetState   @6
-   GetType   @9
+   GetLayout   @9
