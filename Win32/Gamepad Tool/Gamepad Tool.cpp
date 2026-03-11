@@ -126,11 +126,11 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    {
       return FALSE;
    }
-   if (GenericInputInit(hWnd, FALSE) == ERROR_GEN_FAILURE)
-   {
-	   return FALSE;
-   }
-   GenericInputDeviceChange(hWnd, 0, 0, 0);
+//    if (GenericInputInit(hWnd, FALSE) == ERROR_GEN_FAILURE)
+//    {
+// 	   return FALSE;
+//    }
+//    GenericInputDeviceChange(hWnd, 0, 0, 0);
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
@@ -150,7 +150,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    GenericInputDeviceChange(hWnd, message, wParam, lParam);
+/*    GenericInputDeviceChange(hWnd, message, wParam, lParam);*/
     switch (message)
     {
     case WM_PAINT:

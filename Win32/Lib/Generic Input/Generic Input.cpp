@@ -24,10 +24,10 @@ typedef struct _GENERIC_INPUT {
 static HMODULE hGenericInput = nullptr;
 static HWND hRegisteredWindow = nullptr;
 typedef  DWORD(GetState)(DWORD, GENERIC_INPUT_STATE*);
-typedef  DWORD(GetType)(DWORD);
+typedef  DWORD(GetLayoutType)(DWORD);
 
 GetState* pGetState = nullptr;
-GetType* pGetType = nullptr;
+GetLayoutType* pGetLayoutType = nullptr;
 
 // DWORD GenericInputInit(HWND hWindowHandle, BOOL bExitProcess)
 // {
@@ -39,9 +39,9 @@ GetType* pGetType = nullptr;
 // 	else
 // 	{
 // 		pGetState = (GetState*)GetProcAddress(hGenericInput, MAKEINTRESOURCEA(2));
-// 		pGetType = (GetType*)GetProcAddress(hGenericInput, MAKEINTRESOURCEA(9));
+// 		pGetLayoutType = (GetLayoutType*)GetProcAddress(hGenericInput, MAKEINTRESOURCEA(9));
 // 		if (pGetState == nullptr ||
-// 			pGetType == nullptr)
+// 			pGetLayoutType == nullptr)
 // 		{
 // 			MessageBox(hWindowHandle, L"GenericInput.dll is corrupted. Try reinstalling the program to fix this problem.", L"System Error", (MB_OK | MB_ICONERROR));
 // 		}
@@ -51,7 +51,7 @@ GetType* pGetType = nullptr;
 // 			MessageBox(hWindowHandle, L"GenericInput.dll is corrupted. Try reinstalling the program to fix this problem.", L"System Error", (MB_OK | MB_ICONERROR));
 // 		}
 // 
-// 		if (pGetType == nullptr)
+// 		if (pGetLayoutType == nullptr)
 // 		{
 // 			MessageBox(hWindowHandle, L"GenericInput.dll is corrupted. Try reinstalling the program to fix this problem.", L"System Error", (MB_OK | MB_ICONERROR));
 // 		}
@@ -87,6 +87,23 @@ GetType* pGetType = nullptr;
 // }
 DWORD GenericInputGetState(DWORD dwUserIndex, GENERIC_INPUT_STATE* pState)
 {
+	if (pState == nullptr || dwUserIndex > 7)
+	{
+		return ERROR_INVALID_PARAMETER;
+	}
+
+	if (hGenericInput == nullptr)
+	{
+		hGenericInput = LoadLibraryW(L"GenericInput.dll"); // Leaking the library since we want to keep it loaded for the entire process lifetime and we don't have a way to know when to free it
+		if (hGenericInput == nullptr)
+		{
+			return ERROR_FILE_NOT_FOUND;
+		}
+		if (pGetState == nullptr)
+		{
+			pGetState = (GetState*)GetProcAddress(hGenericInput, MAKEINTRESOURCEA(2));
+		}
+	}
 	if (pGetState)
 	{
 		return pGetState(dwUserIndex, pState);
@@ -95,9 +112,26 @@ DWORD GenericInputGetState(DWORD dwUserIndex, GENERIC_INPUT_STATE* pState)
 }
 DWORD GenericInputGetLayout(DWORD dwUserIndex)
 {
-	if (pGetType)
+	if ( dwUserIndex > 7)
 	{
-		return pGetType(dwUserIndex);
+		return ERROR_INVALID_PARAMETER;
+	}
+
+	if (hGenericInput == nullptr)
+	{
+		hGenericInput = LoadLibraryW(L"GenericInput.dll"); // Leaking the library since we want to keep it loaded for the entire process lifetime and we don't have a way to know when to free it
+		if (hGenericInput == nullptr)
+		{
+			return ERROR_FILE_NOT_FOUND;
+		}
+		if (pGetLayoutType == nullptr)
+		{
+			pGetLayoutType = (GetLayoutType*)GetProcAddress(hGenericInput, MAKEINTRESOURCEA(9));
+		}
+	}
+	if (pGetLayoutType)
+	{
+		return pGetLayoutType(dwUserIndex);
 	}
 	return ERROR_FILE_NOT_FOUND;
 }
