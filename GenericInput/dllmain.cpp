@@ -18,6 +18,7 @@ constexpr int ORDINAL_104_GET_BASE_BUS_INFORMATION = 104;
 constexpr int ORDINAL_108_GET_CAPABILITIES_EX = 108;
 
 HMODULE g_hXinputModule = nullptr;
+LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 pXInputGetStateEx funcGetStateEx = nullptr;
 pXInputWaitForGuideButton  funcWaitForGuideButton = nullptr;
@@ -69,7 +70,7 @@ const std::array<XInputDll, NXINPUT_DLLS> XinputDlls = {
 };
 
 extern Window windowManager;
-
+HWND captureWindow = nullptr;
 
 BOOL APIENTRY DllMain(HMODULE hModule,
 	DWORD  ul_reason_for_call,
@@ -86,8 +87,31 @@ BOOL APIENTRY DllMain(HMODULE hModule,
     {
         if (g_hXinputModule == nullptr)
         {
+			if (captureWindow == nullptr)
+			{
+				WNDCLASSW wc =
+				{
+					.lpfnWndProc = WndProc,
+					.lpszClassName = L"Controller Capture",
+				};
+				RegisterClassW(&wc);
+				captureWindow = CreateWindowW(
+					wc.lpszClassName, L"Controller Capture", WS_OVERLAPPED,
+					CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+					HWND_MESSAGE, nullptr, nullptr, nullptr);
+
+				if (captureWindow)
+				{
+					windowManager.RegisterWindow(captureWindow);
+				}
+
+			}
+
+
+
 			std::array<CHAR, MAX_PATH>  path = { '\0' };
 			GetSystemDirectoryA(path.data(), MAX_PATH);
+
 
 			// Parse the export table here to determine which XInput version is present and load the correct one, this is to ensure maximum compatibility with older versions of Windows and avoid loading a newer version of XInput that may not be compatible with the system
 
@@ -193,12 +217,18 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 				}
 			}
         }
+
+
     }
     break;
     case DLL_THREAD_DETACH:
         break;
     case DLL_PROCESS_DETACH:
         {
+		if (IsWindow(captureWindow))
+		{
+			DestroyWindow(captureWindow);
+		}
         windowManager.UnregisterWindow();
         if (g_hXinputModule)
         {

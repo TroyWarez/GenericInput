@@ -68,14 +68,10 @@ typedef DWORD(WINAPI* pXInputGetAudioDeviceIds)(DWORD, LPWSTR, UINT*, LPWSTR, UI
 typedef DWORD(WINAPI* pXInputGetDSoundAudioDeviceGuids)(DWORD, GUID*, GUID*);
 
 
-BOOL CALLBACK EnumWindowsProc(
-	_In_ HWND   hwnd,
-	_In_ LPARAM lParam
-);
+BOOL CALLBACK EnumWindowsProc(HWND   hwnd, LPARAM lParam);
 
 namespace GenericInput
 {
-	LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     DWORD XInputGetState(DWORD dwUserIndex, PGENERIC_INPUT_STATE pState);
     DWORD XInputSetState(DWORD dwUserIndex, PGENERIC_VIBRATION pVibration);
     DWORD GetLayout(DWORD dwUserIndex);

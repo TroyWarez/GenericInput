@@ -44,7 +44,7 @@ static BOOL CALLBACK EnumWindowsProc(_In_ HWND hwnd, _In_ LPARAM lParam)
 	return TRUE;
 }
 
-LRESULT GenericInput::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	if (!RegisterWindowFlag)
 	{
