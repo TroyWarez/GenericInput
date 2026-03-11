@@ -1,13 +1,11 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.32112.339
+# Visual Studio Version 18
+VisualStudioVersion = 18.3.11527.330 d18.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Generic Input DLL", "GenericInput\Generic Input DLL.vcxproj", "{B13A9AE4-E1F8-48B4-83D2-2796F4090477}"
 	ProjectSection(ProjectDependencies) = postProject
 		{E0E22F34-426E-48F6-80CD-15CD4AFBF3EE} = {E0E22F34-426E-48F6-80CD-15CD4AFBF3EE}
 	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Generic Input", "Lib\Generic Input\Generic Input.vcxproj", "{E1787663-6F50-48F8-B7FB-58D1D9DE2CC7}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDL2H", "SDL2H\SDL2H.vcxproj", "{E0E22F34-426E-48F6-80CD-15CD4AFBF3EE}"
 EndProject
@@ -15,7 +13,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Gamepad Tool", "Gamepad Too
 	ProjectSection(ProjectDependencies) = postProject
 		{B13A9AE4-E1F8-48B4-83D2-2796F4090477} = {B13A9AE4-E1F8-48B4-83D2-2796F4090477}
 		{E0E22F34-426E-48F6-80CD-15CD4AFBF3EE} = {E0E22F34-426E-48F6-80CD-15CD4AFBF3EE}
-		{E1787663-6F50-48F8-B7FB-58D1D9DE2CC7} = {E1787663-6F50-48F8-B7FB-58D1D9DE2CC7}
 	EndProjectSection
 EndProject
 Global
@@ -34,14 +31,6 @@ Global
 		{B13A9AE4-E1F8-48B4-83D2-2796F4090477}.Release|x64.Build.0 = Release|x64
 		{B13A9AE4-E1F8-48B4-83D2-2796F4090477}.Release|x86.ActiveCfg = Release|Win32
 		{B13A9AE4-E1F8-48B4-83D2-2796F4090477}.Release|x86.Build.0 = Release|Win32
-		{E1787663-6F50-48F8-B7FB-58D1D9DE2CC7}.Debug|x64.ActiveCfg = Debug|x64
-		{E1787663-6F50-48F8-B7FB-58D1D9DE2CC7}.Debug|x64.Build.0 = Debug|x64
-		{E1787663-6F50-48F8-B7FB-58D1D9DE2CC7}.Debug|x86.ActiveCfg = Debug|Win32
-		{E1787663-6F50-48F8-B7FB-58D1D9DE2CC7}.Debug|x86.Build.0 = Debug|Win32
-		{E1787663-6F50-48F8-B7FB-58D1D9DE2CC7}.Release|x64.ActiveCfg = Release|x64
-		{E1787663-6F50-48F8-B7FB-58D1D9DE2CC7}.Release|x64.Build.0 = Release|x64
-		{E1787663-6F50-48F8-B7FB-58D1D9DE2CC7}.Release|x86.ActiveCfg = Release|Win32
-		{E1787663-6F50-48F8-B7FB-58D1D9DE2CC7}.Release|x86.Build.0 = Release|Win32
 		{E0E22F34-426E-48F6-80CD-15CD4AFBF3EE}.Debug|x64.ActiveCfg = Debug|x64
 		{E0E22F34-426E-48F6-80CD-15CD4AFBF3EE}.Debug|x64.Build.0 = Debug|x64
 		{E0E22F34-426E-48F6-80CD-15CD4AFBF3EE}.Debug|x86.ActiveCfg = Debug|Win32
