@@ -86,7 +86,7 @@ BOOL APIENTRY DllMain(HMODULE hModule,
     {
         if (g_hXinputModule == nullptr)
         {
-			std::array<CHAR, MAX_PATH>  path = { L'\0' };
+			std::array<CHAR, MAX_PATH>  path = { '\0' };
 			GetSystemDirectoryA(path.data(), MAX_PATH);
 
 			// Parse the export table here to determine which XInput version is present and load the correct one, this is to ensure maximum compatibility with older versions of Windows and avoid loading a newer version of XInput that may not be compatible with the system
