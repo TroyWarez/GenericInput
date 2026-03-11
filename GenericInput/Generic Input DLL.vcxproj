@@ -24,7 +24,7 @@
     <ProjectGuid>{b13a9ae4-e1f8-48b4-83d2-2796f4090477}</ProjectGuid>
     <RootNamespace>GenericInput</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>Generic Input DLL</ProjectName>
+    <ProjectName>Generic Input</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

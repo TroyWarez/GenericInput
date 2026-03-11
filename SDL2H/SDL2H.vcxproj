@@ -21,6 +21,19 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="File.cpp" />
+    <ClCompile Include="http.cpp" />
+    <ClCompile Include="SDL2H.cpp" />
+    <ClCompile Include="string.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="File.h" />
+    <ClInclude Include="framework.h" />
+    <ClInclude Include="http.h" />
+    <ClInclude Include="string.h" />
+    <ClInclude Include="user_agent.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -157,19 +170,6 @@
       <AdditionalDependencies>Shlwapi.lib;Winhttp.lib;kernel32.lib;user32.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\SDL2H\File.cpp" />
-    <ClCompile Include="..\..\SDL2H\http.cpp" />
-    <ClCompile Include="..\..\SDL2H\SDL2H.cpp" />
-    <ClCompile Include="..\..\SDL2H\string.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\SDL2H\File.h" />
-    <ClInclude Include="..\..\SDL2H\framework.h" />
-    <ClInclude Include="..\..\SDL2H\http.h" />
-    <ClInclude Include="..\..\SDL2H\string.h" />
-    <ClInclude Include="..\..\SDL2H\user_agent.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

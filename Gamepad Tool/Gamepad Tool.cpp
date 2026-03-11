@@ -4,8 +4,6 @@
 #include "framework.h"
 #include "Gamepad Tool.h"
 
-#include "GenericInput.h"
-
 #define MAX_LOADSTRING 100
 
 // Global Variables:
@@ -27,7 +25,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
     XINPUT_STATE state = { 0 };
-    DWORD a = XInputGetState(0, &state);
+    DWORD ret = XInputGetState(0, &state);
     // TODO: Place code here.
 
     // Initialize global strings
@@ -60,17 +58,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
         else
         {
-            for (DWORD i = 0; i < 12; i++)
-            {
-				GENERIC_INPUT_STATE State = { 0 };
-				DWORD er = GenericInputGetState(i, &State);
-                if (er)
-                {
-                    break;
-                }
-
-            }
-            int a = 2;
+            ret = XInputGetState(0, &state);
         }
     }
 
