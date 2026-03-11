@@ -366,4 +366,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 *.config
-/GameInput.lib
+/GenericInput/controllerDB.h
