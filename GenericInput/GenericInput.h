@@ -57,7 +57,7 @@ typedef DWORD(WINAPI* pXInputGetStateEx)(DWORD, PGENERIC_INPUT_STATE);
 typedef DWORD(WINAPI* pXInputWaitForGuideButton)(DWORD, DWORD, PGENERIC_INPUT_STATE);
 typedef DWORD(WINAPI* pXInputCancelGuideButtonWait)(DWORD);
 typedef DWORD(WINAPI* pXInputPowerOffController)(DWORD);
-typedef DWORD(WINAPI* pXInputGetBaseBusInformation)(UINT, PGENERIC_CAPABILITIES, PGENERIC_CAPABILITIES);
+typedef DWORD(WINAPI* pXInputGetBaseBusInformation)(DWORD, PGENERIC_CAPABILITIES, PGENERIC_CAPABILITIES);
 typedef DWORD(WINAPI* pXInputGetCapabilitiesEx)(DWORD, PGENERIC_CAPABILITIES, PGENERIC_CAPABILITIES);
 
 typedef DWORD(WINAPI* pXInputGetCapabilities)(DWORD, DWORD, PGENERIC_CAPABILITIES);
@@ -66,9 +66,6 @@ typedef DWORD(WINAPI* pXInputGetBatteryInformation)(DWORD, BYTE, PGENERIC_BATTER
 typedef DWORD(WINAPI* pXInputGetKeystroke)(DWORD, DWORD, PGENERIC_KEYSTROKE);
 typedef DWORD(WINAPI* pXInputGetAudioDeviceIds)(DWORD, LPWSTR, UINT*, LPWSTR, UINT*);
 typedef DWORD(WINAPI* pXInputGetDSoundAudioDeviceGuids)(DWORD, GUID*, GUID*);
-
-
-BOOL CALLBACK EnumWindowsProc(HWND   hwnd, LPARAM lParam);
 
 namespace GenericInput
 {

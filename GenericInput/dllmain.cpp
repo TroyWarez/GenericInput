@@ -70,8 +70,38 @@ const std::array<XInputDll, NXINPUT_DLLS> XinputDlls = {
 };
 
 extern Window windowManager;
-HWND captureWindow = nullptr;
+HANDLE hThread = nullptr;
 
+DWORD WINAPI MyThreadFunction(LPVOID lpParam) {
+	UNREFERENCED_PARAMETER(lpParam);
+	WNDCLASSW wc =
+	{
+		.lpfnWndProc = WndProc,
+		.lpszClassName = L"Controller Capture",
+	};
+	RegisterClassW(&wc);
+	HWND captureWindow = CreateWindowW(
+		wc.lpszClassName, L"Controller Capture", WS_OVERLAPPED,
+		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+		HWND_MESSAGE, nullptr, nullptr, nullptr);
+
+	if (captureWindow)
+	{
+		windowManager.RegisterWindow(captureWindow);
+	}
+	for (;;)
+	{
+		MSG msg;
+		if (PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE))
+		{
+			TranslateMessage(&msg);
+			DispatchMessageW(&msg);
+			continue;
+		}
+	}
+
+	return 0;
+}
 BOOL APIENTRY DllMain(HMODULE hModule,
 	DWORD  ul_reason_for_call,
 	LPVOID lpReserved
@@ -87,24 +117,9 @@ BOOL APIENTRY DllMain(HMODULE hModule,
     {
         if (g_hXinputModule == nullptr)
         {
-			if (captureWindow == nullptr)
+			if (hThread == nullptr)
 			{
-				WNDCLASSW wc =
-				{
-					.lpfnWndProc = WndProc,
-					.lpszClassName = L"Controller Capture",
-				};
-				RegisterClassW(&wc);
-				captureWindow = CreateWindowW(
-					wc.lpszClassName, L"Controller Capture", WS_OVERLAPPED,
-					CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-					HWND_MESSAGE, nullptr, nullptr, nullptr);
-
-				if (captureWindow)
-				{
-					windowManager.RegisterWindow(captureWindow);
-				}
-
+				hThread = CreateThread(nullptr, 0, MyThreadFunction, nullptr, 0, nullptr);
 			}
 
 
@@ -225,11 +240,6 @@ BOOL APIENTRY DllMain(HMODULE hModule,
         break;
     case DLL_PROCESS_DETACH:
         {
-		if (IsWindow(captureWindow))
-		{
-			DestroyWindow(captureWindow);
-		}
-        windowManager.UnregisterWindow();
         if (g_hXinputModule)
         {
             FreeLibrary(g_hXinputModule);
