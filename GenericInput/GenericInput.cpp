@@ -161,7 +161,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 								PostMessage(hWnd, WM_CONTROLLER_DISCONNECTED, i, NULL);
 								return 0;
 							}
-							else if (FixedPath == FixedControllerPath)
+							if (FixedPath == FixedControllerPath)
 							{
 								ControllerSlots[i].Path = L"";
 								return 0;

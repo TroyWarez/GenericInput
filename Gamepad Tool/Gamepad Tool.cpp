@@ -44,7 +44,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MSG msg;
 
     // Main message loop:
-    while (true)
+    while (true) // Direct 2d
     {
         if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
         {
