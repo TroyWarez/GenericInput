@@ -1,159 +1,173 @@
-// Gamepad Tool.cpp : Defines the entry point for the application.
-//
+#include <windows.h>
+#include <d2d1.h>
+#include <wrl/client.h> // For ComPtr
 
-#include "framework.h"
-#include "Gamepad Tool.h"
+#pragma comment(lib, "d2d1.lib")
 
-#define MAX_LOADSTRING 100
+using Microsoft::WRL::ComPtr;
 
-// Global Variables:
-HINSTANCE hInst;                                // current instance
-WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
-WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
+class D2DApp {
+public:
+	D2DApp() : m_hwnd(nullptr) {}
 
-// Forward declarations of functions included in this code module:
-ATOM                MyRegisterClass(HINSTANCE hInstance);
-BOOL                InitInstance(HINSTANCE, int);
-LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+	// Initialize the window and Direct2D
+	HRESULT Initialize(HINSTANCE hInstance, int nCmdShow) {
+		WNDCLASSEX wcex = { sizeof(WNDCLASSEX) };
+		wcex.style = CS_HREDRAW | CS_VREDRAW;
+		wcex.lpfnWndProc = D2DApp::WndProc;
+		wcex.cbClsExtra = 0;
+		wcex.cbWndExtra = sizeof(LONG_PTR);
+		wcex.hInstance = hInstance;
+		wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
+		wcex.lpszClassName = L"D2DAppClass";
 
-int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-                     _In_opt_ HINSTANCE hPrevInstance,
-                     _In_ LPWSTR    lpCmdLine,
-                     _In_ int       nCmdShow)
-{
-    UNREFERENCED_PARAMETER(hPrevInstance);
-    UNREFERENCED_PARAMETER(lpCmdLine);
-    XINPUT_STATE state = { 0 };
-    DWORD ret = XInputGetState(0, &state);
-    // TODO: Place code here.
+		RegisterClassEx(&wcex);
 
-    // Initialize global strings
-    LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_GAMEPADTOOL, szWindowClass, MAX_LOADSTRING);
-    MyRegisterClass(hInstance);
+		m_hwnd = CreateWindow(
+			L"D2DAppClass", L"Direct2D Boilerplate",
+			WS_OVERLAPPEDWINDOW,
+			CW_USEDEFAULT, CW_USEDEFAULT, 800, 600,
+			NULL, NULL, hInstance, this
+		);
 
-    // Perform application initialization:
-    if (!InitInstance (hInstance, nCmdShow))
-    {
-        return FALSE;
-    }
+		if (!m_hwnd) return E_FAIL;
 
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_GAMEPADTOOL));
+		// Use the 4-argument version to avoid compiler ambiguity
+		HRESULT hr = D2D1CreateFactory(
+			D2D1_FACTORY_TYPE_SINGLE_THREADED,
+			__uuidof(ID2D1Factory),
+			nullptr,
+			&m_pFactory
+		);
 
-    MSG msg;
+		if (SUCCEEDED(hr)) {
+			ShowWindow(m_hwnd, nCmdShow);
+			UpdateWindow(m_hwnd);
+		}
 
-    // Main message loop:
-    while (true) // Direct 2d
-    {
-        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-        {
-            if (msg.message == WM_QUIT)
-            {
-                break;
-            }
+		return hr;
+	}
 
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }
-        else
-        {
-            ret = XInputGetState(0, &state);
-        }
-    }
+	// Main Message Loop
+	void RunMessageLoop() {
+		MSG msg;
+		while (GetMessage(&msg, NULL, 0, 0)) {
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+	}
 
-    return (int) msg.wParam;
-}
+private:
+	HWND m_hwnd;
+	ComPtr<ID2D1Factory> m_pFactory;
+	ComPtr<ID2D1HwndRenderTarget> m_pRenderTarget;
+	ComPtr<ID2D1SolidColorBrush> m_pBrush;
 
+	// Create resources that are tied to the graphics device (GPU)
+	HRESULT CreateDeviceResources() {
+		HRESULT hr = S_OK;
 
+		if (!m_pRenderTarget) {
+			RECT rc;
+			GetClientRect(m_hwnd, &rc);
+			D2D1_SIZE_U size = D2D1::SizeU(rc.right - rc.left, rc.bottom - rc.top);
 
-//
-//  FUNCTION: MyRegisterClass()
-//
-//  PURPOSE: Registers the window class.
-//
-ATOM MyRegisterClass(HINSTANCE hInstance)
-{
-    WNDCLASSEXW wcex;
+			// Create Render Target
+			hr = m_pFactory->CreateHwndRenderTarget(
+				D2D1::RenderTargetProperties(),
+				D2D1::HwndRenderTargetProperties(m_hwnd, size),
+				&m_pRenderTarget
+			);
 
-    wcex.cbSize = sizeof(WNDCLASSEX);
+			if (SUCCEEDED(hr)) {
+				// Create a basic brush (Cornflower Blue)
+				hr = m_pRenderTarget->CreateSolidColorBrush(
+					D2D1::ColorF(D2D1::ColorF::CornflowerBlue),
+					&m_pBrush
+				);
+			}
+		}
+		return hr;
+	}
 
-    wcex.style          = CS_HREDRAW | CS_VREDRAW;
-    wcex.lpfnWndProc    = WndProc;
-    wcex.cbClsExtra     = 0;
-    wcex.cbWndExtra     = 0;
-    wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_GAMEPADTOOL));
-    wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
-    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_GAMEPADTOOL);
-    wcex.lpszClassName  = szWindowClass;
-    wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+	// Discard resources if the device is lost
+	void DiscardDeviceResources() {
+		m_pRenderTarget.Reset();
+		m_pBrush.Reset();
+	}
 
-    return RegisterClassExW(&wcex);
-}
+	// The actual drawing code
+	void OnRender() {
+		if (SUCCEEDED(CreateDeviceResources())) {
+			m_pRenderTarget->BeginDraw();
+			m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
+			m_pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::White));
 
-//
-//   FUNCTION: InitInstance(HINSTANCE, int)
-//
-//   PURPOSE: Saves instance handle and creates main window
-//
-//   COMMENTS:
-//
-//        In this function, we save the instance handle in a global variable and
-//        create and display the main program window.
-//
-BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
-{
-   hInst = hInstance; // Store instance handle in our global variable
+			// Draw a rectangle in the middle
+			D2D1_SIZE_F rtSize = m_pRenderTarget->GetSize();
+			m_pRenderTarget->FillRectangle(
+				D2D1::RectF(rtSize.width / 4, rtSize.height / 4, 3 * rtSize.width / 4, 3 * rtSize.height / 4),
+				m_pBrush.Get()
+			);
 
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+			HRESULT hr = m_pRenderTarget->EndDraw();
 
-   if (!hWnd)
-   {
-      return FALSE;
-   }
-//    if (GenericInputInit(hWnd, FALSE) == ERROR_GEN_FAILURE)
-//    {
-// 	   return FALSE;
-//    }
-//    GenericInputDeviceChange(hWnd, 0, 0, 0);
+			// If the device is lost (e.g. driver update), recreate it next time
+			if (hr == D2DERR_RECREATE_TARGET) {
+				DiscardDeviceResources();
+			}
+		}
+	}
 
-   ShowWindow(hWnd, nCmdShow);
-   UpdateWindow(hWnd);
+	void OnResize(UINT width, UINT height) {
+		if (m_pRenderTarget) {
+			m_pRenderTarget->Resize(D2D1::SizeU(width, height));
+		}
+	}
 
-   return TRUE;
-}
+	// Standard Win32 Window Procedure
+	static LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
+		D2DApp* pApp = nullptr;
 
-//
-//  FUNCTION: WndProc(HWND, UINT, WPARAM, LPARAM)
-//
-//  PURPOSE: Processes messages for the main window.
-//
-//  WM_COMMAND  - process the application menu
-//  WM_PAINT    - Paint the main window
-//  WM_DESTROY  - post a quit message and return
-//
-//
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-/*    GenericInputDeviceChange(hWnd, message, wParam, lParam);*/
-    switch (message)
-    {
-    case WM_PAINT:
-        {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: Add any drawing code that uses hdc here...
-            EndPaint(hWnd, &ps);
-        }
-        break;
-    case WM_DESTROY:
-        PostQuitMessage(0);
-        break;
-    default:
-        return DefWindowProc(hWnd, message, wParam, lParam);
-    }
-    return 0;
+		if (message == WM_NCCREATE) {
+			CREATESTRUCT* pCreate = reinterpret_cast<CREATESTRUCT*>(lParam);
+			pApp = reinterpret_cast<D2DApp*>(pCreate->lpCreateParams);
+			SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pApp));
+		}
+		else {
+			pApp = reinterpret_cast<D2DApp*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+		}
+
+		if (pApp) {
+			switch (message) {
+			case WM_SIZE:
+				pApp->OnResize(LOWORD(lParam), HIWORD(lParam));
+				return 0;
+			case WM_PAINT:
+				pApp->OnRender();
+				ValidateRect(hwnd, NULL);
+				return 0;
+			case WM_DESTROY:
+				PostQuitMessage(0);
+				return 1;
+			}
+		}
+		return DefWindowProc(hwnd, message, wParam, lParam);
+	}
+};
+
+// Entry Point
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow) {
+	HeapSetInformation(NULL, HeapEnableTerminationOnCorruption, NULL, 0);
+
+	if (SUCCEEDED(CoInitializeEx(NULL, COINIT_APARTMENTTHREADED))) {
+		{
+			D2DApp app;
+			if (SUCCEEDED(app.Initialize(hInstance, nCmdShow))) {
+				app.RunMessageLoop();
+			}
+		}
+		CoUninitialize();
+	}
+	return 0;
 }
