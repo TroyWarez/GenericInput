@@ -18,13 +18,13 @@ public:
 		wcex.lpfnWndProc = D2DApp::WndProc;
 		wcex.hInstance = hInstance;
 		wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
-		wcex.lpszClassName = L"D2DAppClass";
+		wcex.lpszClassName = L"GamepadToolClass";
 		wcex.cbWndExtra = sizeof(LONG_PTR);
 
 		RegisterClassEx(&wcex);
 
-		m_hwnd = CreateWindow(L"D2DAppClass", L"Direct2D + XInput", WS_OVERLAPPEDWINDOW,
-			CW_USEDEFAULT, CW_USEDEFAULT, 800, 600, NULL, NULL, hInstance, this);
+		m_hwnd = CreateWindow(L"GamepadToolClass", L"Direct2D + XInput", WS_OVERLAPPEDWINDOW,
+			CW_USEDEFAULT, CW_USEDEFAULT, 800, 600, nullptr, nullptr, hInstance, this);
 
 		if (!m_hwnd) return E_FAIL;
 
@@ -41,7 +41,7 @@ public:
 	void RunMessageLoop() {
 		MSG msg = { 0 };
 		while (msg.message != WM_QUIT) {
-			if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+			if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
 			}
@@ -147,10 +147,15 @@ private:
 	}
 };
 
-int WINAPI WinMain(HINSTANCE h, HINSTANCE, LPSTR, int n) {
-	CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
+                     _In_opt_ HINSTANCE hPrevInstance,
+                     _In_ LPWSTR    lpCmdLine,
+                     _In_ int       nCmdShow)
+{
+    UNREFERENCED_PARAMETER(hPrevInstance);
+    UNREFERENCED_PARAMETER(lpCmdLine);
 	D2DApp app;
-	if (SUCCEEDED(app.Initialize(h, n))) {
+	if (SUCCEEDED(CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED)) && (SUCCEEDED(app.Initialize(hInstance, nCmdShow)))) {
 		app.RunMessageLoop();
 	}
 	CoUninitialize();
