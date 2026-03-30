@@ -18,6 +18,8 @@
 #include <string>
 #include <algorithm>
 #include <unknwn.h>
+#include <memory>
+#include <array>
 constexpr int CONTROLLER_BUTTON_A = 0x1000;
 constexpr int CONTROLLER_BUTTON_B = 0x2000;
 constexpr int CONTROLLER_BUTTON_X = 0x4000;
@@ -184,3 +186,10 @@ const SHORT YByteToShortAlt[] = {
 	-32767,-32767,-32767, -32767, -32767, -32767,
 	 -32767, -32767, -32767,
 };
+
+inline std::unique_ptr<std::array<GenericInputController, MAX_CONTROLLERS>> Storage =
+std::make_unique<std::array<GenericInputController, MAX_CONTROLLERS>>();
+
+// 2. The Span (The public interface)
+// Threads will use this to access the data.
+inline std::span<GenericInputController> ControllerSlots{ *Storage };

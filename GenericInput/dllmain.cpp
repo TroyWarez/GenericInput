@@ -3,7 +3,9 @@
 #include "Window.h"
 #include <array>
 #include <cstring>
+#include "ControllerScanner.h"
 #include "GenericInput.h"
+
 
 constexpr int NXINPUT_DLL_EXPORTS = 5;
 constexpr int NXINPUT_DLL_ORDINALS = 7;
@@ -18,6 +20,8 @@ constexpr int ORDINAL_104_GET_BASE_BUS_INFORMATION = 104;
 constexpr int ORDINAL_108_GET_CAPABILITIES_EX = 108;
 
 HMODULE g_hXinputModule = nullptr;
+extern Scanner controllerScanner;
+
 LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 pXInputGetStateEx funcGetStateEx = nullptr;
@@ -88,6 +92,7 @@ DWORD WINAPI MyThreadFunction(LPVOID lpParam) {
 	if (captureWindow)
 	{
 		windowManager.RegisterWindow(captureWindow);
+		controllerScanner.ScanForControllers(captureWindow, ControllerSlots);
 	}
 	for (;;)
 	{

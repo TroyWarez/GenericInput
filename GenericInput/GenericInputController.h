@@ -1,6 +1,7 @@
 #pragma once
 #include "pch.h"
 constexpr int MAX_CONTROLLERS = 8;
+
 enum controllerType
 {
 	XInput = 1,

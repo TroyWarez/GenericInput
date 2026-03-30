@@ -12,7 +12,7 @@ constexpr int WM_CONTROLLER_DISCONNECTED = 0x8008;
 
 using namespace Devices;
 extern Bluetooth btManager;
-void Scanner::ScanForControllers(HWND hWnd, std::span<GenericInputController, MAX_CONTROLLERS> ControllerSlots)
+void Scanner::ScanForControllers(HWND hWnd, std::span<GenericInputController> ControllerSlots)
 {
 	std::vector<std::wstring> hidDevicePaths;
 	std::vector<std::wstring> hidDeviceBusType;
@@ -44,7 +44,7 @@ void Scanner::ScanForControllers(HWND hWnd, std::span<GenericInputController, MA
 		if (isController(hidDevicePaths[i], controller) == TRUE)
 		{
 			controller.BusType = hidDeviceBusType[i];
-			if (controller.BusType == L"BTHENUM" && controller.SerialNum != L"")
+			if (controller.BusType == L"BTHENUM" && controller.SerialNum.empty())
 			{
 				//Registry::GetBluetoothAddress(controller);
 			controller.ullbtDeviceInfo = std::stoll(controller.SerialNum, 0, 16);
@@ -93,6 +93,9 @@ void Scanner::ScanForControllers(HWND hWnd, std::span<GenericInputController, MA
 				if (memcmp(&controller.Atributes, &xinputHIDArtibs[j], sizeof(HIDD_ATTRIBUTES)) == 0)
 				{
 					controller.conType = XInput;
+					controller.Atributes = xinputHIDArtibs[j];
+					controller.BusType = xinputDeviceBusType[j];
+					controller.XInputPath = xinputDevicePaths[j];
 				}
 			}
 			if (controller.conType == 0)
@@ -106,7 +109,7 @@ void Scanner::ScanForControllers(HWND hWnd, std::span<GenericInputController, MA
 					controller = { 0 };
 					break;
 				}
-				if (ControllerSlots[i].Path == L"")
+				if (ControllerSlots[i].Path.empty())
 				{
 					ControllerSlots[i] = controller;
 					PostMessageW(hWnd, WM_CONTROLLER_CONNECTED, i, NULL);

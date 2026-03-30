@@ -6,6 +6,7 @@
 #include "DualSense.h"
 #include "DualShock4.h"
 #include "ProController.h"
+#include "XboxInput.h"
 Bluetooth btManager;
 Window windowManager;
 Scanner controllerScanner;
@@ -27,7 +28,7 @@ extern pXInputGetAudioDeviceIds funcGetAudioDeviceIds;
 extern pXInputGetDSoundAudioDeviceGuids funcGetDSoundGuids;
 
 extern bool RegisterWindowFlag;
-static GenericInputController ControllerSlots[MAX_CONTROLLERS];
+
 static DWORD LastError;
 static bool RegisterWindowFlag = false;
 
@@ -195,14 +196,28 @@ DWORD GenericInput::XInputGetState(DWORD dwUserIndex, PGENERIC_INPUT_STATE pStat
 
 	if (ControllerSlots[dwUserIndex].DeviceHandle == nullptr && ControllerSlots[dwUserIndex].conType != XInput)
 	{
-		if (ControllerSlots[dwUserIndex].Path.empty()) {
-			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].Path.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, nullptr, OPEN_EXISTING, NULL, nullptr);
+		if (!ControllerSlots[dwUserIndex].Path.empty()) {
+			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].Path.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, NULL, nullptr);
 		}
-		else if (ControllerSlots[dwUserIndex].BTPath.empty())
+		else if (!ControllerSlots[dwUserIndex].BTPath.empty())
 		{
-			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].BTPath.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, nullptr, OPEN_EXISTING, NULL, nullptr);
+			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].BTPath.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, NULL, nullptr);
 		}
-		if (ControllerSlots[dwUserIndex].DeviceHandle == INVALID_HANDLE_VALUE || ControllerSlots[dwUserIndex].DeviceHandle == 0)
+		if (ControllerSlots[dwUserIndex].DeviceHandle == INVALID_HANDLE_VALUE || ControllerSlots[dwUserIndex].DeviceHandle == nullptr)
+		{
+			return GetLastError();
+		}
+	}
+	else if (ControllerSlots[dwUserIndex].DeviceHandle == nullptr)
+	{
+		if (!ControllerSlots[dwUserIndex].XInputPath.empty()) {
+			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].XInputPath.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, NULL, nullptr);
+		}
+		else if (!ControllerSlots[dwUserIndex].BTPath.empty())
+		{
+			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].BTPath.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, NULL, nullptr);
+		}
+		if (ControllerSlots[dwUserIndex].DeviceHandle == INVALID_HANDLE_VALUE || ControllerSlots[dwUserIndex].DeviceHandle == nullptr)
 		{
 			return GetLastError();
 		}
@@ -211,7 +226,7 @@ DWORD GenericInput::XInputGetState(DWORD dwUserIndex, PGENERIC_INPUT_STATE pStat
 	{
 	case XInput:
 	{
-		//return GameInput::GetState(ControllerSlots[dwUserIndex], pState);
+		return XboxInput::GetState(&ControllerSlots[dwUserIndex], (XboxInput::GENERIC_INPUT_STATE*)pState);
 	}
 	case DS://DualSense
 	{

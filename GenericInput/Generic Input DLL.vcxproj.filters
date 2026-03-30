@@ -66,6 +66,9 @@
     <ClInclude Include="ProController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="XboxInput.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -108,6 +111,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ProController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="XboxInput.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
