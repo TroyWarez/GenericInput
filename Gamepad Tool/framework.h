@@ -13,4 +13,7 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
-#include <xinput.h>
+#include <windows.h>
+#include <d2d1.h>
+#include <wrl/client.h>
+#include <Xinput.h>
