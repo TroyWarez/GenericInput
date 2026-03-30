@@ -43,12 +43,22 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_GAMEPADTOOL));
 
 	MSG msg = {};
+	XINPUT_STATE g_GamepadState; // Store state
+
 	while (msg.message != WM_QUIT) {
 		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
 		else {
+			// Poll for Input
+			ZeroMemory(&g_GamepadState, sizeof(XINPUT_STATE));
+			if (XInputGetState(0, &g_GamepadState) == ERROR_SUCCESS) {
+				// Optional: Pass the gamepad state to your renderer 
+				// so the UI can react to buttons.
+				// renderer.UpdateInput(g_GamepadState); 
+			}
+
 			renderer.Render();
 		}
 	}
