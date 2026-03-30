@@ -193,7 +193,7 @@ DWORD GenericInput::XInputGetState(DWORD dwUserIndex, PGENERIC_INPUT_STATE pStat
 		return ERROR_INVALID_PARAMETER;
 	}
 
-	if (ControllerSlots[dwUserIndex].DeviceHandle == 0 && ControllerSlots[dwUserIndex].conType != XInput)
+	if (ControllerSlots[dwUserIndex].DeviceHandle == nullptr && ControllerSlots[dwUserIndex].conType != XInput)
 	{
 		if (ControllerSlots[dwUserIndex].Path.empty()) {
 			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].Path.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, nullptr, OPEN_EXISTING, NULL, nullptr);
