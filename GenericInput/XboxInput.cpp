@@ -12,7 +12,12 @@ DWORD XboxInput::GetState(GenericInputController* controller, GENERIC_INPUT_STAT
 	if (!DeviceIoControl(controller->DeviceHandle, 0x8000e00c, in, sizeof(in), out, sizeof(out), &size, nullptr) || size != sizeof(out))
 	{
 		// NOTE: could check GetLastError() here, if it is ERROR_DEVICE_NOT_CONNECTED - that means disconnect
-		return -1;
+		if (GetLastError() == ERROR_DEVICE_NOT_CONNECTED )
+		{
+			CloseHandle(controller->DeviceHandle);
+			controller = nullptr;
+			return ERROR_DEVICE_NOT_CONNECTED;
+		}
 	}
 
 	pState->dwPacketNumber = *(DWORD*)(out + 5);
