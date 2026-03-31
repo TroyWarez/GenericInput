@@ -258,7 +258,62 @@ DWORD GenericInput::XInputSetState(DWORD dwUserIndex, PGENERIC_VIBRATION pVibrat
 		return ERROR_INVALID_PARAMETER;
 	}
 
-	return ERROR_SUCCESS;
+	if (ControllerSlots[dwUserIndex].DeviceHandle == nullptr && ControllerSlots[dwUserIndex].conType != XInput)
+	{
+		if (!ControllerSlots[dwUserIndex].Path.empty()) {
+			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].Path.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, NULL, nullptr);
+		}
+		else if (!ControllerSlots[dwUserIndex].BTPath.empty())
+		{
+			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].BTPath.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, NULL, nullptr);
+		}
+		if (ControllerSlots[dwUserIndex].DeviceHandle == INVALID_HANDLE_VALUE || ControllerSlots[dwUserIndex].DeviceHandle == nullptr)
+		{
+			return ERROR_DEVICE_NOT_CONNECTED;
+		}
+	}
+	else if (ControllerSlots[dwUserIndex].DeviceHandle == nullptr)
+	{
+		if (!ControllerSlots[dwUserIndex].XInputPath.empty()) {
+			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].XInputPath.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, NULL, nullptr);
+		}
+		else if (!ControllerSlots[dwUserIndex].BTPath.empty())
+		{
+			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].BTPath.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, NULL, nullptr);
+		}
+		if (ControllerSlots[dwUserIndex].DeviceHandle == INVALID_HANDLE_VALUE || ControllerSlots[dwUserIndex].DeviceHandle == nullptr)
+		{
+			return ERROR_DEVICE_NOT_CONNECTED;
+		}
+	}
+	switch (ControllerSlots[dwUserIndex].conType)
+	{
+	case XInput:
+	{
+		return XboxInput::SetState(&ControllerSlots[dwUserIndex], (XboxInput::GENERIC_VIBRATION*)pVibration);
+	}
+	case DS://DualSense
+	{
+		//return DualSense::SetState(&ControllerSlots[dwUserIndex], (DualSense::GENERIC_INPUT_STATE*)pVibration);
+	}
+	case DS4://DualSense
+	{
+		//return DualShock4::SetState(&ControllerSlots[dwUserIndex], (DualShock4::GENERIC_INPUT_STATE*)pVibration);
+	}
+	case NT://Pro controller
+	{
+		//return ProController::SetState(&ControllerSlots[dwUserIndex], (ProController::GENERIC_INPUT_STATE*)pVibration);
+	}
+	case SDL:
+	{
+		break;
+	}
+	default:
+	{
+		return ERROR_DEVICE_NOT_CONNECTED;
+	}
+	}
+	return GetLastError();
 }
 DWORD GenericInput::GetLayout(DWORD dwUserIndex)
 {

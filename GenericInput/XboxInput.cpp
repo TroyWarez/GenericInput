@@ -29,7 +29,26 @@ DWORD XboxInput::GetState(GenericInputController* controller, GENERIC_INPUT_STAT
 	pState->Gamepad.sThumbRY = *(SHORT*)(out + 21);
 	return ERROR_SUCCESS;
 }
-DWORD XboxInput::SetState(GenericInputController& controller, LPVOID* pData, DWORD dSize)
+DWORD XboxInput::SetState(GenericInputController* controller, GENERIC_VIBRATION* pVibration)
 {
-	return ERROR_INVALID_PARAMETER;
+	if (controller == nullptr || controller->DeviceHandle == nullptr || controller->DeviceHandle == INVALID_HANDLE_VALUE || pVibration == nullptr)
+	{
+		return ERROR_INVALID_PARAMETER;
+	}
+
+	BYTE high_Freq = static_cast<unsigned char>(pVibration->wRightMotorSpeed);
+	BYTE low_Freq = static_cast<unsigned char>(pVibration->wLeftMotorSpeed);
+
+	BYTE in[5] = { 0x00, 0x00, low_Freq,  high_Freq, 0x02 };
+	DWORD size = NULL;
+	if (!DeviceIoControl(controller->DeviceHandle, 0x8000a010, in, sizeof(in), nullptr, 0, nullptr, nullptr))
+	{
+		if (GetLastError() == ERROR_DEVICE_NOT_CONNECTED)
+		{
+			CloseHandle(controller->DeviceHandle);
+			controller = nullptr;
+			return ERROR_DEVICE_NOT_CONNECTED;
+		}
+	}
+	return ERROR_SUCCESS;
 }

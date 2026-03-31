@@ -44,7 +44,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	MSG msg = {};
 	XINPUT_STATE g_GamepadState; // Store state
-
+	XINPUT_VIBRATION g_VibrationState = { 0x00 }; // Store vibration state
+	g_VibrationState = { 0xFF, 0xFF }; // Set vibration to max for both motors
+	XInputSetState(0, &g_VibrationState);
 	while (msg.message != WM_QUIT) {
 		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
 			TranslateMessage(&msg);

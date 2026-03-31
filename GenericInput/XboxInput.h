@@ -15,9 +15,14 @@ namespace XboxInput
 		DWORD          dwPacketNumber;
 		GENERIC_INPUT_GAMEPAD Gamepad;
 	} GENERIC_INPUT_STATE, * PGENERIC_INPUT_STATE;
+	typedef struct _GENERIC_VIBRATION
+	{
+		WORD                                wLeftMotorSpeed;
+		WORD                                wRightMotorSpeed;
+	} GENERIC_VIBRATION, * PGENERIC_VIBRATION;
 
 	DWORD GetState(GenericInputController* controller, GENERIC_INPUT_STATE* pState);
-	static DWORD SetState(GenericInputController& controller, LPVOID* pData, DWORD dSize);
+	DWORD SetState(GenericInputController* controller, GENERIC_VIBRATION* pVibration);
 
 	static std::vector <BYTE> OutputBuffer;
 
