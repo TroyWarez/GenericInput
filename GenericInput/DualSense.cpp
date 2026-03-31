@@ -52,6 +52,7 @@ DWORD DualSense::GetState(GenericInputController* controller, GENERIC_INPUT_STAT
 	DWORD Flags = 0;
 	if (GetHandleInformation(controller->DeviceHandle, &Flags) == FALSE)
 	{
+		controller = nullptr;
 		return GetLastError();
 	}
 	if (controller->dwPacketNumber < 10241)
@@ -69,14 +70,17 @@ DWORD DualSense::GetState(GenericInputController* controller, GENERIC_INPUT_STAT
 
 	if (HidD_GetPreparsedData(controller->DeviceHandle, &pData) == FALSE)
 	{
+		controller = nullptr;
 		return GetLastError();
 	}
 	if (HidP_GetCaps(pData, &deviceCaps) != HIDP_STATUS_SUCCESS)
 	{
+		controller = nullptr;
 		return GetLastError();
 	}
 	if (HidD_FreePreparsedData(pData) == FALSE)
 	{
+		controller = nullptr;
 		return GetLastError();
 	}
 

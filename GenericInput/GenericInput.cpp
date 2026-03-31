@@ -205,7 +205,7 @@ DWORD GenericInput::XInputGetState(DWORD dwUserIndex, PGENERIC_INPUT_STATE pStat
 		}
 		if (ControllerSlots[dwUserIndex].DeviceHandle == INVALID_HANDLE_VALUE || ControllerSlots[dwUserIndex].DeviceHandle == nullptr)
 		{
-			return GetLastError();
+			return ERROR_DEVICE_NOT_CONNECTED;
 		}
 	}
 	else if (ControllerSlots[dwUserIndex].DeviceHandle == nullptr)
@@ -219,7 +219,7 @@ DWORD GenericInput::XInputGetState(DWORD dwUserIndex, PGENERIC_INPUT_STATE pStat
 		}
 		if (ControllerSlots[dwUserIndex].DeviceHandle == INVALID_HANDLE_VALUE || ControllerSlots[dwUserIndex].DeviceHandle == nullptr)
 		{
-			return GetLastError();
+			return ERROR_DEVICE_NOT_CONNECTED;
 		}
 	}
 	switch (ControllerSlots[dwUserIndex].conType)
@@ -244,9 +244,12 @@ DWORD GenericInput::XInputGetState(DWORD dwUserIndex, PGENERIC_INPUT_STATE pStat
 	{
 		break;
 	}
-
+	default: 
+	{
+		return ERROR_DEVICE_NOT_CONNECTED;
 	}
-	return ERROR_SUCCESS;
+	}
+	return GetLastError();
 }
 DWORD GenericInput::XInputSetState(DWORD dwUserIndex, PGENERIC_VIBRATION pVibration)
 {

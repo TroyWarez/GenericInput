@@ -11,7 +11,6 @@ DWORD XboxInput::GetState(GenericInputController* controller, GENERIC_INPUT_STAT
 	DWORD size = NULL;
 	if (!DeviceIoControl(controller->DeviceHandle, 0x8000e00c, in, sizeof(in), out, sizeof(out), &size, nullptr) || size != sizeof(out))
 	{
-		// NOTE: could check GetLastError() here, if it is ERROR_DEVICE_NOT_CONNECTED - that means disconnect
 		if (GetLastError() == ERROR_DEVICE_NOT_CONNECTED )
 		{
 			CloseHandle(controller->DeviceHandle);
