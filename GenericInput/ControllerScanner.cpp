@@ -12,6 +12,8 @@ constexpr int WM_CONTROLLER_DISCONNECTED = 0x8008;
 
 using namespace Devices;
 extern Bluetooth btManager;
+extern DWORD dwDeviceIOCodeXbox;
+
 void Scanner::ScanForControllers(HWND hWnd, std::span<GenericInputController> ControllerSlots)
 {
 	std::vector<std::wstring> hidDevicePaths;
@@ -32,6 +34,29 @@ void Scanner::ScanForControllers(HWND hWnd, std::span<GenericInputController> Co
 			xinputHIDArtibs.push_back(hidArtib);
 		}
 	}
+
+	if (xinputDevicePaths.size())
+	{
+		HANDLE hSteamXbox = CreateFile(xinputDevicePaths[0].c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, NULL, nullptr);
+
+		if (hSteamXbox != INVALID_HANDLE_VALUE && hSteamXbox != nullptr)
+		{
+			BYTE high_Freq = 0;
+			BYTE low_Freq = 0;
+
+			BYTE in[5] = { 0x00, 0x00, low_Freq,  high_Freq, 0x02 };
+
+			if (DeviceIoControl(
+				hSteamXbox,
+				0x002aac08, in, sizeof(in), nullptr, 0, nullptr, nullptr))
+			{
+				dwDeviceIOCodeXbox = 0x002aac08;
+			}
+			DWORD er = GetLastError();
+			CloseHandle(hSteamXbox);
+		}
+	}
+
 	if (hidDeviceBusType.size() != hidDevicePaths.size())
 	{
 		OutputDebugString(L"CRITICAL GENERIC INPUT ERROR: The number of device paths and bus types aren't the same size!\n");

@@ -29,7 +29,7 @@ extern pXInputGetDSoundAudioDeviceGuids funcGetDSoundGuids;
 
 extern bool RegisterWindowFlag;
 
-static DWORD LastError;
+static DWORD LastError = NULL;
 static bool RegisterWindowFlag = false;
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -378,6 +378,17 @@ DWORD XInputDLL::XInputGetCapabilitiesEx(DWORD dwUserIndex, PGENERIC_CAPABILITIE
 // Documented
 DWORD XInputDLL::XInputGetCapabilities(DWORD dwUserIndex, DWORD dwFlags, PGENERIC_CAPABILITIES pCapabilities)
 {
+	GENERIC_CAPABILITIES NonXInputCapabilities = {
+		1,
+		1,
+		0,
+		{ 62463, 255, 255, -64, -64, -64, -64 },
+		{ 255, 255, }
+	};
+	if(ControllerSlots[dwUserIndex].XInputPath.empty() || pCapabilities == nullptr)
+	{
+		return ERROR_DEVICE_NOT_CONNECTED;
+	}
 	if (funcGetCapabilities)
 	{
 		return funcGetCapabilities(dwUserIndex, dwFlags, pCapabilities);

@@ -20,10 +20,18 @@ namespace XboxInput
 		WORD                                wLeftMotorSpeed;
 		WORD                                wRightMotorSpeed;
 	} GENERIC_VIBRATION, * PGENERIC_VIBRATION;
+	typedef struct _XINPUT_CAPABILITIES
+	{
+		BYTE                                Type;
+		BYTE                                SubType;
+		WORD                                Flags;
+		GENERIC_INPUT_GAMEPAD                      Gamepad;
+		GENERIC_VIBRATION                    Vibration;
+	} GENERIC_CAPABILITIES, * PGENERIC_CAPABILITIES;
 
 	DWORD GetState(GenericInputController* controller, GENERIC_INPUT_STATE* pState);
 	DWORD SetState(GenericInputController* controller, GENERIC_VIBRATION* pVibration);
-
+	DWORD GetCapabilities(GenericInputController* controller, GENERIC_CAPABILITIES* pCapabilities);
 	static std::vector <BYTE> OutputBuffer;
 
 };
