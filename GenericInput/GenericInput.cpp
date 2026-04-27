@@ -378,19 +378,23 @@ DWORD XInputDLL::XInputGetCapabilitiesEx(DWORD dwUserIndex, PGENERIC_CAPABILITIE
 // Documented
 DWORD XInputDLL::XInputGetCapabilities(DWORD dwUserIndex, DWORD dwFlags, PGENERIC_CAPABILITIES pCapabilities)
 {
-	GENERIC_CAPABILITIES NonXInputCapabilities = {
-		1,
-		1,
-		0,
-		{ 62463, 255, 255, -64, -64, -64, -64 },
-		{ 255, 255, }
-	};
+// 	GENERIC_CAPABILITIES NonXInputCapabilities = {
+// 		1,
+// 		1,
+// 		0,
+// 		{ 62463, 255, 255, -64, -64, -64, -64 },
+// 		{ 255, 255, }
+// 		};
 
 	if (pCapabilities == nullptr || dwUserIndex > MAX_CONTROLLERS)
 	{
 		return ERROR_INVALID_PARAMETER;
 	}
 
+	if (pCapabilities == nullptr || dwUserIndex > 7)
+	{
+		return ERROR_INVALID_PARAMETER;
+	}
 	if(ControllerSlots[dwUserIndex].XInputPath.empty())
 	{
 		pCapabilities->Type = 1;
@@ -407,10 +411,6 @@ DWORD XInputDLL::XInputGetCapabilities(DWORD dwUserIndex, DWORD dwFlags, PGENERI
 		pCapabilities->Vibration.wRightMotorSpeed = 255;
 
 		return ERROR_SUCCESS;
-	}
-	if (pCapabilities == nullptr || dwUserIndex > 7)
-	{
-		return ERROR_INVALID_PARAMETER;
 	}
 
 	if (funcGetCapabilities)
