@@ -189,7 +189,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 }
 DWORD GenericInput::XInputGetState(DWORD dwUserIndex, PGENERIC_INPUT_STATE pState)
 {
-	if (pState == nullptr || dwUserIndex > 7)
+	if (pState == nullptr || dwUserIndex > MAX_CONTROLLERS)
 	{
 		return ERROR_INVALID_PARAMETER;
 	}
@@ -385,10 +385,34 @@ DWORD XInputDLL::XInputGetCapabilities(DWORD dwUserIndex, DWORD dwFlags, PGENERI
 		{ 62463, 255, 255, -64, -64, -64, -64 },
 		{ 255, 255, }
 	};
-	if(ControllerSlots[dwUserIndex].XInputPath.empty() || pCapabilities == nullptr)
+
+	if (pCapabilities == nullptr || dwUserIndex > MAX_CONTROLLERS)
 	{
-		return ERROR_DEVICE_NOT_CONNECTED;
+		return ERROR_INVALID_PARAMETER;
 	}
+
+	if(ControllerSlots[dwUserIndex].XInputPath.empty())
+	{
+		pCapabilities->Type = 1;
+		pCapabilities->SubType = 1;
+		pCapabilities->Flags = 0;
+		pCapabilities->Gamepad.wButtons = 62463;
+		pCapabilities->Gamepad.bLeftTrigger = 255;
+		pCapabilities->Gamepad.bRightTrigger = 255;
+		pCapabilities->Gamepad.sThumbLX = -64;
+		pCapabilities->Gamepad.sThumbLY = -64;
+		pCapabilities->Gamepad.sThumbRX = -64;
+		pCapabilities->Gamepad.sThumbRY = -64;
+		pCapabilities->Vibration.wLeftMotorSpeed = 255;
+		pCapabilities->Vibration.wRightMotorSpeed = 255;
+
+		return ERROR_SUCCESS;
+	}
+	if (pCapabilities == nullptr || dwUserIndex > 7)
+	{
+		return ERROR_INVALID_PARAMETER;
+	}
+
 	if (funcGetCapabilities)
 	{
 		return funcGetCapabilities(dwUserIndex, dwFlags, pCapabilities);
