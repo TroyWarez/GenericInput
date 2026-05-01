@@ -366,32 +366,50 @@ DWORD XInputDLL::XInputGetBaseBusInformation(DWORD dwUserIndex, PGENERIC_CAPABIL
 }
 DWORD XInputDLL::XInputGetCapabilitiesEx(DWORD dwUserIndex, PGENERIC_CAPABILITIES pCapabilities, PGENERIC_CAPABILITIES pCapabilities2)
 {
-	if (funcGetCapabilitiesEx)
+	if (pCapabilities == nullptr || pCapabilities2 == nullptr || dwUserIndex > MAX_CONTROLLERS)
+	{
+		return ERROR_INVALID_PARAMETER;
+	}
+	if (ControllerSlots[dwUserIndex].XInputPath.empty())
+	{
+		pCapabilities->Type = 1;
+		pCapabilities->SubType = 1;
+		pCapabilities->Flags = 0;
+		pCapabilities->Gamepad.wButtons = 62463;
+		pCapabilities->Gamepad.bLeftTrigger = 255;
+		pCapabilities->Gamepad.bRightTrigger = 255;
+		pCapabilities->Gamepad.sThumbLX = -64;
+		pCapabilities->Gamepad.sThumbLY = -64;
+		pCapabilities->Gamepad.sThumbRX = -64;
+		pCapabilities->Gamepad.sThumbRY = -64;
+		pCapabilities->Vibration.wLeftMotorSpeed = 255;
+		pCapabilities->Vibration.wRightMotorSpeed = 255;
+
+		pCapabilities2->Type = 1;
+		pCapabilities2->SubType = 1;
+		pCapabilities2->Flags = 0;
+		pCapabilities2->Gamepad.wButtons = 62463;
+		pCapabilities2->Gamepad.bLeftTrigger = 255;
+		pCapabilities2->Gamepad.bRightTrigger = 255;
+		pCapabilities2->Gamepad.sThumbLX = -64;
+		pCapabilities2->Gamepad.sThumbLY = -64;
+		pCapabilities2->Gamepad.sThumbRX = -64;
+		pCapabilities2->Gamepad.sThumbRY = -64;
+		pCapabilities2->Vibration.wLeftMotorSpeed = 255;
+		pCapabilities2->Vibration.wRightMotorSpeed = 255;
+	}
+	else if (funcGetCapabilitiesEx)
 	{
 		return funcGetCapabilitiesEx(dwUserIndex, pCapabilities, pCapabilities2);
 	}
-
-
-	return ERROR_DEVICE_NOT_CONNECTED;
+		return ERROR_DEVICE_NOT_CONNECTED;
 }
 
 // Documented
 DWORD XInputDLL::XInputGetCapabilities(DWORD dwUserIndex, DWORD dwFlags, PGENERIC_CAPABILITIES pCapabilities)
 {
-// 	GENERIC_CAPABILITIES NonXInputCapabilities = {
-// 		1,
-// 		1,
-// 		0,
-// 		{ 62463, 255, 255, -64, -64, -64, -64 },
-// 		{ 255, 255, }
-// 		};
 
 	if (pCapabilities == nullptr || dwUserIndex > MAX_CONTROLLERS)
-	{
-		return ERROR_INVALID_PARAMETER;
-	}
-
-	if (pCapabilities == nullptr || dwUserIndex > 7)
 	{
 		return ERROR_INVALID_PARAMETER;
 	}
