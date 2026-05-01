@@ -232,7 +232,7 @@ DWORD GenericInput::XInputGetState(DWORD dwUserIndex, PGENERIC_INPUT_STATE pStat
 	{
 		return DualSense::GetState(&ControllerSlots[dwUserIndex], (DualSense::GENERIC_INPUT_STATE*)pState);
 	}
-	case DS4://DualSense
+	case DS4://DualShock4
 	{
 		return DualShock4::GetState(&ControllerSlots[dwUserIndex], (DualShock4::GENERIC_INPUT_STATE*)pState);
 	}
