@@ -296,7 +296,7 @@ DWORD GenericInput::XInputSetState(DWORD dwUserIndex, PGENERIC_VIBRATION pVibrat
 	{
 		//return DualSense::SetState(&ControllerSlots[dwUserIndex], (DualSense::GENERIC_INPUT_STATE*)pVibration);
 	}
-	case DS4://DualSense
+	case DS4://DualShock4
 	{
 		//return DualShock4::SetState(&ControllerSlots[dwUserIndex], (DualShock4::GENERIC_INPUT_STATE*)pVibration);
 	}
