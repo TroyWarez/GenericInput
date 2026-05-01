@@ -447,6 +447,7 @@ void XInputDLL::XInputEnable(BOOL enable)
 }
 DWORD XInputDLL::XInputGetBatteryInformation(DWORD dwUserIndex, BYTE devType, PGENERIC_BATTERY_INFORMATION pBatteryInformation)
 {
+	// TO DO: Add support for non-xinput controllers, currently just returns error if controller is not xinput
 	if (funcGetBatteryInformation)
 	{
 		return funcGetBatteryInformation(dwUserIndex, devType, pBatteryInformation);
@@ -456,6 +457,7 @@ DWORD XInputDLL::XInputGetBatteryInformation(DWORD dwUserIndex, BYTE devType, PG
 }
 DWORD XInputDLL::XInputGetKeystroke(DWORD dwUserIndex, DWORD dwReserved, PGENERIC_KEYSTROKE pKeystroke)
 {
+	// TO DO: Add support for non-xinput controllers, currently just returns error if controller is not xinput
 	if (funcGetKeystroke)
 	{
 		return funcGetKeystroke(dwUserIndex, dwReserved, pKeystroke);
@@ -465,6 +467,7 @@ DWORD XInputDLL::XInputGetKeystroke(DWORD dwUserIndex, DWORD dwReserved, PGENERI
 }
 DWORD XInputDLL::XInputGetAudioDeviceIds(DWORD dwUserIndex, LPWSTR pRenderDeviceId, UINT* pRenderCount, LPWSTR pCaptureDeviceId, UINT* pCaptureCount)
 {
+	// TO DO: Add support for non-xinput controllers, currently just returns error if controller is not xinput
 	if (funcGetAudioDeviceIds)
 	{
 		return funcGetAudioDeviceIds(dwUserIndex, pRenderDeviceId, pRenderCount, pCaptureDeviceId, pCaptureCount);
@@ -474,6 +477,7 @@ DWORD XInputDLL::XInputGetAudioDeviceIds(DWORD dwUserIndex, LPWSTR pRenderDevice
 }
 DWORD XInputDLL::XInputGetDSoundAudioDeviceGuids(DWORD dwUserIndex, GUID* pDSoundRenderGuid, GUID* pDSoundCaptureGuid)
 {
+	// TO DO: Add support for non-xinput controllers, currently just returns error if controller is not xinput
 	if (funcGetDSoundGuids)
 	{
 		return funcGetDSoundGuids(dwUserIndex, pDSoundRenderGuid, pDSoundCaptureGuid);
