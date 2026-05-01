@@ -22,7 +22,7 @@ constexpr int ORDINAL_108_GET_CAPABILITIES_EX = 108;
 HMODULE g_hXinputModule = nullptr;
 extern Scanner controllerScanner;
 
-LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+LRESULT WINAPI WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 pXInputGetStateEx funcGetStateEx = nullptr;
 pXInputWaitForGuideButton  funcWaitForGuideButton = nullptr;
@@ -80,7 +80,7 @@ DWORD WINAPI MyThreadFunction(LPVOID lpParam) {
 	UNREFERENCED_PARAMETER(lpParam);
 	WNDCLASSW wc =
 	{
-		.lpfnWndProc = WndProc,
+		.lpfnWndProc = (WNDPROC)WndProc,
 		.lpszClassName = L"Controller Capture",
 	};
 	RegisterClassW(&wc);

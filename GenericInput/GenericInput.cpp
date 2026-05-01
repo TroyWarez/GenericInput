@@ -32,7 +32,7 @@ extern bool RegisterWindowFlag;
 static DWORD LastError = NULL;
 static bool RegisterWindowFlag = false;
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT WINAPI WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message) {
 	case WM_DEVICECHANGE: {
