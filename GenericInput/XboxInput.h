@@ -30,7 +30,9 @@ namespace XboxInput
 	} GENERIC_CAPABILITIES, * PGENERIC_CAPABILITIES;
 
 	DWORD GetState(GenericInputController* controller, GENERIC_INPUT_STATE* pState);
+	DWORD GetState360(GenericInputController* controller, GENERIC_INPUT_STATE* pState);
 	DWORD SetState(GenericInputController* controller, GENERIC_VIBRATION* pVibration);
+	DWORD SetState360(GenericInputController* controller, GENERIC_VIBRATION* pVibration);
 	DWORD GetCapabilities(GenericInputController* controller, GENERIC_CAPABILITIES* pCapabilities);
 	static std::vector <BYTE> OutputBuffer;
 

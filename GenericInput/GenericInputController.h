@@ -5,11 +5,12 @@ constexpr int MAX_CONTROLLERS = 8;
 enum controllerType
 {
 	XInput = 1,
-	DS = 2,
-	DS4 = 3,
-	DS3 = 4,
-	NT = 5,
-	SDL = 6
+	XInput_360 = 2,
+	DS = 3,
+	DS4 = 4,
+	DS3 = 5,
+	NT = 6,
+	SDL = 7
 };
 struct GenericInputController
 {

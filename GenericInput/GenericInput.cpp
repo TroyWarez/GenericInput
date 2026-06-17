@@ -194,14 +194,14 @@ DWORD GenericInput::XInputGetState(DWORD dwUserIndex, PGENERIC_INPUT_STATE pStat
 		return ERROR_INVALID_PARAMETER;
 	}
 
-	if (ControllerSlots[dwUserIndex].DeviceHandle == nullptr && ControllerSlots[dwUserIndex].conType != XInput)
+	if (ControllerSlots[dwUserIndex].DeviceHandle == nullptr && ControllerSlots[dwUserIndex].conType != XInput && ControllerSlots[dwUserIndex].conType != XInput_360)
 	{
 		if (!ControllerSlots[dwUserIndex].Path.empty()) {
-			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].Path.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, NULL, nullptr);
+			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].Path.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 		}
 		else if (!ControllerSlots[dwUserIndex].BTPath.empty())
 		{
-			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].BTPath.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, NULL, nullptr);
+			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].BTPath.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 		}
 		if (ControllerSlots[dwUserIndex].DeviceHandle == INVALID_HANDLE_VALUE || ControllerSlots[dwUserIndex].DeviceHandle == nullptr)
 		{
@@ -211,11 +211,11 @@ DWORD GenericInput::XInputGetState(DWORD dwUserIndex, PGENERIC_INPUT_STATE pStat
 	else if (ControllerSlots[dwUserIndex].DeviceHandle == nullptr)
 	{
 		if (!ControllerSlots[dwUserIndex].XInputPath.empty()) {
-			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].XInputPath.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, NULL, nullptr);
+			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].XInputPath.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 		}
 		else if (!ControllerSlots[dwUserIndex].BTPath.empty())
 		{
-			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].BTPath.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, NULL, nullptr);
+			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].BTPath.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 		}
 		if (ControllerSlots[dwUserIndex].DeviceHandle == INVALID_HANDLE_VALUE || ControllerSlots[dwUserIndex].DeviceHandle == nullptr)
 		{
@@ -224,6 +224,10 @@ DWORD GenericInput::XInputGetState(DWORD dwUserIndex, PGENERIC_INPUT_STATE pStat
 	}
 	switch (ControllerSlots[dwUserIndex].conType)
 	{
+	case XInput_360:
+	{
+		return XboxInput::GetState360(&ControllerSlots[dwUserIndex], (XboxInput::GENERIC_INPUT_STATE*)pState);
+	}
 	case XInput:
 	{
 		return XboxInput::GetState(&ControllerSlots[dwUserIndex], (XboxInput::GENERIC_INPUT_STATE*)pState);
@@ -258,14 +262,14 @@ DWORD GenericInput::XInputSetState(DWORD dwUserIndex, PGENERIC_VIBRATION pVibrat
 		return ERROR_INVALID_PARAMETER;
 	}
 
-	if (ControllerSlots[dwUserIndex].DeviceHandle == nullptr && ControllerSlots[dwUserIndex].conType != XInput)
+	if (ControllerSlots[dwUserIndex].DeviceHandle == nullptr && ControllerSlots[dwUserIndex].conType != XInput && ControllerSlots[dwUserIndex].conType != XInput_360)
 	{
 		if (!ControllerSlots[dwUserIndex].Path.empty()) {
-			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].Path.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, NULL, nullptr);
+			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].Path.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 		}
 		else if (!ControllerSlots[dwUserIndex].BTPath.empty())
 		{
-			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].BTPath.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, NULL, nullptr);
+			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].BTPath.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 		}
 		if (ControllerSlots[dwUserIndex].DeviceHandle == INVALID_HANDLE_VALUE || ControllerSlots[dwUserIndex].DeviceHandle == nullptr)
 		{
@@ -275,11 +279,11 @@ DWORD GenericInput::XInputSetState(DWORD dwUserIndex, PGENERIC_VIBRATION pVibrat
 	else if (ControllerSlots[dwUserIndex].DeviceHandle == nullptr)
 	{
 		if (!ControllerSlots[dwUserIndex].XInputPath.empty()) {
-			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].XInputPath.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, NULL, nullptr);
+			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].XInputPath.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 		}
 		else if (!ControllerSlots[dwUserIndex].BTPath.empty())
 		{
-			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].BTPath.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, NULL, nullptr);
+			ControllerSlots[dwUserIndex].DeviceHandle = CreateFile(ControllerSlots[dwUserIndex].BTPath.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 		}
 		if (ControllerSlots[dwUserIndex].DeviceHandle == INVALID_HANDLE_VALUE || ControllerSlots[dwUserIndex].DeviceHandle == nullptr)
 		{
@@ -291,6 +295,10 @@ DWORD GenericInput::XInputSetState(DWORD dwUserIndex, PGENERIC_VIBRATION pVibrat
 	case XInput:
 	{
 		return XboxInput::SetState(&ControllerSlots[dwUserIndex], (XboxInput::GENERIC_VIBRATION*)pVibration);
+	}
+	case XInput_360:
+	{
+		return XboxInput::SetState360(&ControllerSlots[dwUserIndex], (XboxInput::GENERIC_VIBRATION*)pVibration);
 	}
 	case DS://DualSense
 	{

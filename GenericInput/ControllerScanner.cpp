@@ -35,28 +35,6 @@ void Scanner::ScanForControllers(HWND hWnd, std::span<GenericInputController> Co
 		}
 	}
 
-	if (xinputDevicePaths.size())
-	{
-		HANDLE hSteamXbox = CreateFile(xinputDevicePaths[0].c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, NULL, nullptr);
-
-		if (hSteamXbox != INVALID_HANDLE_VALUE && hSteamXbox != nullptr)
-		{
-			BYTE high_Freq = 0;
-			BYTE low_Freq = 0;
-
-			BYTE in[5] = { 0x00, 0x00, low_Freq,  high_Freq, 0x02 };
-
-			if (DeviceIoControl(
-				hSteamXbox,
-				0x002aac08, in, sizeof(in), nullptr, 0, nullptr, nullptr))
-			{
-				dwDeviceIOCodeXbox = 0x002aac08;
-			}
-			DWORD er = GetLastError();
-			CloseHandle(hSteamXbox);
-		}
-	}
-
 	if (hidDeviceBusType.size() != hidDevicePaths.size())
 	{
 		OutputDebugString(L"CRITICAL GENERIC INPUT ERROR: The number of device paths and bus types aren't the same size!\n");
@@ -81,7 +59,7 @@ void Scanner::ScanForControllers(HWND hWnd, std::span<GenericInputController> Co
 						OutputDebugString(L"Failed to get the bluetooth address.");
 						continue;
 					}
-					else if (btManager.IsBluetoothDeviceConnected(controller.ullbtDeviceInfo) == FALSE)
+					if (btManager.IsBluetoothDeviceConnected(controller.ullbtDeviceInfo) == FALSE)
 					{
 						continue;
 					}
@@ -115,13 +93,29 @@ void Scanner::ScanForControllers(HWND hWnd, std::span<GenericInputController> Co
 
 			for (size_t j = 0; j < xinputHIDArtibs.size(); j++)
 			{
-				if (memcmp(&controller.Atributes, &xinputHIDArtibs[j], sizeof(HIDD_ATTRIBUTES)) == 0)
+				wchar_t buffer[255] = { 0 };
+				HANDLE hDevice = CreateFile(controller.Path.c_str(), (GENERIC_READ | GENERIC_WRITE), (FILE_SHARE_READ | FILE_SHARE_DELETE | FILE_SHARE_WRITE), nullptr, OPEN_EXISTING, NULL, nullptr);
+				if (hDevice == INVALID_HANDLE_VALUE)
+				{
+					continue;
+				}
+
+				if (HidD_GetProductString(hDevice, buffer, sizeof(buffer)))
+				{
+					CloseHandle(hDevice);
+				}
+				if ((wcsstr(buffer, L"360")))
+				{
+					controller.conType = XInput_360;
+				}
+				else
 				{
 					controller.conType = XInput;
-					controller.Atributes = xinputHIDArtibs[j];
-					controller.BusType = xinputDeviceBusType[j];
-					controller.XInputPath = xinputDevicePaths[j];
 				}
+				controller.XInputPath = xinputDevicePaths[j];
+				controller.Atributes = xinputHIDArtibs[j];
+				controller.BusType = xinputDeviceBusType[j];
+
 			}
 			if (controller.conType == 0)
 			{
